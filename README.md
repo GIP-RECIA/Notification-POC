@@ -16,6 +16,13 @@ You may also install [smartcd](https://github.com/cxreg/smartcd) to automaticall
 when entering into the project directory. This will bring commands for most common operations that goes through docker 
 containers.
 
+You you don't wan't to install SmartCD, it's still possible to load those aliases manually by sourcing `env.sh` file.
+
+```bash
+. ./env.sh  # Load environment aliases manually
+rabbitmqctl --version  # This should display rabbitmqctl version
+```
+
 ## Setting up the environment
 
 * Clone the github repository
