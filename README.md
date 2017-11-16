@@ -31,7 +31,19 @@ rabbitmqctl --version  # This should display rabbitmqctl version
 git clone https://github.com/GIP-RECIA/Notification-POC.git
 ```
 
-* Start the containers with docker-compose
+* Download required docker images
+
+```bash
+docker-compose pull
+```
+
+* Build custom docker images
+
+```bash
+docker-compose build
+```
+
+* Start containers
 
 ```bash
 docker-compose up -d

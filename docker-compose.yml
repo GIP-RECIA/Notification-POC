@@ -15,6 +15,11 @@ services:
       - "rabbitmq:/var/lib/rabbitmq"
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
       - "rabbitmq-configuration:/etc/rabbitmq"
+  node:
+    image: node:carbon
+    working_dir: /app
+    volumes:
+      - .:/home/node/app
 volumes:
   rabbitmq: ~
   rabbitmq-plugins: ~

@@ -37,6 +37,9 @@ _alias_run() { docker-compose run --rm $@;}
 _alias_rabbitmqctl() { docker-compose exec rabbitmq rabbitmqctl $@;}
 _alias_rabbitmq-plugins() { docker-compose exec rabbitmq rabbitmq-plugins $@;}
 
+_alias_node() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node node $@;}
+_alias_npm() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node npm $@;}
+_alias_yarn() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node yarn $@;}
 
 ALIAS_FUNCTIONS=$(declare -F | sed -r 's/^declare -f //' | awk -F= '/^_?alias_/{print $1 }')
 if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then echo "Commands: "; fi
