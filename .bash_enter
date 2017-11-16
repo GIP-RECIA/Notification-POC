@@ -10,20 +10,20 @@
 # See http://smartcd.org for more ideas about what can be put here
 #######################################################################
 if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then
-  autostash COMPOSE_PROJECT_DIR=$PWD
+  autostash export COMPOSE_PROJECT_DIR=$PWD
 
   # Define DOCKER_DEVBOX_ENV to customize environment configuration files
-  autostash DOCKER_DEVBOX_ENV="${DOCKER_DEVBOX_ENV:-dev}"
+  autostash export DOCKER_DEVBOX_ENV="${DOCKER_DEVBOX_ENV:-dev}"
 
   if [ -z "docker-compose.override.$DOCKER_DEVBOX_ENV.yml" ]; then
     ln -rfs "docker-compose.override.$DOCKER_DEVBOX_ENV.yml" "docker-compose.override.yml"
   fi
 fi
 
-autostash USER_ID=$(id -u)
-autostash GROUP_ID=$(id -g)
-autostash USER_NAME=$(id -un)
-autostash GROUP_NAME=$(id -gn)
+autostash export USER_ID=$(id -u)
+autostash export GROUP_ID=$(id -g)
+autostash export USER_NAME=$(id -un)
+autostash export GROUP_NAME=$(id -gn)
 
 _docker_devbox_map_workdir() {
   CONTAINER_PROJECT_DIR="$1"
@@ -43,8 +43,24 @@ _alias_rabbitmqctl() { docker-compose exec rabbitmq rabbitmqctl $@;}
 _alias_rabbitmq-plugins() { docker-compose exec rabbitmq rabbitmq-plugins $@;}
 
 _alias_node() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node node $@;}
-_alias_npm() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node npm $@;}
-_alias_yarn() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node yarn $@;}
+_alias_npm() {
+  if [ "$1" == "run" ] && [ "$2" == "dev" ]; then
+    PORTS=" -p 8080:8080"
+    echo "Port mapping:$PORTS"
+  else
+    PORTS=""
+  fi
+  docker-compose run --rm$PORTS --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node npm $@;
+}
+_alias_yarn() {
+  if [ "$1" == "dev" ] || ([ "$1" == "run" ] && [ "$2" == "dev" ]); then
+    PORTS=" -p 8080:8080"
+    echo "Port mapping:$PORTS"
+  else
+    PORTS=""
+  fi
+  docker-compose run --rm$PORTS --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node yarn $@;
+}
 
 ALIAS_FUNCTIONS=$(declare -F | sed -r 's/^declare -f //' | awk -F= '/^_?alias_/{print $1 }')
 if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then echo "Commands: "; fi

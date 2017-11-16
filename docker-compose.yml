@@ -23,6 +23,11 @@ services:
         - USER_ID=${USER_ID}
         - GROUP_NAME=${GROUP_NAME}
         - USER_NAME=${USER_NAME}
+    environment:
+      - GROUP_ID=${GROUP_ID}
+      - USER_ID=${USER_ID}
+      - GROUP_NAME=${GROUP_NAME}
+      - USER_NAME=${USER_NAME}
     working_dir: /app
     volumes:
       - .:/home/node/app
