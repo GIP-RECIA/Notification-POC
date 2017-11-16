@@ -31,20 +31,38 @@ rabbitmqctl --version  # This should display rabbitmqctl version
 git clone https://github.com/GIP-RECIA/Notification-POC.git
 ```
 
+* Source enviromnent file (only is SmartCD is not installed)
+
+```bash
+. ./env.sh
+```
+
 * Download required docker images
 
 ```bash
-docker-compose pull
+dc pull
 ```
 
 * Build custom docker images
 
 ```bash
-docker-compose build
+dc build
 ```
 
 * Start containers
 
 ```bash
-docker-compose up -d
+dc up -d
+```
+
+## Shutdown the environment
+
+```bash
+dc down
+```
+
+#### Clear data from the environment
+
+```bash
+dc down -v  # All data will be lost !
 ```

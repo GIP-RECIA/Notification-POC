@@ -20,6 +20,11 @@ if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then
   fi
 fi
 
+autostash USER_ID=$(id -u)
+autostash GROUP_ID=$(id -g)
+autostash USER_NAME=$(id -un)
+autostash GROUP_NAME=$(id -gn)
+
 _docker_devbox_map_workdir() {
   CONTAINER_PROJECT_DIR="$1"
 
