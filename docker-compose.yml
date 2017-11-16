@@ -1,0 +1,21 @@
+version: "2"
+services:
+  rabbitmq:
+    build: .docker/rabbitmq
+    hostname: recia-notification-poc-1
+    ports:
+      - 15671:15671
+      - 15672:15672
+      - 15674:15674
+      - 25672:25672
+      - 4369:4369
+      - 5671:5671
+      - 5672:5672
+    volumes:
+      - "rabbitmq:/var/lib/rabbitmq"
+      - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
+      - "rabbitmq-configuration:/etc/rabbitmq"
+volumes:
+  rabbitmq: ~
+  rabbitmq-plugins: ~
+  rabbitmq-configuration: ~
