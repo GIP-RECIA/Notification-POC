@@ -3,13 +3,16 @@ MAINTAINER Rémi Alvergnat <remi.alvergnat@gfi.fr>
 
 ARG GROUP_ID=1000
 ARG USER_ID=1000
-ARG GROUP_NAME=app
-ARG USER_NAME=app
 
-RUN addgroup --system --gid $GROUP_ID $GROUP_NAME
-RUN adduser --system --gid $GROUP_ID --uid $USER_ID $USER_NAME
+# Fix permissions to match host user
+RUN usermod -u ${USER_ID:-1000} node && groupmod -g ${GROUP_ID:-1000} node
 
-VOLUME /.cache
-RUN chown -R $USER_NAME:$GROUP_NAME /.cache
+RUN mkdir -p /home/node/.cache/yarn && chown -R $USER_ID:$GROUP_ID /home/node/.cache
+VOLUME /home/node/.cache
 
-USER $USER_NAME
+RUN mkdir /app && chown -R $USER_ID:$GROUP_ID /app
+VOLUME /app
+
+WORKDIR /app
+
+USER node
