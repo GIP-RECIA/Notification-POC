@@ -39,21 +39,15 @@ Step 3
 Step 4
 ------
 
-**Dispatch real world events to user notifications**
+**Dispatch real world events as notifications**
 
 - Write a minimalist **Event Registration Service** that simply dispatch events to notifications.
+- Display real time notifications in **Web Application**.
 - Persist produced notifications in **ElasticSearch**
 - Display persisted notifications in **Web Application**.
-- Display real time notifications in **Web Application**.
+
 
 Step 5
-------
-
-**Add digest capabilities for notifications**
-
-- Enhance **Event Emitter Service** to allow aggregation of UserEvent into a single Notification.
-
-Step 6
 ------
 
 **Make notifications configurable by the user**
@@ -62,3 +56,4 @@ Step 6
 media.
 - Use user configuration to dispatch events to notifications on registered users and media only.
 - Update **Web Application** to support login and events that match user only.
+- Enhance **Event Emitter Service** to allow aggregation of UserEvent into a single Notification (digest).
