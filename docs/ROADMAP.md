@@ -32,7 +32,6 @@ Step 3
 **Emit real world events**
 
 - Create real world classes to emit events from (Alert, Document, News, ...).
-- Consume those events in **CLI Application**. 
 - Consume those events in **Web Application**.
 - Produce those events in **Web Application** (on user input).
 - Configure ElasticSearch to support those events.
@@ -42,10 +41,24 @@ Step 4
 
 **Dispatch real world events to user notifications**
 
-- Write a **User Event Registration Service** to register user to various event properties (type, level, ...) and 
-media.
-- Dispatch incoming events to media based on user registrations in **Notification Service**.
+- Write a minimalist **Event Registration Service** that simply dispatch events to notifications.
 - Persist produced notifications in **ElasticSearch**
-- Update **Web Application** to support login and events that match registration only.
-- Display persisted notifications in **CLI Application**.
 - Display persisted notifications in **Web Application**.
+- Display real time notifications in **Web Application**.
+
+Step 5
+------
+
+**Add digest capabilities for notifications**
+
+- Enhance **Event Emitter Service** to allow aggregation of UserEvent into a single Notification.
+
+Step 6
+------
+
+**Make notifications configurable by the user**
+
+- Enhance **Event Registration Service** to register user to various event properties (type, level, ...) and 
+media.
+- Use user configuration to dispatch events to notifications on registered users and media only.
+- Update **Web Application** to support login and events that match user only.
