@@ -12,6 +12,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
 
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -24,6 +26,7 @@
         <module>../notification-poc-cli-common</module>
         <module>../notification-poc-cli-consumer</module>
         <module>../notification-poc-cli-generator</module>
+        <module>../notification-poc-auth-service</module>
     </modules>
 
     <dependencyManagement>
