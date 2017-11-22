@@ -4,23 +4,34 @@ services:
     build: .docker/rabbitmq
     hostname: recia-notification-poc-1
     ports:
-      - 15671:15671
-      - 15672:15672
-      - 15674:15674
-      - 25672:25672
-      - 4369:4369
-      - 5671:5671
-      - 5672:5672
+      - "15671:15671"
+      - "15672:15672"
+      - "15674:15674"
+      - "25672:25672"
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
     volumes:
       - "rabbitmq:/var/lib/rabbitmq"
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
       - "rabbitmq-configuration:/etc/rabbitmq"
+  auth-service:
+    image: maven
+    volumes:
+      - ".:/usr/src/app"
+      - "m2repository:/root/.m2/repository"
+    working_dir: "/usr/src/app/notification-poc-auth-service"
+    command: mvn spring-boot:run -Drun.profiles=docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-db
   auth-db:
     image: postgres:9.6
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:
-      - 12432:5432
+      - "12432:5432"
   node:
     build:
       context: .docker/node
@@ -79,10 +90,10 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-
 volumes:
   rabbitmq: ~
   rabbitmq-plugins: ~
   rabbitmq-configuration: ~
   node-cache: ~
   elasticsearch: ~
+  m2repository: ~
