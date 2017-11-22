@@ -55,6 +55,14 @@ dc build
 dc up -d
 ```
 
+## Services
+
+- Web Application: [http://localhost:8088](http://localhost:8088)
+
+- RabbitMQ Management Interface: [http://localhost:15672](http://localhost:15672)
+
+- Kibana: [http://localhost:5601](http://localhost:5061)
+
 ## Shutdown the environment
 
 ```bash

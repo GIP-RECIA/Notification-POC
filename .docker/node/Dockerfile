@@ -1,5 +1,4 @@
 FROM node:carbon
-MAINTAINER Rémi Alvergnat <remi.alvergnat@gfi.fr>
 
 ARG GROUP_ID=1000
 ARG USER_ID=1000

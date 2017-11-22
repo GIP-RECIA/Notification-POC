@@ -13,9 +13,9 @@ Step 1
 - Showcase Direct Exchange configuration.
 - Showcase Fanout Exchange configuration.
 - Showcase Routing Exchange configuration.
-- Showcase Topics Exchange configuration.
+- Showcase Topic Exchange configuration.
 
-*RabbitMQ exchange configuration are introduced in [RabbitMQ tutorials](https://www.rabbitmq.com/tutorials/)*
+*RabbitMQ exchange configuration are introduced in [RabbitMQ tutorials](https://www.rabbitmq.com/tutorials/amqp-concepts.html)*
 
 Step 2
 ------

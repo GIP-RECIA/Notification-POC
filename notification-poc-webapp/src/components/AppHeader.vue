@@ -20,8 +20,8 @@
     <rabbitmq-connector class="rabbitmq-connector"
                         username="admin"
                         password="admin"
-                        websocketUrl="ws://localhost:15674/ws"
-                        sockJSUrl="http://localhost:15674/stomp">
+                        websocketUrl="ws://localhost:8088/rabbitmq/ws"
+                        sockJSUrl="http://localhost:8088/rabbitmq/stomp">
     </rabbitmq-connector>
   </b-navbar>
 </template>

@@ -25,6 +25,13 @@ services:
     volumes:
       - .:/home/node/app
       - node-cache:/.cache
+  apache:
+    build:
+      context: .docker/apache
+    volumes:
+      - ".docker/apache/config/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
+    ports:
+      - "8088:80"
   elasticsearch:
     build:
       context: .docker/elasticsearch
