@@ -1,10 +1,11 @@
 import SockJS from 'sockjs-client'
 import webstompClient from 'webstomp-client'
 
-export default class RabbitMQ {
-  constructor (vm, websocketUrl, sockJSUrl, useSockJS = null) {
+class RabbitMQ {
+  connect (vm, websocketUrl, sockJSUrl, username, password) {
     this.vm = vm
-    this.useSockJS = (useSockJS !== null && useSockJS !== undefined) ? useSockJS : !window.WebSocket
+
+    this.useSockJS = !window.WebSocket
     this.url = this.useSockJS ? sockJSUrl : websocketUrl
 
     if (this.useSockJS) {
@@ -16,9 +17,7 @@ export default class RabbitMQ {
     }
 
     this.client.reconnect_delay = 5000
-  }
 
-  connect (username, password) {
     return new Promise((resolve, reject) => {
       this.vm.doWillConnect(this.client)
       this.client.connect(username, password, (success) => {
@@ -37,3 +36,6 @@ export default class RabbitMQ {
     this.vm.doDisconnect()
   }
 }
+
+const rabbitMQ = new RabbitMQ()
+export default rabbitMQ

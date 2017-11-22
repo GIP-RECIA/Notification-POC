@@ -90,7 +90,7 @@
       ...mapState(['error', 'client'])
     },
     watch: {
-      client: {
+      'client.connected': {
         immediate: true,
         handler (client) {
           this.updateSubscription(this.destination)
@@ -110,12 +110,15 @@
     },
     methods: {
       updateSubscription (destination) {
-        if (this.subscription) {
-          this.subscription.unsubscribe()
-          this.subscription = null
-        }
-        if (this.client) {
+        if (this.client && this.client.connected) {
+          if (this.subscription) {
+            this.subscription.unsubscribe()
+            this.subscription = null
+          }
+
           this.subscription = this.client.subscribe(destination, this.messageHandler)
+        } else {
+          this.subscription = null
         }
       },
       messageHandler: function (message) {

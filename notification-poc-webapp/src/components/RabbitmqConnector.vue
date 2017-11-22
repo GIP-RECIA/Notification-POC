@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import RabbitMQ from '../modules/rabbitmq'
+  import rabbitMQ from '../modules/rabbitmq'
   import {mapState, mapMutations} from 'vuex'
 
   export default {
@@ -27,12 +27,10 @@
     }),
     methods: {
       connectButtonClicked () {
-        this.rabbitMQ = new RabbitMQ(this, this.websocketUrl, this.sockJSUrl)
-        this.rabbitMQ.connect(this.username, this.password)
+        rabbitMQ.connect(this, this.websocketUrl, this.sockJSUrl, this.username, this.password)
       },
       disconnectButtonClicked () {
-        this.rabbitMQ.disconnect()
-        this.rabbitMQ = null
+        rabbitMQ.disconnect()
       },
       ...mapMutations(['doConnect', 'doWillConnect', 'doDisconnect', 'doError'])
     },

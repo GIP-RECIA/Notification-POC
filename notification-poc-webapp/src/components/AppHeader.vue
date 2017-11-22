@@ -3,7 +3,7 @@
 
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-    <b-navbar-brand :to="{name: 'Main'}">Random Beans</b-navbar-brand>
+    <b-navbar-brand :to="{name: 'Main'}">Notification POC</b-navbar-brand>
 
     <b-navbar-nav>
       <b-nav-item :to="{name: 'ExchangeDirect'}">Direct</b-nav-item>
