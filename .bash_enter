@@ -62,6 +62,8 @@ _alias_yarn() {
   docker-compose run --rm$PORTS --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node yarn $@;
 }
 
+_alias_logstash-plugin() { docker-compose exec logstash logstash-plugin $@;}
+
 ALIAS_FUNCTIONS=$(declare -F | sed -r 's/^declare -f //' | awk -F= '/^_?alias_/{print $1 }')
 if [ -z "$BASH_ENTER_ALIAS_ONLY" ]; then echo "Commands: "; fi
 for func in $ALIAS_FUNCTIONS; do

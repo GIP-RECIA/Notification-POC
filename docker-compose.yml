@@ -25,8 +25,51 @@ services:
     volumes:
       - .:/home/node/app
       - node-cache:/.cache
+  elasticsearch:
+    build:
+      context: .docker/elasticsearch
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - .docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+  logstash:
+    build:
+      context: .docker/logstash
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - USER_ID=${USER_ID}
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - .docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - .docker/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+  kibana:
+    build:
+      context: .docker/kibana
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - .docker/kibana/config/:/usr/share/kibana/config
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
 volumes:
   rabbitmq: ~
   rabbitmq-plugins: ~
   rabbitmq-configuration: ~
   node-cache: ~
+  elasticsearch: ~
