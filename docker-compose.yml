@@ -34,6 +34,19 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "12432:5432"
+  notification-emission-service:
+    image: maven
+    volumes:
+      - ".:/usr/src/app"
+      - "m2repository:/root/.m2/repository"
+    working_dir: "/usr/src/app/notification-poc-notification-emission-service"
+    command: mvn spring-boot:run -Drun.profiles=docker
+    user: ${USER_ID}
+    entrypoint: /bin/true
+    ports:
+      - "8081:8081"
+    depends_on:
+      - auth-service
   node:
     build:
       context: .docker/node

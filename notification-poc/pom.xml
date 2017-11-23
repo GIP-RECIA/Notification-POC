@@ -27,6 +27,8 @@
         <module>../notification-poc-cli-consumer</module>
         <module>../notification-poc-cli-generator</module>
         <module>../notification-poc-auth-service</module>
+        <module>../notification-poc-event-notification-service</module>
+        <module>../notification-poc-notification-emission-service</module>
     </modules>
 
     <dependencyManagement>
