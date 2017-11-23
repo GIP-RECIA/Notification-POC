@@ -22,6 +22,8 @@ services:
       - "m2repository:/root/.m2/repository"
     working_dir: "/usr/src/app/notification-poc-auth-service"
     command: mvn spring-boot:run -Drun.profiles=docker
+    user: ${USER_ID}
+    entrypoint: /bin/true
     ports:
       - "8080:8080"
     depends_on:

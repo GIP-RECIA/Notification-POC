@@ -77,6 +77,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Group saveGroup(Group group) {
-        return null;
+        return groupRepository.save(group);
     }
 }
