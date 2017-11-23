@@ -16,8 +16,11 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
     public Map<String, ?> convertUserAuthentication(Authentication userAuthentication) {
         Map<String, Object> data = (Map<String, Object>) super.convertUserAuthentication(userAuthentication);
 
-        CustomUserDetails userDetails = (CustomUserDetails)userAuthentication.getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) userAuthentication.getPrincipal();
         if (userDetails != null) {
+            if (userDetails.getGroupUuids() != null && userDetails.getGroupUuids().size() > 0) {
+                data.put("user_group_uuids", userDetails.getGroupUuids());
+            }
             if (userDetails.getUserUuid() != null) {
                 data.put("user_uuid", userDetails.getUserUuid());
             }
