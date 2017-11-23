@@ -15,8 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -77,16 +76,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+    public CustomUserAuthenticationConverter userAuthenticationConverter() {
+        return new CustomUserAuthenticationConverter();
+    }
+
+    public DefaultAccessTokenConverter accessTokenConverter() {
+        DefaultAccessTokenConverter converter = new DefaultAccessTokenConverter();
+        converter.setUserTokenConverter(userAuthenticationConverter());
+        return converter;
+    }
+
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setAccessTokenConverter(accessTokenConverter());
         converter.setSigningKey(signingKey);
         return converter;
     }
 
     @Bean
     public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
     @Bean
