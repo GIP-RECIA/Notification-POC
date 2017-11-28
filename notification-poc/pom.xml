@@ -19,6 +19,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
 
         <amqp.client.version>5.0.0</amqp.client.version>
+        <spring-amqp.version>2.0.0.RELEASE</spring-amqp.version>
     </properties>
 
     <modules>
@@ -52,6 +53,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-rabbit</artifactId>
+                <version>2.0.0.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-amqp</artifactId>
+                <version>2.0.0.RELEASE</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>2.9.2</version>
@@ -79,6 +92,12 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>1.2.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.16</version>
             </dependency>
 
             <dependency>

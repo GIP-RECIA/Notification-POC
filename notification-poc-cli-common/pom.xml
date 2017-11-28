@@ -12,8 +12,6 @@
     <artifactId>notification-poc-cli-common</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0-SNAPSHOT</version>
-
     <name>Common CLI for Notification POC</name>
 
     <dependencies>

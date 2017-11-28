@@ -12,8 +12,6 @@
     <artifactId>notification-poc-cli-consumer</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0-SNAPSHOT</version>
-
     <name>Consumer CLI for Notification POC</name>
 
     <dependencies>

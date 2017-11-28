@@ -1,55 +1,81 @@
 package org.esco.notification.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 public class EventBuilder {
-    private Event event;
-
-    public EventBuilder(EventType type) {
-        this.event = new Event(type);
-    }
+    private Event event = new Event();
 
     public Event build() {
         Event event = this.event;
-        this.event = new Event(this.event.getType());
+        this.event = new Event();
         return event;
     }
 
     public EventBuilder priority(EventPriority priority) {
-        this.event.setPriority(priority);
+        this.event.getHeader().setPriority(priority);
         return this;
     }
 
-    public Event title(String title) {
-        this.event.setTitle(title);
-        return this.event;
+    public EventBuilder title(String title) {
+        this.event.getContent().setTitle(title);
+        return this;
     }
 
-    public Event message(String message) {
-        this.event.setMessage(message);
-        return this.event;
+    public EventBuilder message(String message) {
+        this.event.getContent().setMessage(message);
+        return this;
     }
 
-    public Event date(Date date) {
-        this.event.setDate(date);
-        return this.event;
+    public EventBuilder date(Date date) {
+        this.event.getContent().setDate(date);
+        return this;
     }
 
-    public Event scheduledDate(Date date) {
-        this.event.setScheduledDate(date);
-        return this.event;
-    }
-
-
-    public Event expiryDate(Date date) {
-        this.event.setExpiryDate(date);
-        return this.event;
+    public EventBuilder scheduledDate(Date date) {
+        this.event.getHeader().setScheduledDate(date);
+        return this;
     }
 
 
-    public Event property(String property, String value) {
-        this.event.setProperty(property, value);
-        return this.event;
+    public EventBuilder expiryDate(Date date) {
+        this.event.getHeader().setExpiryDate(date);
+        return this;
+    }
+
+
+    public EventBuilder property(String property, String value) {
+        if (this.event.getContent().getProperties() == null) {
+            this.event.getContent().setProperties(new LinkedHashMap<>());
+        }
+        this.event.getContent().getProperties().put(property, value);
+        return this;
+    }
+
+    public EventBuilder group(String... uuids) {
+        if (this.event.getHeader().getGroupUuids() == null) {
+            this.event.getHeader().setGroupUuids(new ArrayList<>());
+        }
+        this.event.getHeader().getGroupUuids().addAll(Arrays.asList(uuids));
+        return this;
+    }
+
+    public EventBuilder user(String... uuids) {
+        if (this.event.getHeader().getUserUuids() == null) {
+            this.event.getHeader().setUserUuids(new ArrayList<>());
+        }
+        this.event.getHeader().getUserUuids().addAll(Arrays.asList(uuids));
+        return this;
+    }
+
+    public EventBuilder media(String... medias) {
+        if (this.event.getHeader().getMedias() == null) {
+            this.event.getHeader().setMedias(new ArrayList<>());
+        }
+        this.event.getHeader().getMedias().addAll(Arrays.asList(medias));
+        return this;
     }
 
 }

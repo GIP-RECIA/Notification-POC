@@ -12,8 +12,6 @@
     <artifactId>notification-poc-cli-generator</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.0-SNAPSHOT</version>
-
     <name>Generator CLI for Notification POC</name>
 
     <dependencies>
