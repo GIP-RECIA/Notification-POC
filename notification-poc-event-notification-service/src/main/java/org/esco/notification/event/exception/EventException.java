@@ -1,6 +1,6 @@
 package org.esco.notification.event.exception;
 
-public class EventException extends Exception {
+public class EventException extends RuntimeException {
     public EventException() {
     }
 

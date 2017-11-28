@@ -2,7 +2,7 @@ package org.esco.notification.event.service;
 
 import org.esco.notification.data.Event;
 import org.esco.notification.data.Notification;
-import org.esco.notification.event.exception.NotificationEmissionException;
+import org.esco.notification.event.exception.NotificationEmitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,8 @@ public class EventConsumerServiceImpl implements EventConsumerService {
     @Override
     public void consume(Event event) {
         List<Notification> notifications = dispatcherService.dispatchEvent(event);
-        notifications.forEach(notification -> {
-            try {
-                notificationEmitterService.emit(notification);
-            } catch (NotificationEmissionException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
+
+        // TODO: How should we handle errors here here ? Should we acknowledge the initial event, or not ?
+        notifications.forEach(notificationEmitterService::emit);
     }
 }

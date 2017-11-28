@@ -13,7 +13,7 @@
     <artifactId>notification-poc-event-notification-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>Event Registration service</name>
+    <name>Event Notification service</name>
 
     <dependencyManagement>
         <dependencies>

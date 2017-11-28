@@ -1,7 +1,7 @@
-package org.esco.notification.event.component;
+package org.esco.notification.emission.component;
 
-import org.esco.notification.data.Event;
-import org.esco.notification.event.service.EventConsumerService;
+import org.esco.notification.data.Notification;
+import org.esco.notification.emission.service.NotificationConsumerService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventMessageListener implements MessageListener {
+public class NotificationMessageListener implements MessageListener {
     @Autowired
-    private EventConsumerService consumerService;
+    private NotificationConsumerService consumerService;
 
     @Autowired
     private MessageConverter messageConverter;
@@ -19,6 +19,6 @@ public class EventMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message) {
         Object event = messageConverter.fromMessage(message);
-        consumerService.consume((Event) event);
+        consumerService.consume((Notification) event);
     }
 }

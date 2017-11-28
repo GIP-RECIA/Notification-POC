@@ -11,8 +11,4 @@ public interface EventObjectConverter {
     UserEvent toUserEvent(Event event, String userUid);
 
     Notification toNotification(UserEvent userEvent, String media);
-
-    Emission toEmission(Notification notification, Date date);
-
-    Emission toEmission(Notification notification, Date date, boolean failed, String message);
 }
