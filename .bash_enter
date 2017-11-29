@@ -47,7 +47,7 @@ _alias_rabbitmq-plugins() { docker-compose exec rabbitmq rabbitmq-plugins $@;}
 _alias_node() { docker-compose run --rm --workdir="$(_docker_devbox_map_workdir "/home/node/app")" node node $@;}
 _alias_npm() {
   if [ "$1" == "run" ] && [ "$2" == "dev" ]; then
-    PORTS=" -p 8080:8080"
+    PORTS=" -p 8085:8085 -p 8086:8086"
     echo "Port mapping:$PORTS"
   else
     PORTS=""
@@ -56,7 +56,7 @@ _alias_npm() {
 }
 _alias_yarn() {
   if [ "$1" == "dev" ] || ([ "$1" == "run" ] && [ "$2" == "dev" ]); then
-    PORTS=" -p 8080:8080"
+    PORTS=" -p 8085:8085 -p 8086:8086"
     echo "Port mapping:$PORTS"
   else
     PORTS=""
