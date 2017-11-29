@@ -28,6 +28,7 @@
         <module>notification-auth-service</module>
         <module>notification-event-service</module>
         <module>notification-emission-service</module>
+        <module>notification-performance-test</module>
     </modules>
 
     <dependencyManagement>

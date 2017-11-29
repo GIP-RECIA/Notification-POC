@@ -12,14 +12,14 @@ public class WebMediaConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         /** queue prefix for SUBSCRIPTION (FROM server to CLIENT)  */
-        config.enableSimpleBroker("/topic", "/queue");
+        config.enableSimpleBroker("/topic", "/queue", "/notifications");
         /** queue prefix for SENDING messages (FROM client TO server) */
         //config.setApplicationDestinationPrefixes("/notifications");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/notifications")
+        registry.addEndpoint("/stomp")
                 .setAllowedOrigins("*");
         //registry.addEndpoint("/notifications").withSockJS();
     }

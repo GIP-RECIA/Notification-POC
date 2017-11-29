@@ -18,6 +18,7 @@ public class ResourceServerConfig implements ResourceServerConfigurer {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/ping").permitAll()
+                .antMatchers("/stomp").permitAll()
                 .anyRequest().authenticated();
     }
 }
