@@ -27,7 +27,10 @@ It's NOT related to which user will receive a notification nor which media will 
 | Property  | Type | Description |
 | ------------- | ------------- | --- |
 | priority | Enum\<EventPriority\> | Priority of this event |
-| type | Enum\<EventType\> | Type of this event |
+| type | String | Type of this event |
+| groupUuids | List\<String\> | Group uuids that should get notification |
+| userUuids | List\<String\> | User uuids that should get notification |
+| medias | List\<String\> | Media to use for notification |
 | title | String | Title of the event |
 | message | String | Message content of the event |
 | date | Date | Date of the event |
@@ -62,8 +65,7 @@ There are commonly one or more **Notification** instance generated for each **Us
 
 | Property  | Type | Description |
 | ------------- | ------------- | ------------- |
-| userEvent  | UserEvents | Source user event to notify (Not a digest)
-| digestUserEvents  | List\<UserEvents\>  | Digest of user events to notify (Is a digest) |
+| userEvent  | List\<UserEvents\> | Source user event to notify. Can be a digest of many event (list)
 | mediaType  | String | Which type of media will the notification be emitted with |
 
 #### Emission
@@ -77,7 +79,7 @@ per retry attempt)
 | ------------- | ------------- |
 | notification  | Notification  |
 | error  | boolean |
-| errorMessage | String |
+| message | String |
 
 ### Software components
 

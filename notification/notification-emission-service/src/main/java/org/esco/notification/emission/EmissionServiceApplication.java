@@ -1,11 +1,11 @@
-package org.esco.notification.event;
+package org.esco.notification.emission;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EventNotificationApplication {
+public class EmissionServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(EventNotificationApplication.class, args);
+        SpringApplication.run(EmissionServiceApplication.class, args);
     }
 }
