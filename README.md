@@ -16,7 +16,7 @@ You may also install [smartcd](https://github.com/cxreg/smartcd) to automaticall
 when entering into the project directory. This will bring commands for most common operations that goes through docker 
 containers.
 
-You you don't wan't to install SmartCD, it's still possible to load those aliases manually by sourcing `env.sh` file.
+If you don't wan't to install SmartCD, it's still possible to load those aliases manually by sourcing `env.sh` file.
 
 ```bash
 . ./env.sh  # Load environment aliases manually
@@ -57,9 +57,11 @@ dc up -d
 
 ## Services
 
-- Web Application: [http://localhost:8088](http://localhost:8088)
+- Notification Web Application: [http://localhost:8088/notification](http://localhost/notification)
 
-- RabbitMQ Management Interface: [http://localhost:15672](http://localhost:15672)
+- Random Beans Web Application: [http://localhost:8088/random-beans](http://localhost/random-beans)
+
+- RabbitMQ Management Interface: [http://localhost:8088/rabbitmq/admin](http://localhost/rabbitmq/admin)
 
 - Kibana: [http://localhost:5601](http://localhost:5061)
 

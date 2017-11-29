@@ -42,7 +42,8 @@
         }
       },
       messageHandler: function (message) {
-        if (message.headers['content-type'] === 'application/json') {
+        if (message.headers['content-type'] === 'application/json' ||
+          message.headers['content-type'] === 'application/json;charset=UTF-8') {
           console.log(message)
         } else {
           throw new Error('Unknown content type: ' + message.headers['content-type'])
