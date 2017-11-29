@@ -1,0 +1,16 @@
+package org.esco.notification.randombeans.configuration;
+
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+
+public class ExchangeDirectConfiguration extends AbstractPublishConfiguration {
+    public ExchangeDirectConfiguration() {
+        super("", "random-beans");
+    }
+
+    @Override
+    public void configure(Channel channel) throws IOException {
+        channel.queueDeclare(routingKey, true, false, false, null);
+    }
+}
