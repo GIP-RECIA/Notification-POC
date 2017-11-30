@@ -15,7 +15,7 @@
       destination: String
     },
     computed: {
-      ...mapState(['error', 'client'])
+      ...mapState('stomp', ['error', 'client'])
     },
     watch: {
       'client.connected': {

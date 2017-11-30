@@ -45,8 +45,9 @@ const getters = {
   connected: state => !!state.client
 }
 
-export default new Vuex.Store({
+export default {
+  namespaced: true,
   state,
   mutations,
   getters
-})
+}

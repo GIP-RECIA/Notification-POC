@@ -1,5 +1,6 @@
 package org.esco.notification.auth.config;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,7 +15,7 @@ public class CorsConfig {
      * necessary to your use case.
      */
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -22,6 +23,11 @@ public class CorsConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        CorsFilter corsFilter = new CorsFilter(source);
+
+        // Should be called before @EnableAuthorizationServer configuration
+        FilterRegistrationBean bean = new FilterRegistrationBean(corsFilter);
+        bean.setOrder(-100);
+        return bean;
     }
 }

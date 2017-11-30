@@ -4,6 +4,7 @@
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
     <b-navbar-brand :to="{name: 'Main'}"><i class="fa fa-home" title="Notification" aria-hidden="true"></i></b-navbar-brand>
+    <b-navbar-brand :to="{name: 'Login'}">Login</b-navbar-brand>
     <b-navbar-brand :to="{name: 'Notifications'}">Notifications</b-navbar-brand>
 
     <stomp-connector class="stomp-connector"

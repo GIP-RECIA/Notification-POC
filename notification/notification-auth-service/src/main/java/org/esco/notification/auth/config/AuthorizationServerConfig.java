@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableAuthorizationServer
-@EnableResourceServer
+//@EnableResourceServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security.jwt.client-id}")
@@ -73,5 +73,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager);
     }
-
 }

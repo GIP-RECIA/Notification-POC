@@ -19,20 +19,28 @@
 
   export default {
     name: 'RabbitmqConnector',
-    computed: mapState({
-      'client': 'client',
-      'connecting': 'connecting',
-      'connected': 'connected',
-      'errorState': 'error'
-    }),
+    computed: {
+      ...mapState('stomp', {
+        'client': 'client',
+        'connecting': 'connecting',
+        'connected': 'connected',
+        'errorState': 'error'
+      }),
+      ...mapState('auth', ['auth'])
+    },
     methods: {
       connectButtonClicked () {
-        rabbitMQ.connect(this, this.websocketUrl, this.sockJSUrl, this.username, this.password)
+        const accessToken = this.auth ? this.auth.access_token : undefined
+        let url = this.websocketUrl
+        if (accessToken) {
+          url += '?access_token=' + accessToken
+        }
+        rabbitMQ.connect(this, url, this.sockJSUrl, this.username, this.password)
       },
       disconnectButtonClicked () {
         rabbitMQ.disconnect()
       },
-      ...mapMutations(['doConnect', 'doWillConnect', 'doDisconnect', 'doError'])
+      ...mapMutations('stomp', ['doConnect', 'doWillConnect', 'doDisconnect', 'doError'])
     },
     props: {
       username: String,

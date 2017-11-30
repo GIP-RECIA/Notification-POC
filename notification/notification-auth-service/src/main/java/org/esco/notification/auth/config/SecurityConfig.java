@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -62,6 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests() // Allow preflight request (CORS) (https://stackoverflow.com/questions/25136532/allow-options-http-method-for-oauth-token-request#answer-25244055)
+                .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 .and()
                 .httpBasic()
                 .realmName(securityRealm)
