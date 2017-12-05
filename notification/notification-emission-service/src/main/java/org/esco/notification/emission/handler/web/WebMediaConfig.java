@@ -1,6 +1,7 @@
 package org.esco.notification.emission.handler.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -29,7 +31,9 @@ public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfig
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         /** queue prefix for SUBSCRIPTION (FROM server to CLIENT)  */
-        config.enableSimpleBroker("/queue");
+        config.enableStompBrokerRelay("/queue")
+                .setClientLogin("admin").setClientPasscode("admin")
+                .setSystemLogin("admin").setSystemPasscode("admin");
         /** queue prefix for SENDING messages (FROM client TO server) */
         config.setUserDestinationPrefix("/user");
         //config.setApplicationDestinationPrefixes("/user", "/web-media");
@@ -42,7 +46,10 @@ public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfig
         //registry.addEndpoint("/notification").withSockJS();
     }
 
-
+    @Override
+    public void configureClientOutboundChannel(ChannelRegistration registration) {
+        super.configureClientOutboundChannel(registration);
+    }
 
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {

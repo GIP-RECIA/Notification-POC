@@ -3,14 +3,16 @@
     <b-container>
       <b-row>
         <b-col>
-          <b-card v-for="notification in notifications" class="mt-2 mb-2">
-            <div slot="header">
-              {{notification.content.title}}
-            </div>
-            <div>
-              {{notification.content.message}}
-            </div>
-          </b-card>
+          <template v-for="notification in notifications">
+            <b-card  class="mt-2 mb-2">
+              <div slot="header">
+                {{notification.content.title}}
+              </div>
+              <div>
+                {{notification.content.message}}
+              </div>
+            </b-card>
+          </template>
         </b-col>
       </b-row>
     </b-container>
