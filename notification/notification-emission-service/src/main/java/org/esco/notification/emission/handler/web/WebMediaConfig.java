@@ -29,16 +29,17 @@ public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfig
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         /** queue prefix for SUBSCRIPTION (FROM server to CLIENT)  */
-        config.enableSimpleBroker("/notifications");
+        config.enableSimpleBroker("/queue");
         /** queue prefix for SENDING messages (FROM client TO server) */
-        //config.setApplicationDestinationPrefixes("/notifications");
+        config.setUserDestinationPrefix("/user");
+        //config.setApplicationDestinationPrefixes("/user", "/web-media");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp")
                 .setAllowedOrigins("*");
-        //registry.addEndpoint("/notifications").withSockJS();
+        //registry.addEndpoint("/notification").withSockJS();
     }
 
 
@@ -47,7 +48,7 @@ public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfig
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
         messages
                 .nullDestMatcher().authenticated()
-                .simpDestMatchers("/notifications", "/notifications/**").hasAuthority("admin.users")
+                .simpDestMatchers("/user", "/user/**", "/queue", "/queue/**").authenticated()
                 .anyMessage().denyAll();
     }
 

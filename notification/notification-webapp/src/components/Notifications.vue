@@ -1,24 +1,40 @@
 <template>
-  <div>Notifications</div>
+  <div class="notifications">
+    <b-container>
+      <b-row>
+        <b-col>
+          <b-card v-for="notification in notifications" class="mt-2 mb-2">
+            <div slot="header">
+              {{notification.content.title}}
+            </div>
+            <div>
+              {{notification.content.message}}
+            </div>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
+  import {mapState} from 'vuex'
 
   export default {
     name: 'Notifications',
     data: function () {
       return {
-        subscription: null
+        subscription: null,
+        notifications: []
       }
     },
     props: {
       destination: String
     },
     computed: {
-      ...mapState('stomp', ['error', 'client'])
+      ...mapState('stomp', ['error', 'client', 'connected'])
     },
     watch: {
-      'client.connected': {
+      'connected': {
         immediate: true,
         handler (client) {
           this.updateSubscription(this.destination)
@@ -44,7 +60,7 @@
       messageHandler: function (message) {
         if (message.headers['content-type'] === 'application/json' ||
           message.headers['content-type'] === 'application/json;charset=UTF-8') {
-          console.log(message)
+          this.notifications.push(JSON.parse(message.body))
         } else {
           throw new Error('Unknown content type: ' + message.headers['content-type'])
         }

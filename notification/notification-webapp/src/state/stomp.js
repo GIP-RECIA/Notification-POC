@@ -20,8 +20,8 @@ const mutations = {
   doConnect (state, client) {
     state.error = null
     state.connecting = false
-    state.connected = true
     state.client = client
+    state.connected = true
   },
   doDisconnect (state) {
     state.error = null
@@ -42,7 +42,8 @@ const mutations = {
 const getters = {
   client: state => state.client,
   error: state => state.error,
-  connected: state => !!state.client
+  connected: state => state.connected,
+  connecting: state => state.connecting
 }
 
 export default {

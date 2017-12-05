@@ -23,7 +23,7 @@ export default new Router({
       name: 'Notifications',
       component: Notifications,
       props: {
-        destination: '/notifications'
+        destination: '/user/queue/notification'
       }
     }
   ]

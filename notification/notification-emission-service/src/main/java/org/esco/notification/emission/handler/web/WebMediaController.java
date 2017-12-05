@@ -7,8 +7,8 @@ import java.security.Principal;
 
 @Controller
 public class WebMediaController {
-    @MessageMapping("/notifications")
-    public String notifications(Principal principal) {
-        return "notifications: " + "test";
+    @MessageMapping("/user/queue/notification")
+    public void userNotification(Principal principal) {
+        // May be implemented to return notification history
     }
 }
