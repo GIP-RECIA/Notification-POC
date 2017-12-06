@@ -17,14 +17,16 @@ services:
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
       - "rabbitmq-configuration:/etc/rabbitmq"
   auth-service:
-    image: maven
+    build:
+      context: .docker/maven
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/root/.m2/repository"
-    working_dir: "/usr/src/app/notification/notification-auth-service"
-    command: mvn spring-boot:run -Drun.profiles=docker
-    user: ${USER_ID}
-    entrypoint: /bin/true
+      - "m2repository:/maven-repository"
+    working_dir: "/usr/src/app/notification"
+    command: "bash -c 'mvn install; mvn -pl notification-auth-service spring-boot:run -Drun.profiles=docker'"
     ports:
       - "8080:8080"
     depends_on:
@@ -36,31 +38,38 @@ services:
     ports:
       - "12432:5432"
   event-service:
-    image: maven
+    build:
+      context: .docker/maven
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/root/.m2/repository"
-    working_dir: "/usr/src/app/notification/notification-event-service"
-    command: mvn spring-boot:run -Drun.profiles=docker
-    user: ${USER_ID}
-    entrypoint: /bin/true
+      - "m2repository:/maven-repository"
+    working_dir: "/usr/src/app/notification"
+    command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
     ports:
       - "8081:8081"
     depends_on:
+      - rabbitmq
       - auth-service
   emission-service:
-    image: maven
+    build:
+      context: .docker/maven
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/root/.m2/repository"
-    working_dir: "/usr/src/app/notification/notification-emission-service"
-    command: mvn spring-boot:run -Drun.profiles=docker
-    user: ${USER_ID}
-    entrypoint: /bin/true
+      - "m2repository:/maven-repository"
+    working_dir: "/usr/src/app/notification"
+    command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker'"
     ports:
       - "8082:8082"
     depends_on:
+      - rabbitmq
       - auth-service
+      - event-service
   node:
     build:
       context: .docker/node
@@ -76,6 +85,7 @@ services:
       context: .docker/apache
     volumes:
       - ".docker/apache/config/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"
+      - ".docker/apache/htdocs:/usr/local/apache2/htdocs"
     ports:
       - "8088:80"
   elasticsearch:

@@ -1,0 +1,8 @@
+version: "2"
+services:
+  auth-service:
+    entrypoint: /bin/true
+  event-service:
+    entrypoint: /bin/true
+  emission-service:
+    entrypoint: /bin/true

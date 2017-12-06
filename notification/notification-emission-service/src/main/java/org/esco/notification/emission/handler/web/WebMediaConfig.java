@@ -2,6 +2,7 @@ package org.esco.notification.emission.handler.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -28,12 +29,16 @@ public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfig
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private RabbitProperties rabbitProperties;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         /** queue prefix for SUBSCRIPTION (FROM server to CLIENT)  */
         config.enableStompBrokerRelay("/queue")
-                .setClientLogin("admin").setClientPasscode("admin")
-                .setSystemLogin("admin").setSystemPasscode("admin");
+                .setRelayHost(rabbitProperties.getHost()).setRelayPort(61613) // TODO: Should be configurable
+                .setClientLogin(rabbitProperties.getUsername()).setClientPasscode(rabbitProperties.getPassword())
+                .setSystemLogin(rabbitProperties.getUsername()).setSystemPasscode(rabbitProperties.getPassword());
         /** queue prefix for SENDING messages (FROM client TO server) */
         config.setUserDestinationPrefix("/user");
         //config.setApplicationDestinationPrefixes("/user", "/web-media");
