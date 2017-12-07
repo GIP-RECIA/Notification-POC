@@ -42,6 +42,7 @@ public class NotificationPerformerServiceImpl implements NotificationPerformerSe
 
         MediaHandler mediaHandler = handlers.get(media);
         mediaHandler.performNotification(notification);
+        //TODO: Generate emission when notification fails
 
         Emission emission = notificationObjectConverter.toEmission(notification, new Date());
         emissionEmitterService.emit(emission);

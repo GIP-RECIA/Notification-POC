@@ -10,22 +10,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmissionEmitterServiceImpl implements EmissionEmitterService {
-    /*
     @Autowired
     private AmqpTemplate amqpTemplate;
 
     @Autowired
     private TopicExchange emissionExchange;
-    */
 
     @Override
     public void emit(Emission emission) throws EmissionEmitException {
-        /*
         try {
             amqpTemplate.convertAndSend(emissionExchange.getName(), "", emission);
         } catch (AmqpException amqpException) {
             throw new EmissionEmitException(amqpException.getMessage(), amqpException);
         }
-        */
     }
 }
