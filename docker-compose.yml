@@ -15,7 +15,6 @@ services:
     volumes:
       - "rabbitmq:/var/lib/rabbitmq"
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
-      - "rabbitmq-configuration:/etc/rabbitmq"
   auth-service:
     build:
       context: .docker/maven
@@ -132,7 +131,6 @@ services:
 volumes:
   rabbitmq: ~
   rabbitmq-plugins: ~
-  rabbitmq-configuration: ~
   node-cache: ~
   elasticsearch: ~
   m2repository: ~

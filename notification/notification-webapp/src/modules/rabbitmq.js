@@ -1,12 +1,19 @@
 import SockJS from 'sockjs-client'
 import webstompClient from 'webstomp-client'
+import config from '../config'
 
 class RabbitMQ {
-  connect (vm, websocketUrl, sockJSUrl, username, password) {
+  connect (vm, auth) {
     this.vm = vm
 
+    const accessToken = auth ? auth.access_token : undefined
+    let url = config.stomp.url
+    if (accessToken) {
+      url += '?access_token=' + accessToken
+    }
+
     this.useSockJS = !window.WebSocket
-    this.url = this.useSockJS ? sockJSUrl : websocketUrl
+    this.url = url
 
     if (this.useSockJS) {
       this.client = webstompClient.over(() => {
@@ -20,7 +27,7 @@ class RabbitMQ {
 
     return new Promise((resolve, reject) => {
       this.vm.doWillConnect(this.client)
-      this.client.connect(username, password, (success) => {
+      this.client.connect(config.stomp.username, config.stomp.password, (success) => {
         this.vm.doConnect(this.client)
         resolve(this.client, success)
       }, (error) => {

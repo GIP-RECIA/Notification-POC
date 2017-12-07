@@ -100,9 +100,8 @@ export default {
           promise = Promise.resolve()
         }
 
-        return promise.then((response) => {
+        return promise.then(() => {
           context.commit('setAuthPayload', null)
-          return response.data
         })
       })
     }

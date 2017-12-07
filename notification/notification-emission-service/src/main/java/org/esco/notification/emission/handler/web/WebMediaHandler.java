@@ -35,7 +35,7 @@ public class WebMediaHandler implements MediaHandler {
         }
 
         if (user != null) {
-            brokerMessagingTemplate.convertAndSendToUser(user.getName(), "/queue/notification", notification);
+            brokerMessagingTemplate.convertAndSendToUser(user.getName(), "/queue/notification", notification.getContent());
         }
     }
 }

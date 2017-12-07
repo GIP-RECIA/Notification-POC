@@ -16,7 +16,7 @@ const requestInterceptor = (config) => {
 }
 
 const error401ResponseHandler = (error) => {
-  if (error.response.status !== 401 || !error.response || !error.response.data || error.response.data.error !== 'invalid_token') {
+  if (error.response && (error.response.status !== 401 || !error.response || !error.response.data || error.response.data.error !== 'invalid_token')) {
     throw error
   }
   const requestConfig = error.config

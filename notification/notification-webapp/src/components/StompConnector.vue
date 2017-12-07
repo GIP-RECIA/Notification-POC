@@ -1,15 +1,17 @@
 <template>
-  <div class="rabbitmq-connector">
+  <div>
     <b-badge variant="danger" v-if="errorState">{{errorState}}</b-badge>
     <b-badge variant="warning" v-if="connecting" class="font-weight-bold">Connecting ...</b-badge>
     <b-badge variant="success" v-if="connected && !connecting" class="font-weight-bold">Connected</b-badge>
-    <b-badge variant="warning" v-else class="font-weight-bold">Not connected</b-badge>
-    <b-button size="sm" v-if="connected" @click="disconnectButtonClicked">
-      <i class="fa fa-plug" aria-hidden="true"></i> Disconnect
-    </b-button>
-    <b-button size="sm" v-else @click="connectButtonClicked">
-      <i class="fa fa-plug" aria-hidden="true"></i> Connect
-    </b-button>
+    <b-badge variant="warning" v-if="!connected && !connecting" class="font-weight-bold">Not connected</b-badge>
+    <template v-if="actionnable">
+      <b-button size="sm" v-if="connected" @click="disconnectButtonClicked">
+        <i class="fa fa-plug" aria-hidden="true"></i> Disconnect
+      </b-button>
+      <b-button size="sm" v-else @click="connectButtonClicked">
+        <i class="fa fa-plug" aria-hidden="true"></i> Connect
+      </b-button>
+    </template>
   </div>
 </template>
 
@@ -28,25 +30,17 @@
       }),
       ...mapState('auth', ['auth'])
     },
+    props: {
+      actionnable: false
+    },
     methods: {
       connectButtonClicked () {
-        const accessToken = this.auth ? this.auth.access_token : undefined
-        let url = this.websocketUrl
-        if (accessToken) {
-          url += '?access_token=' + accessToken
-        }
-        rabbitMQ.connect(this, url, this.sockJSUrl, this.username, this.password)
+        rabbitMQ.connect(this, this.auth)
       },
       disconnectButtonClicked () {
         rabbitMQ.disconnect()
       },
       ...mapMutations('stomp', ['doConnect', 'doWillConnect', 'doDisconnect', 'doError'])
-    },
-    props: {
-      username: String,
-      password: String,
-      websocketUrl: String,
-      sockJSUrl: String
     },
     beforeDestroy () {
       if (this.client) {

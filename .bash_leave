@@ -10,6 +10,10 @@
 # See http://smartcd.org for more ideas about what can be put here
 #######################################################################
 
+if [ -f "docker-compose.override.yml" ]; then
+ rm "docker-compose.override.yml"
+fi
+
 ALIAS_FUNCTIONS=$(declare -F | sed -r 's/^declare -f //' | awk -F= '/^_?alias_/{print $1 }')
 DOCKER_DEVBOX_FUNCTIONS=$(declare -F | sed -r 's/^declare -f //' | awk -F= '/^_?docker_devbox_/{print $1 }')
 

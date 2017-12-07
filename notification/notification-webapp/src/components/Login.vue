@@ -41,7 +41,7 @@
       submit () {
         this.login(this.form).then(() => {
           this.error = null
-          this.$router.push({ name: 'Main' })
+          this.$router.push({ name: 'Notifications' })
         }).catch((err) => {
           if (err.response && err.response.data && err.response.data.error_description) {
             this.error = err.response.data.error_description

@@ -15,6 +15,10 @@
 
     <name>Notification Emission Service</name>
 
+    <properties>
+        <elasticsearch.version>6.0.1</elasticsearch.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -24,6 +28,11 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -50,9 +59,9 @@
             <artifactId>notification-common</artifactId>
         </dependency>
         <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-messaging -->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -63,9 +72,9 @@
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
         <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-jwt</artifactId>
-		</dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
@@ -84,6 +93,12 @@
         <dependency>
             <groupId>io.projectreactor.spring</groupId>
             <artifactId>reactor-spring-messaging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>${elasticsearch.version}</version>
         </dependency>
 
         <dependency>

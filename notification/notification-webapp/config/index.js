@@ -12,12 +12,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/emission': {
-        target: 'http://localhost:8082',
+        target: 'http://emission-service:8082',
         pathRewrite: {'^/emission/': '/'},
         xfwd: true
       },
       '/auth': {
-        target: 'http://localhost:8080',
+        target: 'http://auth-service:8080',
         pathRewrite: {'^/auth/': '/'},
         xfwd: true
       }
@@ -30,7 +30,7 @@ module.exports = {
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
-    poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+    poll: true, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
