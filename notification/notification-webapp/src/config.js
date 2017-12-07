@@ -2,7 +2,7 @@ export default {
   stomp: {
     username: 'admin',
     password: 'admin',
-    url: process.env.NODE_ENV === 'development' ? 'ws://localhost:8082/stomp' : 'ws://localhost:8082/stomp'
+    url: process.env.NODE_ENV === 'development' ? 'ws://localhost:8082/stomp' : 'ws://' + window.location.host + '/emission/stomp'
   },
   emissionService: {
     url: process.env.NODE_ENV === 'development' ? 'http://localhost:8082' : '/emission'
