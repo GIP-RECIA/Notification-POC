@@ -8,10 +8,10 @@ export default {
     url: process.env.NODE_ENV === 'development' ? 'http://localhost:8082' : '/emission'
   },
   openid: {
-    clientId: 'jwt',
-    clientSecret: 'jwt',
+    // auth: { username: 'jwt', password: 'jwt' }, // Client ID/Secret
     configuration: {
-      token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/oauth/token' : '/auth/oauth/token',
+      // token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/oauth/token' : '/auth/oauth/token',
+      token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:11080/cas/oidc/accessToken?client_id=jwt' : '/cas/oidc/accessToken?client_id=jwt',
       end_session_endpoint: null
     }
   }

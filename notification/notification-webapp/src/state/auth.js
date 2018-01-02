@@ -52,7 +52,7 @@ export default {
 
         const encodedData = Querystring.stringify(data)
 
-        const auth = { username: config.openid.clientId, password: config.openid.clientSecret }
+        const auth = config.openid.auth
         return rawClient.post(openidConfiguration.token_endpoint, encodedData, {
           auth: auth,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }

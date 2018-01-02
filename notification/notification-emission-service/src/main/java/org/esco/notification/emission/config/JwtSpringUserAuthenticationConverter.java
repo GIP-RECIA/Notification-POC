@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 
 import java.util.Map;
 
-public class CustomUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
+public class JwtSpringUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
     public Authentication extractAuthentication(Map<String, ?> map) {
         Authentication authentication = super.extractAuthentication(map);
         if (authentication instanceof AbstractAuthenticationToken) {

@@ -2,7 +2,6 @@ package org.esco.notification.emission.handler.web;
 
 import org.esco.notification.emission.component.UserDetailsAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 

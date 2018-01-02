@@ -5,10 +5,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -37,7 +35,7 @@ public class ElasticServiceImpl implements ElasticService {
     private UserDetailsAccessor userDetailsAccessor;
 
     @Override
-    public List<Notification> findNotifications(Principal principal, String ... medias) throws IOException {
+    public List<Notification> findNotifications(Principal principal, String... medias) throws IOException {
         String userUuid = userDetailsAccessor.getUserUuid((OAuth2Authentication) principal);
 
         SearchRequest searchRequest = new SearchRequest("logstash-notification-*").types("notification");
