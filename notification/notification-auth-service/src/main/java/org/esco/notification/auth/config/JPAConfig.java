@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * JPA Configuration for spring Authorization Server
+ */
 @Configuration
 @EnableTransactionManagement
 @EntityScan(basePackages = "org.esco.notification.auth.domain")
 @EnableJpaRepositories(basePackages = "org.esco.notification.auth.repository")
-public class DatasourceConfig {
+public class JPAConfig {
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

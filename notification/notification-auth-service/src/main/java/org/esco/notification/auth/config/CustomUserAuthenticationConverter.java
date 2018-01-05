@@ -6,6 +6,9 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 
 import java.util.Map;
 
+/**
+ * Authentication converter to use for Spring Authorization Server.
+ */
 public class CustomUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
     /**
      * Extract information about the user to be used in an access token (i.e. for resource servers).

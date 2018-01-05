@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * Get user UUID from OAuth 2 Authentication object received from CAS Authorization Server.
+ */
 @Component
 @Profile("jwk-cas")
 public class JwkCasUserDetailsAccessor implements UserDetailsAccessor {

@@ -6,6 +6,9 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 
 import java.util.Map;
 
+/**
+ * Add decoded JWT to Authentication details.
+ */
 public class JwtSpringUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
     public Authentication extractAuthentication(Map<String, ?> map) {
         Authentication authentication = super.extractAuthentication(map);

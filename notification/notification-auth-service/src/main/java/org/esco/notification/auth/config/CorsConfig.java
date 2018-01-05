@@ -7,12 +7,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * CORS Configuration to allow browser access for another host.
+ */
 @Configuration
 public class CorsConfig {
     /**
      * Allowing all origins, headers and methods here is only intended to keep this example simple.
-     * This is not a default recommended configuration. Make adjustments as
-     * necessary to your use case.
+     * This is not a default recommended configuration.
+     *
+     * Make adjustments as necessary to your use case.
      */
     @Bean
     public FilterRegistrationBean corsFilter() {

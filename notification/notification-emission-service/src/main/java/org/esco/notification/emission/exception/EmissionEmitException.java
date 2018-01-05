@@ -1,5 +1,8 @@
 package org.esco.notification.emission.exception;
 
+/**
+ * Exception thrown when emission fails to be emitted.
+ */
 public class EmissionEmitException extends NotificationException {
     public EmissionEmitException() {
     }

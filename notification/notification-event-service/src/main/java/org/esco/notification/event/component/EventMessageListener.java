@@ -8,6 +8,9 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Listen and consume events coming from RabbitMQ
+ */
 @Component
 public class EventMessageListener implements MessageListener {
     @Autowired

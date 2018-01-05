@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Elastic search client configuration.
+ */
 @Configuration
 public class ElasticConfig {
     @Autowired

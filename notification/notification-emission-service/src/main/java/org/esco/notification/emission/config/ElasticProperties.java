@@ -3,6 +3,9 @@ package org.esco.notification.emission.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration properties for elastic search hosts
+ */
 @Configuration
 @ConfigurationProperties(prefix = "notification.elastic")
 public class ElasticProperties {

@@ -10,6 +10,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handle for web notification (through STOMP relay)
+ */
 @Component
 public class WebMediaHandler implements MediaHandler {
     Logger log = LoggerFactory.getLogger(WebMediaHandler.class);

@@ -8,6 +8,9 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.security.Principal;
 
+/**
+ * When a user connects, register it's UUID and name into SessionService.
+ */
 @Component
 public class SessionConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
     @Autowired
@@ -17,7 +20,7 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
     public void onApplicationEvent(SessionConnectedEvent event) {
         Principal user = event.getUser();
         if (user instanceof OAuth2Authentication) {
-            sessionService.registerUser((OAuth2Authentication)user);
+            sessionService.registerUser((OAuth2Authentication) user);
         }
     }
 }

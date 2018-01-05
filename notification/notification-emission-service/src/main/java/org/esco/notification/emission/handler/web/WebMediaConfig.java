@@ -12,13 +12,15 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+/**
+ * Configuration of Spring STOMP Relay to underlying RabbitMQ.
+ *
+ * This acts as a STOMP proxy and allow browser connections.
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 @Order(50)
 public class WebMediaConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Autowired
     private RabbitProperties rabbitProperties;
 

@@ -14,6 +14,9 @@
     <packaging>jar</packaging>
 
     <name>Notification Event Service</name>
+    <description>Service that listens events from RabbitMQ and REST API and transmit notifications to RabbitMQ
+    </description>
+
 
     <dependencyManagement>
         <dependencies>

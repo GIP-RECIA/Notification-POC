@@ -14,6 +14,9 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Converter for CAS Authentication
+ */
 public class JwkCasUserAuthenticationConverter implements UserAuthenticationConverter {
     final String AUTHORITIES = "isMemberOf";
 

@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Load principal details (authorities, user object ...) from it's username.
+ */
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
@@ -24,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
 
-         if (user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
         }
 

@@ -14,6 +14,7 @@
     <packaging>jar</packaging>
 
     <name>Authentication and Authorization service</name>
+    <description>A minimal OpenID Authorization Server implemented with Spring and JPA.</description>
 
     <dependencyManagement>
         <dependencies>

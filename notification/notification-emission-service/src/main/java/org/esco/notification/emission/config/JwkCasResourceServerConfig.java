@@ -19,6 +19,9 @@ import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStor
 
 import java.lang.reflect.Field;
 
+/**
+ * CAS Resource Server configuration
+ */
 @Configuration
 @EnableResourceServer
 @Profile("jwk-cas")

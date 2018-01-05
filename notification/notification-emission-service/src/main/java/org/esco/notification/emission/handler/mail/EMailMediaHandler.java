@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Email notification handler.
+ */
 @Component
 public class EMailMediaHandler implements MediaHandler {
     Logger log = LoggerFactory.getLogger(EMailMediaHandler.class);
@@ -18,6 +21,7 @@ public class EMailMediaHandler implements MediaHandler {
 
     @Override
     public void performNotification(Notification notification) throws NotificationPerformException {
+        // TODO: Send an email, but throw NotificationPerformException if sending fails.
         log.info(notification.toString());
     }
 }

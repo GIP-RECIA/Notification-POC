@@ -1,5 +1,8 @@
 package org.esco.notification.emission.exception;
 
+/**
+ * Exception thrown when notification.
+ */
 public class NotificationException extends RuntimeException {
     public NotificationException() {
         super();

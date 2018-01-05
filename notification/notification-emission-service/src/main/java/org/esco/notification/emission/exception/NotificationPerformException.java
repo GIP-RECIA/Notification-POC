@@ -1,5 +1,8 @@
 package org.esco.notification.emission.exception;
 
+/**
+ * Exception thrown when notification fails to be performed.
+ */
 public class NotificationPerformException extends NotificationException {
     public NotificationPerformException() {
     }

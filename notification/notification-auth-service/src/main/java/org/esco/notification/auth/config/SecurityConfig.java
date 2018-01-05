@@ -26,9 +26,6 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 
 import java.security.KeyPair;
 
-/**
- * Created by nydiarra on 06/05/17.
- */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

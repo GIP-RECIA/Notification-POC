@@ -2,6 +2,10 @@ package org.esco.notification.emission.handler.web;
 
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
+/**
+ * Allow registration/unregistration of user informations,
+ * and get authentication objects from user UUID or name.
+ */
 public interface WebMediaUserService {
     void registerUser(OAuth2Authentication authentication);
 

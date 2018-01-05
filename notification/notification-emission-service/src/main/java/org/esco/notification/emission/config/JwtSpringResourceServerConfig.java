@@ -15,8 +15,10 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
 
+/**
+ * Spring resource server configuration.
+ */
 @Configuration
 @EnableResourceServer
 @Profile("jwt-spring")

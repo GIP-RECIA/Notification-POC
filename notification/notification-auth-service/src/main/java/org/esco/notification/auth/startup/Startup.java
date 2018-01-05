@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Load default data into database.
+ */
 @Component
 public class Startup
         implements ApplicationListener<ApplicationReadyEvent> {

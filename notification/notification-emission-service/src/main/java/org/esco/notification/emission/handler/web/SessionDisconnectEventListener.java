@@ -8,6 +8,9 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
+/**
+ * When a user disconnect, unregister it from SessionService.
+ */
 @Component
 public class SessionDisconnectEventListener implements ApplicationListener<SessionDisconnectEvent> {
     @Autowired
@@ -18,7 +21,7 @@ public class SessionDisconnectEventListener implements ApplicationListener<Sessi
     public void onApplicationEvent(SessionDisconnectEvent event) {
         Principal user = event.getUser();
         if (user instanceof OAuth2Authentication) {
-            sessionService.unregisterUser((OAuth2Authentication)user);
+            sessionService.unregisterUser((OAuth2Authentication) user);
         }
     }
 }
