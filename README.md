@@ -44,6 +44,36 @@ dc build
 dc up -d
 ```
 
+## Showcase
+
+- Login with an existing account from on [localhost:8088/notification](http://localhost/notification)
+
+- It should then display **Connected** green badge on navbar (It means websocket is up and ready to receive notifications)
+
+- HTTP **POST** to event service to emit an event
+
+POST [localhost:8081/event/emit](localhost:8081/event/emit)
+Content-Type: application/json
+Body (Adjust `userUuids` field to the uuid of connected user):
+
+```json
+{
+  "header": {
+    "type": "test",
+    "userUuids": ["F1000ugr"],
+    "medias": ["web"]
+  },
+  "content": {
+    "title": "Hello World",
+    "message": "First notification"
+  }
+}
+```
+
+- This should display a real time notification on the webapp through established WebSocket.
+
+- When reloading the webapp, the existing notification are loaded through ElasticSearch storage.
+
 ## Services
 
 - Notification Web Application: [http://localhost:8088/notification](http://localhost/notification)
@@ -66,6 +96,8 @@ dc down
 dc down -v  # All data will be lost !
 ```
 
-## Build webapp modules
+## Webapp modules
 
 To build a webapp (random-beans-webapp / notification-webapp), get inside the webapp directory and run `yarn build`.
+
+To run a webapp with developement server, run `yarn dev`
