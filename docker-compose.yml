@@ -16,7 +16,7 @@ services:
       - "rabbitmq:/var/lib/rabbitmq"
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
   auth-service:
-    # Disabled
+    # Disabled (Use CAS instead of Spring Authorization Server)
     entrypoint: /bin/true
     build:
       context: .docker/maven
@@ -33,6 +33,8 @@ services:
     depends_on:
       - auth-db
   auth-db:
+    # Disabled (Use CAS instead of Spring Authorization Server)
+    entrypoint: /bin/true
     image: postgres:9.6
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -48,7 +50,8 @@ services:
       - ".:/usr/src/app"
       - "m2repository:/maven-repository"
     working_dir: "/usr/src/app/notification"
-    command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
+    #command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
+    command: "bash -c 'mvn install; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
     ports:
       - "8081:8081"
     depends_on:
@@ -64,7 +67,8 @@ services:
       - ".:/usr/src/app"
       - "m2repository:/maven-repository"
     working_dir: "/usr/src/app/notification"
-    command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker'"
+    #command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker,jwt-spring,jwt-spring-docker'"
+    command: "bash -c 'mvn install; curl-wait http://cas:11080/cas/oidc/jwks; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker,jwk-cas-docker'"
     ports:
       - "8082:8082"
     depends_on:

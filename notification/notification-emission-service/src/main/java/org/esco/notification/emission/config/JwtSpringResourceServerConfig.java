@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
  */
 @Configuration
 @EnableResourceServer
-@Profile("jwt-spring")
+@Profile({"jwt-spring", "jwt-spring-docker"})
 public class JwtSpringResourceServerConfig implements ResourceServerConfigurer {
     @Autowired
     private ResourceServerProperties resourceServiceProperties;

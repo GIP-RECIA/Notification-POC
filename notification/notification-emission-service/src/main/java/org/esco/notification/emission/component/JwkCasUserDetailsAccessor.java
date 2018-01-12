@@ -11,7 +11,7 @@ import java.util.Map;
  * Get user UUID from OAuth 2 Authentication object received from CAS Authorization Server.
  */
 @Component
-@Profile("jwk-cas")
+@Profile({"jwk-cas", "jwk-cas-docker"})
 public class JwkCasUserDetailsAccessor implements UserDetailsAccessor {
     public String getUserUuid(OAuth2Authentication authentication) {
         AbstractAuthenticationToken userAuthentication = (AbstractAuthenticationToken) authentication.getUserAuthentication();

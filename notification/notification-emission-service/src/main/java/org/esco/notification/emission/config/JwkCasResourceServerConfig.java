@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
  */
 @Configuration
 @EnableResourceServer
-@Profile("jwk-cas")
+@Profile({"jwk-cas", "jwk-cas-docker"})
 public class JwkCasResourceServerConfig implements ResourceServerConfigurer {
     @Autowired
     private ResourceServerProperties resourceServiceProperties;
