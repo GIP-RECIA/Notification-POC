@@ -16,6 +16,8 @@ services:
       - "rabbitmq:/var/lib/rabbitmq"
       - "rabbitmq-plugins:/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.14/plugins"
   auth-service:
+    # Disabled
+    entrypoint: /bin/true
     build:
       context: .docker/maven
       args:
@@ -128,6 +130,17 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+  cas:
+    build:
+      context: cas-esco-overlay/.docker/tomcat
+      args:
+        - GROUP_ID=${GROUP_ID}
+        - USER_ID=${USER_ID}
+    ports:
+      - 11080:11080
+    volumes:
+      - "./cas-esco-overlay/cas/target/cas.war:/usr/local/tomcat/webapps/cas.war:ro"
+      - "./cas-esco-overlay/config/etc/cas:/etc/cas"
 volumes:
   rabbitmq: ~
   rabbitmq-plugins: ~

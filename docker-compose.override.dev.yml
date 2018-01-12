@@ -1,8 +1,11 @@
 version: "2"
 services:
   auth-service:
+    # Disabled (run manually in IDE)
     entrypoint: /bin/true
   event-service:
+    # Disabled (run manually in IDE)
     entrypoint: /bin/true
   emission-service:
+    # Disabled (run manually in IDE)
     entrypoint: /bin/true

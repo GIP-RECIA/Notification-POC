@@ -10,8 +10,8 @@ export default {
   openid: {
     // auth: { username: 'jwt', password: 'jwt' }, // Client ID/Secret
     configuration: {
-      // token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/oauth/token' : '/auth/oauth/token',
-      token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:11080/cas/oidc/accessToken?client_id=jwt' : '/cas/oidc/accessToken?client_id=jwt',
+      // token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/oauth/token' : '/auth/oauth/token', // For Spring Authorization Server
+      token_endpoint: process.env.NODE_ENV === 'development' ? 'http://localhost:11080/cas/oidc/accessToken?client_id=jwt' : '/cas/oidc/accessToken?client_id=jwt', // for CAS OpenID
       end_session_endpoint: null
     }
   }

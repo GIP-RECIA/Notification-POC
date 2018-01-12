@@ -1,0 +1,3 @@
+[submodule "cas-esco-overlay"]
+	path = cas-esco-overlay
+	url = https://github.com/GIP-RECIA/cas-esco-overlay.git

@@ -10,32 +10,21 @@ store and dispatch notifications.
 [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/) are used to setup the 
 technical environment containing all requirements.
 
-#### Optional
-
-You may also install [smartcd](https://github.com/cxreg/smartcd) to automatically register some handy shell aliases 
-when entering into the project directory. This will bring commands for most common operations that goes through docker 
-containers.
-
-If you don't wan't to install SmartCD, it's still possible to load those aliases manually by sourcing `env.sh` file.
-
-```bash
-. ./env.sh  # Load environment aliases manually
-rabbitmqctl --version  # This should display rabbitmqctl version
-```
-
 ## Setting up the environment
 
-* Clone the github repository
+* Clone the github repository including submodules
 
 ```bash
-git clone https://github.com/GIP-RECIA/Notification-POC.git
+git clone --recursive https://github.com/GIP-RECIA/Notification-POC.git
 ```
 
-* Source enviromnent file (only is SmartCD is not installed)
+* Source enviromnent file
 
 ```bash
 . ./env.sh
 ```
+
+* Build CAS Overlay from `cas-esco-overlay` directory (see [cas-esco-overlay/README.md](./cas-esco-overlay/README.md))
 
 * Download required docker images
 
@@ -76,3 +65,7 @@ dc down
 ```bash
 dc down -v  # All data will be lost !
 ```
+
+## Build webapp modules
+
+To build a webapp (random-beans-webapp / notification-webapp), get inside the webapp directory and run `yarn build`.
