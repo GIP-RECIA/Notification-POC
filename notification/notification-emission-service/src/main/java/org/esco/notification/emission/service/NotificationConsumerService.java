@@ -4,7 +4,7 @@ import org.esco.notification.data.Notification;
 import org.esco.notification.emission.exception.NotificationException;
 
 /**
- * Consume notification comming from RabbitMQ listener.
+ * Consume {@link Notification} comming from RabbitMQ listener.
  */
 public interface NotificationConsumerService {
     void consume(Notification notification) throws NotificationException;

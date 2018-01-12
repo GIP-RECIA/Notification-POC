@@ -4,7 +4,7 @@ import org.esco.notification.data.Notification;
 import org.esco.notification.event.exception.NotificationEmitException;
 
 /**
- * Validate and emit notification
+ * Emit {@link Notification}
  */
 public interface NotificationEmitterService {
     void emit(Notification notification) throws NotificationEmitException;

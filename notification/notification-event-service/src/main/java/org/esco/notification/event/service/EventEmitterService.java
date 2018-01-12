@@ -5,7 +5,7 @@ import org.esco.notification.event.exception.EventEmitException;
 import org.esco.notification.event.exception.EventValidateException;
 
 /**
- * Validate and emit event
+ * Validate and emit {@link Event}
  */
 public interface EventEmitterService {
 

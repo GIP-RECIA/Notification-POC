@@ -1,14 +1,19 @@
 package org.esco.notification.event.service;
 
 import org.esco.notification.data.Event;
+import org.esco.notification.data.EventHeader;
 import org.esco.notification.data.UserEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Dumb implementation that only use {@link EventHeader#getUserUuids()}
+ * and {@link EventHeader#getMedias()} to return matching user uuids and medias.
+ */
 @Service
-public class FowardingRoutingService implements RoutingService {
+public class RoutingServiceImpl implements RoutingService {
     @Override
     public List<String> getMatchingUsers(Event event) {
         List<String> userUuids = new ArrayList<>();

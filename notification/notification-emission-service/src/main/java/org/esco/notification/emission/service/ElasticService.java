@@ -7,7 +7,7 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Search for data stored in elastic search.
+ * Search for existing {@link Notification} in ElasticSearch data store.
  */
 public interface ElasticService {
     List<Notification> findNotifications(Principal principal, String... medias) throws IOException;

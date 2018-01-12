@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST API to emit events
+ * REST API to emit events.
  */
 @RestController
 @RequestMapping("/event")

@@ -4,7 +4,7 @@ import org.esco.notification.data.Event;
 import org.esco.notification.event.exception.EventException;
 
 /**
- * Consume event and produce notification
+ * Consume {@link Event}
  */
 public interface EventConsumerService {
     void consume(Event event) throws EventException;

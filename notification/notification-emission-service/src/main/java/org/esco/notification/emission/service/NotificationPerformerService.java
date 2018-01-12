@@ -4,7 +4,7 @@ import org.esco.notification.data.Notification;
 import org.esco.notification.emission.exception.NotificationPerformException;
 
 /**
- * Perform notification.
+ * Perform effective {@link Notification}.
  */
 public interface NotificationPerformerService {
     void performNotification(Notification notification) throws NotificationPerformException;

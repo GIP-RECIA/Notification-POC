@@ -6,7 +6,7 @@ import org.esco.notification.data.Notification;
 import java.util.Date;
 
 /**
- * Convert notification to emission.
+ * Convert {@link Notification} to {@link Emission}.
  */
 public interface NotificationObjectConverter {
     Emission toEmission(Notification notification, Date date);
