@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * Technical header of {@link Emission}.
+ *
+ * It contains data that should not be displayed to end-user.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

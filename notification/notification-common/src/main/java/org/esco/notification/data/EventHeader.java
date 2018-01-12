@@ -5,6 +5,11 @@ import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Technical header of {@link Event}.
+ *
+ * It contains data that should not be displayed to end-user.
+ */
 @Data
 public class EventHeader {
     private String type;
