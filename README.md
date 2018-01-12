@@ -78,8 +78,6 @@ Body (Adjust `userUuids` field to the uuid of connected user):
 
 - Notification Web Application: [http://localhost:8088/notification](http://localhost/notification)
 
-- Random Beans Web Application: [http://localhost:8088/random-beans](http://localhost/random-beans)
-
 - RabbitMQ Management Interface: [http://localhost:8088/rabbitmq/admin](http://localhost/rabbitmq/admin)
 
 - Kibana: [http://localhost:5601](http://localhost:5061)
@@ -95,9 +93,3 @@ dc down
 ```bash
 dc down -v  # All data will be lost !
 ```
-
-## Webapp modules
-
-To build a webapp (random-beans-webapp / notification-webapp), get inside the webapp directory and run `yarn build`.
-
-To run a webapp with developement server, run `yarn dev`

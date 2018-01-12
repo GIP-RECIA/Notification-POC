@@ -163,3 +163,61 @@ on registrations.
 - **CAS**
 
 **Role**: Act as an OpenID server to authenticate users.
+
+### notification project modules
+
+#### auth-service
+
+- This is not running with default docker configuration, but can act as a simple Spring replacement of CAS OpenID service.
+
+#### common
+
+- Contains DTO of objects used by the system. It requires [Lombok](https://projectlombok.org/).
+
+#### event-service
+
+- Features a endpoint to dispatch events from REST API.
+
+POST [localhost:8081/event/emit](localhost:8081/event/emit)
+Content-Type: application/json
+Body (Adjust `userUuids` field to the uuid of connected user):
+
+```json
+{
+  "header": {
+    "type": "test",
+    "userUuids": ["F1000ugr"],
+    "medias": ["web"]
+  },
+  "content": {
+    "title": "Hello World",
+    "message": "First notification"
+  }
+}
+```
+
+- Listen to events comming from RabbitMQ, and Dispatch them as Notification objects. Currently, it doesn't support any 
+configuration and forwards to users and media defined in `userUuids` and `medias` fields of Event object.
+
+- It currently requires no authentication.
+
+#### emission-service
+
+- Listen for dispatched Notification and performs them.
+
+- Supports `web` media handler to display live notifications on `webapp` module.
+
+- Supports dummy `mail` media handler that only display event content in logs.
+
+#### performance-consumer
+
+- Can be used to test performance of many WebSockets.
+
+#### webapp
+
+- VueJS web application that supports OpenID Connect to CAS and notifications through STOMP/WebSocket from 
+emission-service.
+
+- To build the webapp, get inside the directory and run `yarn build`.
+
+- To run the webapp with development server, run `yarn dev`
