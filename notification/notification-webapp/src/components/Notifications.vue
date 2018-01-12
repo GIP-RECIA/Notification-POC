@@ -81,8 +81,7 @@
         return this.$router.push({name: 'Login'})
       }
       this.refresh()
-      let client = rabbitMQ.connect(this, this.auth)
-      console.log(client)
+      rabbitMQ.connect(this, this.auth)
     },
     methods: {
       ...mapMutations('stomp', ['doConnect', 'doWillConnect', 'doDisconnect', 'doError']),

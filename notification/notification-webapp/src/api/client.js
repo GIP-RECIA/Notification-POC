@@ -30,7 +30,6 @@ const error401ResponseHandler = (error) => {
     }).catch((error) => {
       console.log('JWT Refresh Failed !')
       if (error.response.data.error === 'invalid_grant') {
-        console.log(error.response.data)
         store.commit('auth/setAuthPayload', null)
       }
       throw error
