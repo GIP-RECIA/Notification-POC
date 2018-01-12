@@ -136,7 +136,7 @@ services:
       - elasticsearch
   cas:
     build:
-      context: cas-esco-overlay/.docker/tomcat
+      context: .docker/cas
       args:
         - GROUP_ID=${GROUP_ID}
         - USER_ID=${USER_ID}
