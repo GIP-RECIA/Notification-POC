@@ -24,7 +24,7 @@ git clone --recursive https://github.com/GIP-RECIA/Notification-POC.git
 . ./env.sh
 ```
 
-* Build CAS Overlay from `cas-esco-overlay` directory (see [cas-esco-overlay/README.md](./cas-esco-overlay/README.md))
+* Build CAS Overlay from `cas-esco-overlay` directory (see [GIP-RECIA/cas-esco-overlay/README.md](https://github.com/GIP-RECIA/cas-esco-overlay/blob/master/README.md))
 
 * Download required docker images
 
