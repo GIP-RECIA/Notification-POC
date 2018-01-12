@@ -22,21 +22,28 @@ Architecture
 
 An **Event** is the raw source of data that is emitted from any application, at any time.
 
-It's NOT related to which user will receive a notification nor which media will be used.
+```json
+{
+  header: {
+    type: "...", // Type of the event
+    priority: "...", // Priority of the event (HIGH or NORMAL)
+    groupUuids: [...], // Groups UUIDs to notify
+    userUuids: [...], // User UUIDs to notify
+    medias: [...], // Media to use (web, mail, ...)
+  },
+  content: {
+    title: "...",
+    message: "...",
+    date: "...",
+    properties: {
+       ... // Custom additional key/value properties
+    }
+  }
+}
+```
 
-| Property  | Type | Description |
-| ------------- | ------------- | --- |
-| priority | Enum\<EventPriority\> | Priority of this event |
-| type | String | Type of this event |
-| groupUuids | List\<String\> | Group uuids that should get notification |
-| userUuids | List\<String\> | User uuids that should get notification |
-| medias | List\<String\> | Media to use for notification |
-| title | String | Title of the event |
-| message | String | Message content of the event |
-| date | Date | Date of the event |
-| scheduleDate | Date | Date when notifications should occur |
-| expiryDate | Date | Date after when notifications should not occur |
-| properties | Map\<String, String\> | Other custom properties
+Event content is transmit through the processing chain and it's structure will be kept in other objects. It contains
+data that should be displayed to the user at the end of the processing.
 
 #### UserEvent
 
@@ -46,15 +53,23 @@ It's related to a single user, but NOT related to which media will be used.
 
 There are commonly many **UserEvent** instances generated for each **Event** instance.
 
-
-| Property  | Type | Description |
-| ------------- | ------------- | ------------- |
-| event  | Event | Source event
-| userUid  | String | User unique identifier
+```json
+{
+  header: {
+    event: {
+      ... // Event.header content
+    },
+    userUuid: "..." // User uuid to dispatch event to.
+  },
+  content: {
+    ... // Event.content content
+  }
+}
+```
 
 #### Notification
 
-A **Notification** is one or many **UserEvent** instances that should be sent through a specific media type 
+A **Notification** is one **UserEvent** instance that should be sent through a specific media type 
 (Mail, SMS, Web Portal) to notify the user.
 
 Notification instance may be build and sent in real-time when **UserEvent** are processed (High priority alerts, One 
@@ -63,10 +78,19 @@ Notification per UserEvent), but may also be delayed to digest many **UserEvent*
 
 There are commonly one or more **Notification** instance generated for each **UserEvent** instance.
 
-| Property  | Type | Description |
-| ------------- | ------------- | ------------- |
-| userEvent  | List\<UserEvents\> | Source user event to notify. Can be a digest of many event (list)
-| mediaType  | String | Which type of media will the notification be emitted with |
+```json
+{
+  header: {
+    userEvent: {
+      ... // UserEvent.header content
+    },
+    media: "..." // Media name to dispatch event to.
+  },
+  content: {
+    ... // Event.content content
+  }
+}
+```
 
 #### Emission
 
@@ -75,11 +99,21 @@ An **Emission** is an attempt to send one Notification over it's specified media
 There is commonly one **Emission** instance per Notification instance, but there may be more in case of errors (one instance
 per retry attempt)
 
-| Property  | Type |
-| ------------- | ------------- |
-| notification  | Notification  |
-| error  | boolean |
-| message | String |
+```json
+{
+  header: {
+    notification: {
+      ... // Notification.header content
+    },
+    media: "..." // Media uuid to dispatch event to.
+  },
+  content: {
+    date: "...",
+    failed: false/true,
+    message: "..."
+  }
+}
+```
 
 ### Software components
 
@@ -125,3 +159,7 @@ on registrations.
 **RabbitMQ Protocol**: AMQP + STOMP over WebSocket  
 **Type**: Service  
 **Role**: Effectively sends notifications to various media.
+
+- **CAS**
+
+**Role**: Act as an OpenID server to authenticate users.
