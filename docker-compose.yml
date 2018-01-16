@@ -137,9 +137,9 @@ services:
   cas:
     build:
       context: .docker/cas
-      args:
-        - GROUP_ID=${GROUP_ID}
-        - USER_ID=${USER_ID}
+      #args:
+      #  - GROUP_ID=${GROUP_ID}
+      #  - USER_ID=${USER_ID}
     ports:
       - 11080:11080
     volumes:
