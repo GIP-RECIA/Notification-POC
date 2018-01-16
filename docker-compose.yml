@@ -25,7 +25,7 @@ services:
         - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/maven-repository"
+      - "auth-service-m2repository:/maven-repository"
     working_dir: "/usr/src/app/notification"
     command: "bash -c 'mvn install; mvn -pl notification-auth-service spring-boot:run -Drun.profiles=docker'"
     ports:
@@ -48,7 +48,7 @@ services:
         - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/maven-repository"
+      - "event-service-m2repository:/maven-repository"
     working_dir: "/usr/src/app/notification"
     #command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
     command: "bash -c 'mvn install; mvn -pl notification-event-service spring-boot:run -Drun.profiles=docker'"
@@ -65,7 +65,7 @@ services:
         - USER_ID=${USER_ID}
     volumes:
       - ".:/usr/src/app"
-      - "m2repository:/maven-repository"
+      - "emission-service-m2repository:/maven-repository"
     working_dir: "/usr/src/app/notification"
     #command: "bash -c 'mvn install; curl-wait http://auth-service:8080/oauth/token_key; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker,jwt-spring,jwt-spring-docker'"
     command: "bash -c 'mvn install; curl-wait http://cas:11080/cas/oidc/jwks; mvn -pl notification-emission-service spring-boot:run -Drun.profiles=docker,jwk-cas-docker'"
@@ -150,4 +150,7 @@ volumes:
   rabbitmq-plugins: ~
   node-cache: ~
   elasticsearch: ~
-  m2repository: ~
+  auth-service-m2repository: ~
+  event-service-m2repository: ~
+  emission-service-m2repository: ~
+
