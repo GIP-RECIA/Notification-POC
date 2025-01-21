@@ -19,7 +19,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
 
-        <amqp.client.version>5.0.0</amqp.client.version>
+        <amqp.client.version>5.18.0</amqp.client.version>
     </properties>
 
     <modules>
@@ -69,7 +69,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.13</version>
             </dependency>
 
             <dependency>
@@ -81,7 +81,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

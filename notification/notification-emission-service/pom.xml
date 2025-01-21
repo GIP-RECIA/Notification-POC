@@ -17,7 +17,7 @@
     <description>Service that listens events from RabbitMQ and REST API</description>
 
     <properties>
-        <elasticsearch.version>6.0.1</elasticsearch.version>
+        <elasticsearch.version>7.17.23</elasticsearch.version>
     </properties>
 
     <dependencyManagement>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.17.Final</version>
+            <version>4.1.42.Final</version>
         </dependency>
 
         <dependency>
