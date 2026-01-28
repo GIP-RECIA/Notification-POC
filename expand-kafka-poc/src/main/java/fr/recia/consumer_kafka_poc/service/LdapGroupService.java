@@ -1,13 +1,17 @@
 package fr.recia.consumer_kafka_poc.service;
 
+import fr.recia.consumer_kafka_poc.configuration.LdapRequestProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -15,42 +19,41 @@ import java.util.List;
 public class LdapGroupService {
 
     private final LdapTemplate ldapTemplate;
+    private final LdapRequestProperties ldapRequestProperties;
 
-    public LdapGroupService(LdapTemplate ldapTemplate) {
+    public LdapGroupService(LdapTemplate ldapTemplate, LdapRequestProperties ldapRequestProperties) {
         this.ldapTemplate = ldapTemplate;
+        this.ldapRequestProperties = ldapRequestProperties;
     }
 
     public List<String> getGroupMembers(String groupCn) {
-        String base = "ou=groups";
-        String filter = "(&(objectClass=groupOfNames)(cn=" + groupCn + "))";
-        log.trace("Filtre utilisé pour récupérer les utilisateurs du groupe : {}", filter);
-        List<List<String>> rawResults = ldapTemplate.search(
-                base,
-                filter,
-                (AttributesMapper<List<String>>) attrs -> {
-                    List<String> members = new ArrayList<>();
-                    Attribute memberAttr = attrs.get("hasMember");
-                    if (memberAttr != null) {
-                        NamingEnumeration<?> allMembers = memberAttr.getAll();
-                        while (allMembers.hasMore()) {
-                            Object obj = allMembers.next();
-                            members.add(obj.toString());
-                        }
-                    }
-                    return members;
-                }
-        );
-        List<String> membersFlattened = new ArrayList<>();
-        for (List<String> sublist : rawResults) {
-            for(String elem : sublist){
-                // TODO : ne garder que les users, pas les groupes -> améliorer le test
-                if(elem.length()==8 && elem.startsWith("F")){
-                    membersFlattened.add(elem);
-                }
+
+        String filter = MessageFormat.format(ldapRequestProperties.getFilter(), groupCn);
+        log.trace("Filtre LDAP utilisé : {}", filter);
+
+        return ldapTemplate.search(ldapRequestProperties.getBranchBase(), filter, this::mapMembers)
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(this::isUser)
+                .toList();
+    }
+
+    private List<String> mapMembers(Attributes attrs) throws NamingException {
+        List<String> members = new ArrayList<>();
+        Attribute memberAttr = attrs.get(ldapRequestProperties.getRetrievedAttribute());
+        if (memberAttr != null) {
+            NamingEnumeration<?> all = memberAttr.getAll();
+            while (all.hasMore()) {
+                members.add(all.next().toString());
             }
         }
-        return membersFlattened;
+        return members;
+    }
+
+    private boolean isUser(String value) {
+        return value.length() == 8 && (value.startsWith("F") || value.startsWith("f"));
     }
 }
+
 
 
