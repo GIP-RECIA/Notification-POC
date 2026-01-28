@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: routing-kafka-poc
+
+logging:
+  file:
+    path: logs
