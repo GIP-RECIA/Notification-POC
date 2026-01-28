@@ -1,0 +1,47 @@
+logging:
+  file:
+    path: logs
+
+spring:
+  application:
+    name: consumer-mail-poc
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    consumer:
+      group-id: mail-consumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="mail-consumer"
+          password="l7j9FTRaLLcIWWEL";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="mail-consumer"
+          password="l7j9FTRaLLcIWWEL";
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=esco-centre,dc=fr
+    username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+    password: admin
+mail:
+  smtp:
+    host: localhost
+    port: 1025
+    username: ""
+    password: ""
+    auth: false
+    starttls: false
+
