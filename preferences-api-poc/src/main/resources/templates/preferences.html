@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User preferences</title>
+  <link rel="stylesheet" th:href="@{/css/preferences.css}">
+</head>
+<body>
+
+<form id="prefsForm" method="POST">
+
+  <h1 th:text="${userId}"/>
+
+  <fieldset>
+    <legend>Configuration globale</legend>
+    <label><input type="checkbox" th:field="*{prefs.global.ws}"> WS</label>
+    <label><input type="checkbox" th:field="*{prefs.global.mail}"> Mail</label>
+    <label><input type="checkbox" th:field="*{prefs.global.push}"> Push</label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Configuration par service</legend>
+
+    <div th:each="servicePref : ${prefs.services}" class="service">
+      <h3 th:text="${servicePref.key}"></h3>
+
+      <label>
+        <input type="checkbox"
+               th:field="*{prefs.services[__${servicePref.key}__].enabled}"
+               class="service-enabled">
+        Activer les notifications sur ce service ?
+      </label>
+
+      <label class="label-override">
+        <input type="checkbox"
+               th:field="*{prefs.services[__${servicePref.key}__].override}"
+               class="service-override">
+        Surcharger la configuration globale ?
+      </label>
+
+      <div th:each="priority : ${servicePref.value.priorities}" class="priority"
+           th:data-service="${servicePref.key}">
+        <h4 th:text="${priority.key}" class="priority-label"></h4>
+        <label>
+          <input type="checkbox"
+                 th:field="*{prefs.services[__${servicePref.key}__].priorities[__${priority.key}__].ws}"
+                 class="priority-checkbox">
+          WS
+        </label>
+        <label>
+          <input type="checkbox"
+                 th:field="*{prefs.services[__${servicePref.key}__].priorities[__${priority.key}__].mail}"
+                 class="priority-checkbox">
+          Mail
+        </label>
+        <label>
+          <input type="checkbox"
+                 th:field="*{prefs.services[__${servicePref.key}__].priorities[__${priority.key}__].push}"
+                 class="priority-checkbox">
+          Push
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <button type="submit">Save</button>
+</form>
+
+<script th:src="@{/js/preferences.js}"></script>
+
+</body>
+</html>

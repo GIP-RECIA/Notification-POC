@@ -1,0 +1,36 @@
+server:
+  port: 8078
+
+logging:
+  file:
+    path: logs
+
+soffit:
+  jwt:
+    signature-key: KEYKEYKEYKEYKEYKEYKEYKEYKEYKEYKEY
+
+spring:
+  application:
+    name: preferences-api-poc
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="preferences-streams"
+          password="wJ2ngZuYh1vRZ642";
+
+prefs:
+  notification-services:
+    - GLC
+    - GROUPER
+    - DEMO-SERVICE
+  default-channels:
+    ws: true
+    mail: false
+    push: false
