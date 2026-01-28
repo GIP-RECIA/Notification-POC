@@ -1,0 +1,44 @@
+server:
+  port: 8076
+
+logging:
+  file:
+    path: logs
+
+soffit:
+  jwt:
+    signature-key: KEYKEYKEYKEYKEYKEYKEYKEYKEYKEYKEY
+
+spring:
+  application:
+    name: consumer-kafka-poc
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    consumer:
+      group-id: web-consumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="web-consumer"
+          password="ibBFcFQR3WAbv9Hi";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="web-consumer"
+          password="ibBFcFQR3WAbv9Hi";
+  data:
+    redis:
+      host: localhost
+      port: 6379
