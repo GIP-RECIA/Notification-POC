@@ -25,6 +25,17 @@ spring:
           username="preferences-streams"
           password="wJ2ngZuYh1vRZ642";
 
+streams:
+  bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+  application-id: preferences-ap
+  replication-factor: 3
+  security-protocol: SASL_PLAINTEXT
+  sasl-mechanism: PLAIN
+  jaas-config: >
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="preferences-streams"
+    password="wJ2ngZuYh1vRZ642";
+
 prefs:
   notification-services:
     - GLC

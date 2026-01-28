@@ -5,3 +5,14 @@ spring:
 logging:
   file:
     path: logs
+
+streams:
+  bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+  application-id: basic-router
+  replication-factor: 3
+  security-protocol: SASL_PLAINTEXT
+  sasl-mechanism: PLAIN
+  jaas-config: >
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="router-streams"
+    password="VtS1g4Rru56xF6ff";
