@@ -10,6 +10,7 @@ Java :
 - Spring Boot
 - Model Kafka
 - Spring Boot Kafka
+- Spring Boot Cache et Caffeine
 - Jackson
 - Spring Boot Data Ldap
 - Jakarta Mail

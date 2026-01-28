@@ -36,6 +36,11 @@ spring:
     base: dc=esco-centre,dc=fr
     username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
     password: admin
+  cache:
+    type: caffeine
+    cache-names: ldap-person-mail
+    caffeine:
+      spec: maximumSize=50_000,expireAfterWrite=8h
 
 request:
   branch-base: ou=people

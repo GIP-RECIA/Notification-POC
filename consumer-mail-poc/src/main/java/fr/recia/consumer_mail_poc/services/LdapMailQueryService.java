@@ -2,6 +2,7 @@ package fr.recia.consumer_mail_poc.services;
 
 import fr.recia.consumer_mail_poc.configuration.LdapRequestProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class LdapMailQueryService {
         this.ldapRequestProperties = ldapRequestProperties;
     }
 
+    @Cacheable(cacheNames = "ldap-person-mail", key = "#uid")
     public Optional<String> getPersonMail(String uid) {
 
         String filter = MessageFormat.format(ldapRequestProperties.getFilter(), uid);
