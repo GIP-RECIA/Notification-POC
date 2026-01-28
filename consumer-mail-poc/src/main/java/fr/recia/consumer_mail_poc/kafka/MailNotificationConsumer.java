@@ -13,6 +13,8 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.backoff.FixedBackOff;
 
+import java.util.Optional;
+
 @Component
 @Slf4j
 public class MailNotificationConsumer {
@@ -37,11 +39,11 @@ public class MailNotificationConsumer {
     @KafkaListener(topics = "notifications.mail", groupId = "mail-consumer")
     public void consume(RoutedNotification routedNotification) {
         log.debug("Notification mail reçue : {}", routedNotification);
-        String mail_to = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
-        if(mail_to == null){
+        Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
+        if(mailTo.isEmpty()){
             log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
         } else {
-            mailSendingService.sendTextMail(MAIL_FROM, mail_to, routedNotification.getNotification().getContent().getTitle(),
+            mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
                     routedNotification.getNotification().getContent().getMessage());
         }
     }

@@ -36,6 +36,12 @@ spring:
     base: dc=esco-centre,dc=fr
     username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
     password: admin
+
+request:
+  branch-base: ou=people
+  retrieved-attribute: mail
+  filter: "(uid={0})"
+
 mail:
   smtp:
     host: localhost
