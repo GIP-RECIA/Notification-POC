@@ -1,0 +1,31 @@
+server:
+  port: 8079
+
+logging:
+  file:
+    path: logs
+
+spring:
+  application:
+    name: producer-api-poc
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      max.block.ms: 5000
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="notif-producer"
+        password="FhDnnbK1vYVMeFqC";
+
+security:
+  api-keys:
+    GLC: VRgpwzuVYurP2q9PkVU9QFvfUrFplNf0
+    GROUPER: jD60tftTJemjfldxdf4d19CQS82XZN9I
+    DEMO-SERVICE: wtxcI80Xn2qS7yajJh6R74rkoCSbSstV
+  allowed-ips:
+    - 127.0.0.1/24
