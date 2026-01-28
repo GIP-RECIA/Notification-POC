@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Notification</title>
+</head>
+<body>
+
+<h1>Envoi de notification</h1>
+
+<form method="post" action="/send">
+
+  <div>
+    <label>Target : </label>
+    <select name="target">
+      <option value="user">User</option>
+      <option value="group">Group</option>
+    </select>
+  </div>
+
+  <div>
+    <label>ID : </label>
+    <input type="text" name="id" value="AAA1"/>
+  </div>
+
+  <div>
+    <label>Titre : </label>
+    <input type="text" name="title" value="Hello"/>
+  </div>
+
+  <div>
+    <label>Message : </label>
+    <input type="text" name="message" value="Ceci est une notification"/>
+  </div>
+
+  <button type="submit">Envoyer</button>
+</form>
+
+<p th:if="${param.sent}">Notification envoyée</p>
+
+</body>
+</html>
