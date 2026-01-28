@@ -11,6 +11,8 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.KeyValueStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
@@ -24,9 +26,9 @@ import java.util.UUID;
 @Configuration
 public class KafkaStreamsConfig {
 
-    public static final String STORE_NAME = "user-prefs-store-v2";
-    public static final String TOPIC_NAME = "user.preferences-v2";
-    public static final String APPLICATION_ID = "preferences-api-v2";
+    public static final String STORE_NAME = "user-prefs-store";
+    public static final String TOPIC_NAME = "user.preferences";
+    public static final String APPLICATION_ID = "preferences-api";
 
     @Bean
     public GlobalKTable<String, UserPreferences> preferencesTable(StreamsBuilder builder, ObjectMapper objectMapper) {
@@ -50,7 +52,7 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         // TODO : Qu'est ce qui se passe quand le router redémarre en condition de prod ?
         // -> c'est côté client que c'est stocké donc tant qu'on en a qu'un par machine donc on pourra enlever la ligne
-        props.put(StreamsConfig.STATE_DIR_CONFIG, "/tmp/kafka-streams/basic-router-" + UUID.randomUUID());
+        props.put(StreamsConfig.STATE_DIR_CONFIG, "/tmp/kafka-streams/preferences-api-" + UUID.randomUUID());
         props.put(StreamsConfig.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
         props.put("sasl.mechanism", "PLAIN");
         props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"preferences-streams\" password=\"wJ2ngZuYh1vRZ642\";");

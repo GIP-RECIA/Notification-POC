@@ -123,7 +123,7 @@ public class BasicRouter {
         });
 
         // KTable pour récupérer les préferences utilisateur
-        KTable<String, UserPreferences> preferences = builder.table("user.preferences-v2", Consumed.with(Serdes.String(), prefsSerde));
+        KTable<String, UserPreferences> preferences = builder.table("user.preferences", Consumed.with(Serdes.String(), prefsSerde));
         preferences.toStream().peek((key, prefs) -> {
             log.trace("Nouvelle préférence : key={}, value={}", key, prefs);
         });
