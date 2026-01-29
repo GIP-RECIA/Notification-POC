@@ -1,6 +1,7 @@
 package fr.recia.event_rest_client_kafka_poc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.model_kafka_poc.model.Channel;
 import fr.recia.model_kafka_poc.model.Content;
 import fr.recia.model_kafka_poc.model.EventHeader;
 import fr.recia.model_kafka_poc.model.Priority;
@@ -15,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class HttpNotificationClient {
@@ -45,55 +47,39 @@ public class HttpNotificationClient {
         this.maxRetries = maxRetries;
     }
 
-    public void sendLowPriorityToUser(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.LOW, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.USER, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendLowPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
+        sendNotification(title, message, link, userId, channels, Priority.LOW, TargetType.USER);
     }
 
-    public void sendNormalPriorityToUser(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.NORMAL, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.USER, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendNormalPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
+        sendNotification(title, message, link, userId, channels, Priority.NORMAL, TargetType.USER);
     }
 
-    public void sendHighPriorityToUser(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.HIGH, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.USER, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendHighPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
+        sendNotification(title, message, link, userId, channels, Priority.HIGH, TargetType.USER);
     }
 
-    public void sendLowPriorityToGroup(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.LOW, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.GROUP, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendLowPriorityToGroup(String title, String message, String link, String groupId, List<Channel> channels) {
+        sendNotification(title, message, link, groupId, channels, Priority.LOW, TargetType.GROUP);
     }
 
-    public void sendNormalPriorityToGroup(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.NORMAL, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.GROUP, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendNormalPriorityToGroup(String title, String message, String link, String groupId, List<Channel> channels) {
+        sendNotification(title, message, link, groupId, channels, Priority.NORMAL, TargetType.GROUP);
     }
 
-    public void sendHighPriorityToGroup(String title, String message, String userId) {
-        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), Priority.HIGH, this.service, LocalDateTime.now().toString());
-        Content eventContent = new Content(title, message);
-        Target eventTarget = new Target(TargetType.GROUP, Collections.singletonList(userId));
-        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
-        send(serviceEvent);
+    public void sendHighPriorityToGroup(String title, String message, String link, String groupId, List<Channel> channels) {
+        sendNotification(title, message, link, groupId, channels, Priority.HIGH, TargetType.GROUP);
     }
 
-    private void send(ServiceEvent payload) {
+    public void sendNotification(String title, String message, String link, String userId, List<Channel> channels, Priority priority, TargetType targetType){
+        EventHeader eventHeader = new EventHeader(UUID.randomUUID().toString(), priority, this.service, channels, LocalDateTime.now().toString());
+        Content eventContent = new Content(title, message, link);
+        Target eventTarget = new Target(targetType, Collections.singletonList(userId));
+        ServiceEvent serviceEvent = new ServiceEvent(eventHeader, eventContent, eventTarget);
+        sendRequest(serviceEvent);
+    }
+
+    private void sendRequest(ServiceEvent payload) {
         try {
             String json = objectMapper.writeValueAsString(payload);
             int current_try = 0;

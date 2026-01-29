@@ -1,6 +1,7 @@
 package fr.recia.routing_kafka_poc.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.model_kafka_poc.model.Channel;
 import fr.recia.model_kafka_poc.model.ChannelPreferences;
 import fr.recia.model_kafka_poc.model.Notification;
 import fr.recia.model_kafka_poc.model.NotificationSerde;
@@ -24,15 +25,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Component
 @Slf4j
 public class BasicRouter {
 
-    private static final String WS_TOPIC = "notifications.web";
-    private static final String MAIL_TOPIC = "notifications.mail";
-    private static final String PUSH_TOPIC = "notifications.push";
+    private static final Map<Channel, String> channelToTopic = Map.of(Channel.WEB, "notifications.web",
+            Channel.MAIL, "notifications.mail", Channel.PUSH, "notifications.push");
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -54,27 +55,40 @@ public class BasicRouter {
         return new RoutedNotificationSerde(objectMapper);
     }
 
-    private Set<String> channelsFromPrefs(ChannelPreferences prefs) {
-        Set<String> channels = new HashSet<>();
+    private Set<Channel> channelsFromPrefs(ChannelPreferences prefs) {
+        Set<Channel> channels = new HashSet<>();
         if (prefs.isWs()) {
-            channels.add(WS_TOPIC);
+            channels.add(Channel.WEB);
         }
         if (prefs.isMail()) {
-            channels.add(MAIL_TOPIC);
+            channels.add(Channel.MAIL);
         }
         if (prefs.isPush()) {
-            channels.add(PUSH_TOPIC);
+            channels.add(Channel.PUSH);
         }
         return channels;
     }
 
+    // Regarde si les channels demandés par l'utilisateur sont aussi ceux proposés par le service
+    private Set<String> resolveChannels(Notification notif, UserPreferences prefs){
+        Set<Channel> channels = resolveChannelsInternal(notif, prefs);
+        log.trace("Resolving output topics for notification {} and preferences {}", notif, prefs);
+        Set<String> outTopics = new HashSet<>();
+        for(Channel channel : channels){
+            if(notif.getHeader().getEventHeader().getChannels().contains(channel)){
+                outTopics.add(channelToTopic.get(channel));
+            }
+        }
+        return outTopics;
+    }
 
-    private Set<String> resolveChannels(Notification notif, UserPreferences prefs) {
+
+    private Set<Channel> resolveChannelsInternal(Notification notif, UserPreferences prefs) {
         log.trace("Resolving output channels for notification {} and preferences {}", notif, prefs);
         // 1. Aucune préférence -> comportement par défaut
         if (prefs == null) {
             log.trace("No preferences are set -> putting notification {} in default topic", notif);
-            return Set.of(WS_TOPIC);
+            return Set.of(Channel.WEB);
         }
 
         String service = notif.getHeader().getEventHeader().getService();
@@ -92,14 +106,14 @@ public class BasicRouter {
                 // Si le service est activé, on regarde s'il surcharge la configuration globale
                 // Si non, on fait en fonction de la configuration globale
                 if(!sp.isOverride()){
-                    Set<String> channelsToSend = channelsFromPrefs(prefs.getGlobal());
+                    Set<Channel> channelsToSend = channelsFromPrefs(prefs.getGlobal());
                     log.trace("Service is enabled but does not override global configuration -> notification {} will be sent to topics {}", notif, channelsToSend);
                     return channelsToSend;
                 }
                 // Si oui, on regarde ses règles en fonction de la priorité de la notification
                 ChannelPreferences cp = sp.getPriorities().get(priority);
                 if (cp != null) {
-                    Set<String> channelsToSend = channelsFromPrefs(cp);
+                    Set<Channel> channelsToSend = channelsFromPrefs(cp);
                     log.trace("Service is enabled and overrides global configuration -> notification {} will be sent to topics {}", notif, channelsToSend);
                     return channelsToSend;
                 }
@@ -107,7 +121,7 @@ public class BasicRouter {
         }
 
         // 3. Si on a pas de préférences par service alors on regarde les préférences globales
-        Set<String> channelsToSend = channelsFromPrefs(prefs.getGlobal());
+        Set<Channel> channelsToSend = channelsFromPrefs(prefs.getGlobal());
         log.trace("Service is unknown to user preferences -> using global configuration notification {} will be sent to topics {}", notif, channelsToSend);
         return channelsToSend;
     }

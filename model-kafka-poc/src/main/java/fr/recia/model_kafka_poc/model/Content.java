@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class Content {
     private String title;
     private String message;
+    private String link;
 }

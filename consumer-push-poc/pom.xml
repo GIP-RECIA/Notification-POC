@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>fr.recia</groupId>
 			<artifactId>model-kafka-poc</artifactId>
-			<version>1.0.20-SNAPSHOT</version>
+			<version>1.0.21-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
