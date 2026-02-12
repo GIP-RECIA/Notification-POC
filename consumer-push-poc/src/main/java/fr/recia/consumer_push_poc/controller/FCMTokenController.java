@@ -1,6 +1,7 @@
 package fr.recia.consumer_push_poc.controller;
 
 import fr.recia.consumer_push_poc.model.TokenDto;
+import fr.recia.consumer_push_poc.services.AuthService;
 import fr.recia.consumer_push_poc.services.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,21 @@ public class FCMTokenController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private AuthService authService;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody TokenDto tokenDto) {
         log.debug("Got a new token registration {}", tokenDto);
-        tokenService.saveToken(tokenDto.getUserId(), tokenDto.getToken());
-        return ResponseEntity.ok().build();
+        String uid = authService.authenticate(tokenDto.getTicket());
+        if(uid != null){
+            log.debug("Authenticated user {} from ticket {}", uid, tokenDto.getTicket());
+            tokenService.saveToken(uid, tokenDto.getToken());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+
     }
 
 }

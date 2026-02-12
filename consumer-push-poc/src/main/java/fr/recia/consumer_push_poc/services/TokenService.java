@@ -20,7 +20,6 @@ public class TokenService {
     private ReadOnlyKeyValueStore<String, DeviceTokenSet> store;
     private final KafkaTemplate<String, DeviceTokenSet> kafkaTemplate;
 
-    // Possible de récupérer une StreamsBuilderFactoryBean car on a initialisé le Bean defaultKafkaStreamsConfig + annotation @EnableKafkaStreams
     public TokenService(StreamsBuilderFactoryBean factoryBean, KafkaTemplate<String, DeviceTokenSet> kafkaTemplate) {
         this.factoryBean = factoryBean;
         this.kafkaTemplate = kafkaTemplate;
@@ -31,9 +30,14 @@ public class TokenService {
         if(tokens == null){
             tokens = new DeviceTokenSet();
         }
-        tokens.add(token);
-        kafkaTemplate.send(KafkaStreamsConfig.TOPIC_NAME, userId, tokens);
-        log.info("New token {} set for user {}", token, userId);
+        if(!tokens.contains(token)){
+            tokens.add(token);
+            kafkaTemplate.send(KafkaStreamsConfig.TOPIC_NAME, userId, tokens);
+            log.info("New token {} set for user {}", token, userId);
+        } else {
+            log.info("Token {} is already associated to user {}, no need to update kafka", token, userId);
+        }
+
     }
 
     public void removeToken(String userId, String token){

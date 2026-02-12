@@ -50,3 +50,7 @@ fcm:
   service-account-path: test-poc-netocentre-account.json
   fcm-url: https://fcm.googleapis.com/v1/projects/test-poc-netocentre/messages:send
   firebase-auth-url: https://www.googleapis.com/auth/firebase.messaging
+
+cas:
+  service-url: https://auth.recia.fr/appMobile
+  validate-url: https://auth.recia.fr/cas/serviceValidate
