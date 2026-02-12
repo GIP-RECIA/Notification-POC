@@ -1,0 +1,9 @@
+package fr.recia.consumer_push_poc.model;
+
+import lombok.Data;
+
+@Data
+public class TokenDto {
+    private String userId;
+    private String token;
+}
