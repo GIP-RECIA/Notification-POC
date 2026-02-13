@@ -39,6 +39,10 @@ L'enregistrement des devices est sécurisé via une authentification par CAS :
 
 Avec ce système, c'est le CAS qui assure l'identité de la personne qui enregistre une nouvelle device.
 
+Le schéma ci-dessous résumé les différentes intéractions autour du consumer push (en vert le flot d'enregistrement de device, en orange le flot d'envoi d'une notification) :
+
+![Schéma Push Mobile](../docs/images/pushmobile.png)
+
 ## Exécution
 
 - `mvn spring-boot:run` ou `./scripts-bash/start-consumer.push.sh`

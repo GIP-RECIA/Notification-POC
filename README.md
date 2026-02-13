@@ -47,7 +47,7 @@ Ce consumer écoute les notifications à envoyer par mail. Il récupère l'adres
 
 ### [Consumer-push-poc](consumer-push-poc/README.md)
 
-Ce consumer écoute les notifications à envoyer par méthode push (mobile). Pour l'instant il ne fait encore aucune action.
+Ce consumer écoute les notifications à envoyer par méthode push (mobile). Il enregistre les tokens depuis l'appli mobile et envoie des requêtes API à Firebase.
 
 ## [Replayer-kafka-poc](replayer-kafka-poc/README.md)
 
