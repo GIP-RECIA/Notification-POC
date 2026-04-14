@@ -27,3 +27,6 @@ cd ..
 cd service-example-kafka-poc
 mvn spring-boot:run &
 cd ..
+cd delayer-poc
+mvn spring-boot:run &
+cd ..

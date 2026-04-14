@@ -9,3 +9,4 @@
 ./scripts-bash/start-expand.sh
 ./scripts-bash/start-replayer.sh
 ./scripts-bash/start-service.sh
+./scripts-bash/start-dalyer-poc.sh
