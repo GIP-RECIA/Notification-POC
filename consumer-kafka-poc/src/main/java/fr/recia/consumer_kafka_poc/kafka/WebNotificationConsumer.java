@@ -29,10 +29,9 @@ public class WebNotificationConsumer {
                         (record, ex) -> new TopicPartition("notifications.replay.web", record.partition()));
         return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
     }
-
-    @KafkaListener(topics = "notifications.web", groupId = "web-consumer")
+    @KafkaListener(topics = "ok.web", groupId = "web-consumer")
     public void consume(RoutedNotification routedNotification) {
-        log.debug("Notification web reçue : {}", routedNotification);
+        log.debug("Notification web ok reçue : {}", routedNotification);
         redisNotificationStore.save(routedNotification.getNotification());
     }
 
