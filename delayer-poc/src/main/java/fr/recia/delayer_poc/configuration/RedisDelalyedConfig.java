@@ -1,7 +1,8 @@
 package fr.recia.delayer_poc.configuration;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.recia.delayer_poc.services.RedisExpirationListener;
 import fr.recia.model_kafka_poc.model.RoutedNotification;
-import fr.recia.model_kafka_poc.model.StoredNotification;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
@@ -12,15 +13,21 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import tools.jackson.databind.DefaultTyping;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+
 
 @Configuration
 public class RedisDelalyedConfig {
     @Bean
-    public RedisTemplate<String, RoutedNotification> notificationDelayedRedisTemplate(RedisConnectionFactory connectionFactory, ObjectMapper objectMapper) {
+    public RedisTemplate<String, RoutedNotification> notificationDelayedRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, RoutedNotification> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
+        BasicPolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder().allowIfSubType("fr.recia").allowIfSubType("java").build();
+        ObjectMapper objectMapper = JsonMapper.builder().activateDefaultTyping(ptv, DefaultTyping.NON_FINAL_AND_ENUMS, JsonTypeInfo.As.PROPERTY).build();
         template.setValueSerializer(new GenericJacksonJsonRedisSerializer(objectMapper));
         return template;
     }
