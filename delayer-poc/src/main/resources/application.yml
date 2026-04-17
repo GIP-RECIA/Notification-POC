@@ -1,0 +1,86 @@
+server:
+  port: 8072
+
+logging:
+  file:
+    path: logs
+
+spring:
+  application:
+    name: delayer-poc
+  profiles :
+    include:
+      - vacancesDates
+  Kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    consumer:
+      group-id: delayer-consumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="delayer-consumer"
+          password="jKDjizs125KJSnsAZis";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: "*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: >
+          org.apache.kafka.common.security.plain.PlainLoginModule required
+          username="delayer-consumer"
+          password="jKDjizs125KJSnsAZis";
+     
+
+    data:
+      redis:
+        host: localhost
+        port: 6379
+
+vacances :
+  centre:
+    vacances:
+      - debut: 2026-10-17
+        fin: 2026-11-02
+      - debut: 2026-12-19
+        fin: 2027-01-04
+      - debut: 2027-02-20
+        fin: 2027-03-08
+      - debut: 2027-04-17
+        fin: 2027-05-03
+
+    jours-feries:
+      - 2026-11-11
+      - 2027-03-29
+      - 2027-05-01
+      - 2027-05-06
+      - 2027-05-07
+      - 2027-05-08
+      - 2027-05-17
+
+  reunion:
+    vacances:
+      - debut: 2026-10-10
+        fin: 2026-10-26
+      - debut: 2026-12-19
+        fin: 2027-02-01
+      - debut: 2027-03-16
+        fin: 2027-03-30
+      - debut: 2027-05-05
+        fin: 2027-05-19
+
+    jours-feries:
+      - 2026-11-11
+      - 2027-03-29
+      - 2027-05-01
+      - 2027-05-06
+      - 2027-05-07
+      - 2027-05-08
+      - 2027-05-17
