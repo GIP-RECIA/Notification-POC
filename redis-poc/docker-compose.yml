@@ -6,7 +6,7 @@ services:
     container_name: redis-poc
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --notify-keyspace-events "KEx"
     volumes:
       - redis-data:/data
 
