@@ -34,7 +34,7 @@ public class PushNotificationConsumer {
         return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
     }
 
-    @KafkaListener(topics = "notifications.push", groupId = "push-consumer")
+    @KafkaListener(topics = "ok.push", groupId = "push-consumer")
     public void consume(RoutedNotification routedNotification) {
         log.debug("Notification push reçue : {}", routedNotification);
         try {

@@ -36,7 +36,7 @@ public class MailNotificationConsumer {
         return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
     }
 
-    @KafkaListener(topics = "notifications.mail", groupId = "mail-consumer")
+    @KafkaListener(topics = "ok.mail", groupId = "mail-consumer")
     public void consume(RoutedNotification routedNotification) {
         log.debug("Notification mail reçue : {}", routedNotification);
         Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
