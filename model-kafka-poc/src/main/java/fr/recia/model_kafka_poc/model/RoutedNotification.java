@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class RoutedNotification {
     private Notification notification;
     private String routedTopic;
+    private int retryNumber;
 }
