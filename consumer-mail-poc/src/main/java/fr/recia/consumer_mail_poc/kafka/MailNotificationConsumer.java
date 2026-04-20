@@ -32,7 +32,7 @@ public class MailNotificationConsumer {
     public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
                         kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replay.mail", record.partition()));
+                        (record, ex) -> new TopicPartition("notifications.replayer", record.partition()));// Changement du Topic de sortie en notifications.replayer. On supprime les différents notifications.replay.*
         return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
     }
 

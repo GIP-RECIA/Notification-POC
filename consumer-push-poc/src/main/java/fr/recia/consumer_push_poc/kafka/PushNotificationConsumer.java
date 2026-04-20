@@ -4,6 +4,7 @@ import fr.recia.consumer_push_poc.services.FcmService;
 import fr.recia.consumer_push_poc.services.TokenService;
 import fr.recia.model_kafka_poc.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,7 @@ public class PushNotificationConsumer {
     public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
                         kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replay.push", record.partition()));
+                        (record, ex) -> new TopicPartition("notifications.replayer", record.partition()));// Changement du Topic de sortie en notifications.replayer On supprime les différents notifications.replay.*
         return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
     }
 

@@ -154,11 +154,13 @@ public class BasicRouter {
             Set<String> channels = resolveChannels(enrichedNotif.getNotification(), enrichedNotif.getPreferences());
             // On retourne une liste de KeyValue, avec comme valeur une RoutedNotification qui à l'information du topic dans laquelle elle doit être déposée
             return channels.stream()
-                    .map(channel -> KeyValue.pair(enrichedNotif.getNotification().getHeader().getUserId(), new RoutedNotification(enrichedNotif.getNotification(), channel)))
+                    .map(channel -> KeyValue.pair(enrichedNotif.getNotification().getHeader().getUserId(), new RoutedNotification(enrichedNotif.getNotification(), channel, 0)))// Initialisation du retryNumber à 0
                     .toList();
         //.to attend en retour un TopicNameExtractor qui va retourner le nom du topic dans lequel on va mettre la notif et un Produced pour la sérialisation
         }).to(
-                (key, value, ctx) -> value.getRoutedTopic(),
+                /*(key, value, ctx) -> value.getRoutedTopic(),//newtopic
+                Produced.with(Serdes.String(), routedNotificationSerde)*/
+                (key, value, ctx) -> "notifications.router",//AJout du Nouveau Topic "notifications.router" qui remplace les anciens Topic "notifications.*"
                 Produced.with(Serdes.String(), routedNotificationSerde)
         );
 

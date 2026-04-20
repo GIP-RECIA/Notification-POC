@@ -1,3 +1,4 @@
+
 logging:
   file:
     path: logs
@@ -31,3 +32,7 @@ spring:
           org.apache.kafka.common.security.plain.PlainLoginModule required
           username="replay"
           password="aN7LMnvfj7awsQUU";
+    data:
+      redis:
+        host: localhost
+        port: 6379
