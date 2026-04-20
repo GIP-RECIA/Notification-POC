@@ -25,7 +25,7 @@ public class NotificationDelayer {
     private final static String TOPIC_IN_WEB = "notifications.web";
     private final static String TOPIC_IN_MAIL = "notifications.mail";
     private final static String TOPIC_IN_PUSH = "notifications.push";
-
+    private final static String TOPIC_IN_ROUTER = "notifications.router";
 
     public final static String GROUP_ID = "delayer-consumer";
 
@@ -34,6 +34,34 @@ public class NotificationDelayer {
     private final RedisDelayedNotificationStore redisDelayedNotificationStore;
 
 
+    @KafkaListener (topics = TOPIC_IN_ROUTER, groupId = GROUP_ID)
+    public void consumeDelay(ConsumerRecord<String, RoutedNotification> record) {
+        String userId = record.key();
+        RoutedNotification notification = record.value();
+        log.trace("notification routée {} reçue par {}", notification, GROUP_ID);
+        String topicOut = switch (record.value().getRoutedTopic()) {
+            case TOPIC_IN_WEB -> TOPIC_OUT_WEB;
+            case TOPIC_IN_MAIL -> TOPIC_OUT_MAIL;
+            case TOPIC_IN_PUSH -> TOPIC_OUT_PUSH;
+            default -> {
+                log.warn("Erreur, le topic d'entrée n'a pas été trouvé");
+                yield null;
+            }
+        };
+
+        if (!droitDeconnexionService.peutRecevoirNotif(userId, record.timestamp(), "centre")) {
+
+            Duration ttl = droitDeconnexionService.calculDelai(record.timestamp(), "centre");
+
+            redisDelayedNotificationStore.save(notification, ttl.plusHours(1));
+            log.info("notification Web {} délayée et transférée vers le redis", notification);
+
+        }else {
+            kafkaTemplate.send(topicOut, userId, notification);
+            log.trace("notification {}, qui est une {} a été transmise vers {}", notification, notification.getRoutedTopic(), topicOut);
+        }
+    }
+/*
     @KafkaListener (topics = TOPIC_IN_WEB, groupId = GROUP_ID)
     public void consumeWeb(ConsumerRecord<String, RoutedNotification> record) {
         String userId = record.key();
@@ -89,5 +117,5 @@ public class NotificationDelayer {
             kafkaTemplate.send(TOPIC_OUT_PUSH, userId, notification);
             log.trace("notification Push {} transmise vers {}", notification, TOPIC_OUT_PUSH);
         }
-    }
+    }*/
 }
