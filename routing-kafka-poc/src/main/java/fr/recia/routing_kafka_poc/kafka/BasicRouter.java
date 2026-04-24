@@ -32,6 +32,8 @@ import java.util.Set;
 @Slf4j
 public class BasicRouter {
 
+    private final static String TOPIC_OUT = "notifications.router";
+
     private static final Map<Channel, String> channelToTopic = Map.of(Channel.WEB, "notifications.web",
             Channel.MAIL, "notifications.mail", Channel.PUSH, "notifications.push");
 
@@ -154,11 +156,11 @@ public class BasicRouter {
             Set<String> channels = resolveChannels(enrichedNotif.getNotification(), enrichedNotif.getPreferences());
             // On retourne une liste de KeyValue, avec comme valeur une RoutedNotification qui à l'information du topic dans laquelle elle doit être déposée
             return channels.stream()
-                    .map(channel -> KeyValue.pair(enrichedNotif.getNotification().getHeader().getUserId(), new RoutedNotification(enrichedNotif.getNotification(), channel)))
+                    .map(channel -> KeyValue.pair(enrichedNotif.getNotification().getHeader().getUserId(), new RoutedNotification(enrichedNotif.getNotification(), channel)))// Initialisation du retryNumber à 0
                     .toList();
         //.to attend en retour un TopicNameExtractor qui va retourner le nom du topic dans lequel on va mettre la notif et un Produced pour la sérialisation
         }).to(
-                (key, value, ctx) -> value.getRoutedTopic(),
+                (key, value, ctx) -> TOPIC_OUT,
                 Produced.with(Serdes.String(), routedNotificationSerde)
         );
 

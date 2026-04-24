@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.replayer_kafka_poc" level="TRACE"/>
+    <logger name="fr.recia.delayer_poc" level="TRACE"/>
 
 </configuration>

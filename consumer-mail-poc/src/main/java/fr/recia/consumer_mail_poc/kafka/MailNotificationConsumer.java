@@ -4,14 +4,9 @@ import fr.recia.consumer_mail_poc.services.LdapMailQueryService;
 import fr.recia.consumer_mail_poc.services.MailSendingService;
 import fr.recia.model_kafka_poc.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.TopicPartition;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
-import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.Optional;
 
@@ -22,31 +17,31 @@ public class MailNotificationConsumer {
     private final MailSendingService mailSendingService;
     private final LdapMailQueryService ldapMailQueryService;
     private static final String MAIL_FROM = "notification@mail.fr";
+    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
+    private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    public MailNotificationConsumer(MailSendingService mailSendingService, LdapMailQueryService ldapMailQueryService){
+    public MailNotificationConsumer(MailSendingService mailSendingService, LdapMailQueryService ldapMailQueryService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
         this.mailSendingService = mailSendingService;
         this.ldapMailQueryService = ldapMailQueryService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-                        kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replay.mail", record.partition()));
-        return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
-    }
-
-    @KafkaListener(topics = "notifications.mail", groupId = "mail-consumer")
+    @KafkaListener(topics = "ok.mail", groupId = "mail-consumer")
     public void consume(RoutedNotification routedNotification) {
-        log.debug("Notification mail reçue : {}", routedNotification);
-        Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
-        if(mailTo.isEmpty()){
-            log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
-        } else {
-            mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
-                    routedNotification.getNotification().getContent().getMessage());
+        try {
+            log.debug("Notification mail reçue : {}", routedNotification);
+            Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
+            if(mailTo.isEmpty()){
+                log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
+            } else {
+                mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
+                        routedNotification.getNotification().getContent().getMessage());
+            }
+        } catch (Exception e) {
+            log.warn("Une notification {} n'a pas pu être envoyée vers le mail, elle a été envoyée vers le replayer", routedNotification);
+            int retryCount = routedNotification.getRetryNumber();
+            routedNotification.setRetryNumber(++retryCount);
+            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
         }
     }
-
 }
-

@@ -9,3 +9,4 @@
 ./scripts-bash/restart-expand.sh
 ./scripts-bash/restart-replayer.sh
 ./scripts-bash/restart-service.sh
+./scripts-bash/restart-delayer.sh

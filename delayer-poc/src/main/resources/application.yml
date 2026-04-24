@@ -1,0 +1,83 @@
+server:
+  port: 8072
+
+logging:
+  file:
+    path: logs
+
+spring:
+  application:
+    name: delayer-poc
+  Kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=esco-centre,dc=fr
+    username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+    password: admin
+
+request:
+  branch-base: ou=people
+  retrieved-attribute: ESCODomaines
+  filter: "(uid={0})"
+
+domaines :
+    -centre :
+      - lycees.netocentre.fr
+      - cfa.netocentre.fr
+      - recia.netocentre.fr
+    -reunion :
+      - reunion.fr
+
+vacances :
+  centre:
+    vacances:
+      - debut: 2026-10-17
+        fin: 2026-11-02
+      - debut: 2026-12-19
+        fin: 2027-01-04
+      - debut: 2027-02-20
+        fin: 2027-03-08
+      - debut: 2027-04-17
+        fin: 2027-05-03
+
+    jours-feries:
+      - 2026-11-11
+      - 2027-03-29
+      - 2027-05-01
+      - 2027-05-06
+      - 2027-05-07
+      - 2027-05-08
+      - 2027-05-17
+
+  reunion:
+    vacances:
+      - debut: 2026-10-10
+        fin: 2026-10-26
+      - debut: 2026-12-19
+        fin: 2027-02-01
+      - debut: 2027-03-16
+        fin: 2027-03-30
+      - debut: 2027-05-05
+        fin: 2027-05-19
+
+    jours-feries:
+      - 2026-11-11
+      - 2027-03-29
+      - 2027-05-01
+      - 2027-05-06
+      - 2027-05-07
+      - 2027-05-08
+      - 2027-05-17
+
+streams:
+  bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+  application-id: basic-delayer
+  replication-factor: 3
+  security-protocol: SASL_PLAINTEXT
+  sasl-mechanism: PLAIN
+  jaas-config: >
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="delayer-streams"
+    password="DkA5c4Ojd86sI6kk";

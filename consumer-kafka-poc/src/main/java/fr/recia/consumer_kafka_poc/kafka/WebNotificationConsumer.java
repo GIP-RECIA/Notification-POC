@@ -3,38 +3,35 @@ package fr.recia.consumer_kafka_poc.kafka;
 import fr.recia.consumer_kafka_poc.services.RedisNotificationStore;
 import fr.recia.model_kafka_poc.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.TopicPartition;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
-import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.util.backoff.FixedBackOff;
 
 @Component
 @Slf4j
 public class WebNotificationConsumer {
 
     private final RedisNotificationStore redisNotificationStore;
+    private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    public WebNotificationConsumer(RedisNotificationStore redisNotificationStore) {
+    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
+
+    public WebNotificationConsumer(RedisNotificationStore redisNotificationStore, KafkaTemplate<String, RoutedNotification> kafkaTemplate) {
         this.redisNotificationStore = redisNotificationStore;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-                        kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replay.web", record.partition()));
-        return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
-    }
-
-    @KafkaListener(topics = "notifications.web", groupId = "web-consumer")
+    @KafkaListener(topics = "ok.web", groupId = "web-consumer")
     public void consume(RoutedNotification routedNotification) {
-        log.debug("Notification web reçue : {}", routedNotification);
+        try {
+        log.debug("Notification web ok reçue : {}", routedNotification);
         redisNotificationStore.save(routedNotification.getNotification());
+
+        }catch (Exception e) {
+            log.warn("Une notification {} n'a pas pu être traitée, envoie vers le delayer", routedNotification);
+            int retryCount = routedNotification.getRetryNumber();
+            routedNotification.setRetryNumber(++retryCount);
+            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+        }
     }
-
 }
-

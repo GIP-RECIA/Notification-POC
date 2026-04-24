@@ -18,12 +18,12 @@ cd ..
 cd routing-kafka-poc
 mvn spring-boot:run &
 cd ..
-cd replayer-kafka-poc
-mvn spring-boot:run &
-cd ..
 cd expand-kafka-poc
 mvn spring-boot:run &
 cd ..
 cd service-example-kafka-poc
+mvn spring-boot:run &
+cd ..
+cd delayer-poc
 mvn spring-boot:run &
 cd ..
