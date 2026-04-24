@@ -2,6 +2,7 @@ package fr.recia.delayer_poc.services;
 
 import fr.recia.delayer_poc.configuration.LdapRequestProperties;
 import fr.recia.delayer_poc.droitReconnexionConfig.DomainesProperties;
+import fr.recia.delayer_poc.droitReconnexionConfig.Region;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class LdapRegionService {
         this.domainesProperties = domainesProperties;
     }
 
-    public String getRegionByUid(String userId) {
+    public Region getRegionByUid(String userId) {
         List<String> userDomaines = getListDomaineCentre(userId);
 
         List<String> referenceCentre = domainesProperties.getCentre();
@@ -36,7 +37,7 @@ public class LdapRegionService {
         boolean isCentre = userDomaines.stream()
                 .anyMatch(domaine -> referenceCentre != null && referenceCentre.contains(domaine));
 
-       return isCentre ? "centre" : "reunion";
+       return isCentre ? Region.CENTRE : Region.REUNION;
     }
 
 

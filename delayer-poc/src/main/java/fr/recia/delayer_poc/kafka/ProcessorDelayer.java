@@ -1,5 +1,6 @@
 package fr.recia.delayer_poc.kafka;
 
+import fr.recia.delayer_poc.droitReconnexionConfig.Region;
 import fr.recia.delayer_poc.services.DroitDeconnexionService;
 import fr.recia.delayer_poc.services.LdapRegionService;
 import lombok.Data;
@@ -31,8 +32,12 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final static String ROUTED_TOPIC_MAIL = "notifications.mail";
     private final static String ROUTED_TOPIC_PUSH = "notifications.push";
 
+    private final static String STORE = "delayer-store";
+
     private final static String SINK_DLT = "sink.dlt";
-    public final static int NUM_RETRIES = 5;
+    private final static int NUM_RETRIES = 5;
+
+    private Duration scanFrequency = Duration.ofMinutes(5);
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
         this.droitDeconnexionService = droitDeconnexionService;
@@ -46,7 +51,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         long now = record.timestamp();
         long nowReplay = now + Duration.ofMinutes(30).toMillis();
         int replayCount = record.value().getRetryNumber();
-        String region = ldapRegionService.getRegionByUid(userId);
+        Region region = ldapRegionService.getRegionByUid(userId);
 
         if (replayCount == 0) {
             if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)) {
@@ -55,7 +60,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                 log.trace("La région de l'utilisateur {} a bien été trouvée, c'est la région {}", userId, region);
 
                 notification.setDeliveryTime(deliveryTime);
-                log.trace("La notification sera envoyée à {}", deliveryTime);
+                log.trace("La notification a été envoyée à {}", deliveryTime);
                 stateStore.put(notification.getNotification().getHeader().getNotificationId(), notification);
                 log.debug("Une notification {} envoyée dans le Store {}", notification, stateStore);
             } else {
@@ -88,10 +93,10 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     @Override
     public void init(ProcessorContext<String, RoutedNotification> context) {
         this.context = context;
-        this.stateStore = context.getStateStore("delayer-store");
+        this.stateStore = context.getStateStore(STORE);
 
         context.schedule(
-                Duration.ofMinutes(1),
+                scanFrequency,
                 PunctuationType.WALL_CLOCK_TIME,
                 timestamp -> {
                     try (var iterator = stateStore.all()){

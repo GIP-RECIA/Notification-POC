@@ -29,6 +29,8 @@ public class PushNotificationConsumer {
 
     KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
+    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
+
     @KafkaListener(topics = "ok.push", groupId = "push-consumer")
     public void consume(RoutedNotification routedNotification) {
         log.debug("Notification push reçue : {}", routedNotification);
@@ -44,10 +46,9 @@ public class PushNotificationConsumer {
         } catch (Exception e) {
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            kafkaTemplate.send("notifications.replayer", routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
             log.warn("An error occured while sending the notification to firebase", e);
         }
     }
-
 }
 

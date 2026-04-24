@@ -1,6 +1,7 @@
 package fr.recia.delayer_poc.services;
 
 import fr.recia.delayer_poc.droitReconnexionConfig.PeriodesVacances;
+import fr.recia.delayer_poc.droitReconnexionConfig.Region;
 import fr.recia.delayer_poc.droitReconnexionConfig.VacancesProperties;
 import fr.recia.delayer_poc.droitReconnexionConfig.CalendrierRegion;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,15 @@ import java.time.*;
 public class DroitDeconnexionService {
     private final VacancesProperties vacancesProperties;
 
-    private ZoneId getZoneId(String region) {
-        return region.equalsIgnoreCase("reunion")
+    private final static String ILE_DE_LA_REUNION = "reunion";
+
+    private ZoneId getZoneId(Region region) {
+        return (region == Region.REUNION)
                 ? ZoneId.of("Indian/Reunion") // UTC +4
                 : ZoneId.of("Europe/Paris"); // UTC +1 ou UTC +2 selon la période
     }
 
-    public Duration calculDelai(long timestamp, String region) {
+    public Duration calculDelai(long timestamp, Region region) {
         ZonedDateTime maintenant = Instant.ofEpochMilli(timestamp).atZone(getZoneId(region));
         ZonedDateTime prochainEnvoi = prochainMomentAutorise(maintenant, region);
 
@@ -30,7 +33,7 @@ public class DroitDeconnexionService {
         return delai.isNegative() ? Duration.ZERO : delai;
     }
 
-    private LocalDate getFinVacances(LocalDate date, String region){
+    private LocalDate getFinVacances(LocalDate date, Region region){
         CalendrierRegion prop = getCalendrierRegion(region);
 
         for (PeriodesVacances period : prop.getVacances()) {
@@ -41,7 +44,7 @@ public class DroitDeconnexionService {
         return date;
     }
 
-    private ZonedDateTime prochainMomentAutorise(ZonedDateTime dateTime, String region) {
+    private ZonedDateTime prochainMomentAutorise(ZonedDateTime dateTime, Region region) {
         LocalDate date = dateTime.toLocalDate();
 
 
@@ -79,14 +82,14 @@ public class DroitDeconnexionService {
         return dateTime;
     }
 
-    private CalendrierRegion getCalendrierRegion(String region) {
-        return region.equalsIgnoreCase(("reunion"))
+    private CalendrierRegion getCalendrierRegion(Region region) {
+        return ( region == Region.REUNION)
                 ? vacancesProperties.getReunion()
                 : vacancesProperties.getCentre();
     }
 
     // Check si on peut envoyer la notif ou non.
-    public boolean peutRecevoirNotif(String userId, long timestamp, String region) {
+    public boolean peutRecevoirNotif(String userId, long timestamp, Region region) {
         log.debug("le calendrier {}", vacancesProperties);
         ZonedDateTime dateTime = Instant.ofEpochMilli(timestamp).atZone(getZoneId(region));
         LocalDate date = dateTime.toLocalDate();
@@ -128,12 +131,12 @@ public class DroitDeconnexionService {
         return heure >= 8 && heure <= 18;
     }
 
-    private boolean estVacances(LocalDate date, String region){
+    private boolean estVacances(LocalDate date, Region region){
         CalendrierRegion prop = getCalendrierRegion(region);
 
 
         for (PeriodesVacances periode : prop.getVacances()) {
-            log.info("date début : {} , date de fin {} , date actuelle {}", periode.getDebut(), periode.getFin(), date);
+            log.trace("date début : {} , date de fin {} , date actuelle {}", periode.getDebut(), periode.getFin(), date);
             if (date.isAfter(periode.getDebut()) && date.isBefore(periode.getFin().minusDays(1))) {
                 return true;
             }
@@ -141,7 +144,7 @@ public class DroitDeconnexionService {
         return false;
     }
 
-    private boolean estFerie(LocalDate date, String region){
+    private boolean estFerie(LocalDate date, Region region){
         CalendrierRegion prop = getCalendrierRegion(region);
 
         return prop.getJoursFeries().contains(date) && !estVacances(date, region);

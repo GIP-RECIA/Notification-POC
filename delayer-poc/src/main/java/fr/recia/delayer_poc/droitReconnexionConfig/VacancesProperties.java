@@ -1,14 +1,10 @@
 package fr.recia.delayer_poc.droitReconnexionConfig;
 
-import lombok.ToString;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import lombok.Getter;
-import lombok.Setter;
 
-@ToString
-@Setter
-@Getter
+@Data
 @ConfigurationProperties(prefix = "vacances")
 @Configuration
 public class VacancesProperties {

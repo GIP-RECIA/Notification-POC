@@ -1,13 +1,9 @@
 package fr.recia.delayer_poc.droitReconnexionConfig;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@ToString
-@Setter
-@Getter
+@Data
 public class PeriodesVacances {
     private LocalDate debut;
     private LocalDate fin;

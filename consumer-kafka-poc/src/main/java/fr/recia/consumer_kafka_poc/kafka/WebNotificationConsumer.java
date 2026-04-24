@@ -3,23 +3,18 @@ package fr.recia.consumer_kafka_poc.kafka;
 import fr.recia.consumer_kafka_poc.services.RedisNotificationStore;
 import fr.recia.model_kafka_poc.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.TopicPartition;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
-import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.util.backoff.FixedBackOff;
 
 @Component
 @Slf4j
 public class WebNotificationConsumer {
 
     private final RedisNotificationStore redisNotificationStore;
+    private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
+    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
 
     public WebNotificationConsumer(RedisNotificationStore redisNotificationStore, KafkaTemplate<String, RoutedNotification> kafkaTemplate) {
         this.redisNotificationStore = redisNotificationStore;
@@ -36,7 +31,7 @@ public class WebNotificationConsumer {
             log.warn("Une notification {} n'a pas pu être traitée, envoie vers le delayer", routedNotification);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            kafkaTemplate.send("notifications.replayer", routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
         }
     }
 }

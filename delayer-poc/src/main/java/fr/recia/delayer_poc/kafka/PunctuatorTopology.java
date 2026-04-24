@@ -2,6 +2,7 @@ package fr.recia.delayer_poc.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.model_kafka_poc.model.RoutedNotificationSerde;
+import fr.recia.delayer_poc.configuration.KafkaSerdeConfig;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.state.Stores;
@@ -15,6 +16,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class PunctuatorTopology {
 
+    private final static String SINK_WEB = "sink.web";
+    private final static String SINK_MAIL = "sink.mail";
+    private final static String SINK_PUSH = "sink.push";
+    private final static String SINK_DLT = "sink.dlt";
+
+    private final static String TOPIC_OUT_WEB = "ok.web";
+    private final static String TOPIC_OUT_MAIL = "ok.mail";
+    private final static String TOPIC_OUT_PUSH = "ok.push";
+    private final static String TOPIC_OUT_DLT = "notifications.dlt";
+
+    private final static String TOPIC_IN_ROUTER = "notifications.router";
+    private final static String TOPIC_IN_REPLAYER = "notifications.replayer";
+
+    private final static String STORE = "delayer-store";
+
+    private final static String PROCESSOR_DELAYER = "processor-delayer";
+
+    private final static String SOURCE_ROUTER = "router";
+    private final static String SOURCE_REPLAYER = "replayer";
+
+
     @Bean
     public KafkaStreams kafkaStreams(Topology topology, KafkaStreamsConfiguration defaultKafkaStreamsConfig) {
         KafkaStreams streams = new KafkaStreams(
@@ -26,73 +48,74 @@ public class PunctuatorTopology {
     }
 
     @Bean
-    public Topology topology(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
+    public Topology topology(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService, RoutedNotificationSerde routedNotificationSerde) {
+
         Topology topology = new Topology();
 
         topology.addStateStore(
                 Stores.keyValueStoreBuilder(
-                        Stores.persistentKeyValueStore("delayer-store"),
+                        Stores.persistentKeyValueStore(STORE),
                         Serdes.String(),
-                        new RoutedNotificationSerde(new ObjectMapper())
+                        routedNotificationSerde
                 )
         );
 
         topology.addSource(
-                "source",
+                SOURCE_ROUTER,
                 Serdes.String().deserializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).deserializer(),
-                "notifications.router"
+                routedNotificationSerde.deserializer(),
+                TOPIC_IN_ROUTER
         );
 
         topology.addSource(
-                "source2",
+                SOURCE_REPLAYER,
                 Serdes.String().deserializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).deserializer(),
-                "notifications.replayer"
+                routedNotificationSerde.deserializer(),
+                TOPIC_IN_REPLAYER
         );
 
         topology.addProcessor(
-                "processor-delayer",
+                PROCESSOR_DELAYER,
                 () -> new ProcessorDelayer(droitDeconnexionService, ldapRegionService),
-                "source",
-                "source2"
+                SOURCE_ROUTER,
+                SOURCE_REPLAYER
         );
 
         topology.connectProcessorAndStateStores(
-                "processor-delayer",
-                "delayer-store"
+                PROCESSOR_DELAYER,
+                STORE
         );
 
         topology.addSink(
-                "sink.web",
-                "ok.web",
+                SINK_WEB,
+                TOPIC_OUT_WEB,
                 Serdes.String().serializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).serializer(),
-                "processor-delayer"
+                routedNotificationSerde.serializer(),
+                PROCESSOR_DELAYER
         );
 
         topology.addSink(
-                "sink.mail",
-                "ok.mail",
+                SINK_MAIL,
+                TOPIC_OUT_MAIL,
                 Serdes.String().serializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).serializer(),
-                "processor-delayer"
+                routedNotificationSerde.serializer(),
+                PROCESSOR_DELAYER
         );
 
         topology.addSink(
-                "sink.push",
-                "ok.push",
+                SINK_PUSH,
+                TOPIC_OUT_PUSH,
                 Serdes.String().serializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).serializer(),
-                "processor-delayer"
+                routedNotificationSerde.serializer(),
+                PROCESSOR_DELAYER
         );
 
         topology.addSink(
-                "sink.dlt",
-                "notifications.dlt",
+                SINK_DLT,
+                TOPIC_OUT_DLT,
                 Serdes.String().serializer(),
-                new RoutedNotificationSerde(new ObjectMapper()).serializer(),
-                "processor-delayer"
+                routedNotificationSerde.serializer(),
+                PROCESSOR_DELAYER
         );
 
         return topology;
