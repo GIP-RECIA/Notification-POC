@@ -44,6 +44,25 @@ spring:
         host: localhost
         port: 6379
 
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=esco-centre,dc=fr
+    username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+    password: admin
+
+request:
+  branch-base: ou=people
+  retrieved-attribute: ESCODomaines
+  filter: "(uid={0})"
+
+domaines :
+    -centre :
+      - lycees.netocentre.fr
+      - cfa.netocentre.fr
+      - recia.netocentre.fr
+    -reunion :
+      - reunion.fr
+
 vacances :
   centre:
     vacances:
@@ -84,3 +103,14 @@ vacances :
       - 2027-05-07
       - 2027-05-08
       - 2027-05-17
+
+streams:
+  bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+  application-id: basic-delayer
+  replication-factor: 3
+  security-protocol: SASL_PLAINTEXT
+  sasl-mechanism: PLAIN
+  jaas-config: >
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="delayer-streams"
+    password="DkA5c4Ojd86sI6kk";
