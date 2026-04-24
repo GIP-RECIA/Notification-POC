@@ -27,13 +27,7 @@ public class PushNotificationConsumer {
     @Autowired
     private FcmService fcmService;
 
-    @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-                        kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replayer", record.partition()));// Changement du Topic de sortie en notifications.replayer On supprime les différents notifications.replay.*
-        return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
-    }
+    KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
     @KafkaListener(topics = "ok.push", groupId = "push-consumer")
     public void consume(RoutedNotification routedNotification) {
@@ -48,8 +42,10 @@ public class PushNotificationConsumer {
                 fcmService.sendNotification(routedNotification.getNotification(), token);
             }
         } catch (Exception e) {
+            int retryCount = routedNotification.getRetryNumber();
+            routedNotification.setRetryNumber(++retryCount);
+            kafkaTemplate.send("notifications.replayer", routedNotification.getNotification().getHeader().getUserId(), routedNotification);
             log.warn("An error occured while sending the notification to firebase", e);
-            throw new RuntimeException(e);
         }
     }
 

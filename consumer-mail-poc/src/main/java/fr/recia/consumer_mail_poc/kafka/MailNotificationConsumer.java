@@ -23,28 +23,30 @@ public class MailNotificationConsumer {
     private final LdapMailQueryService ldapMailQueryService;
     private static final String MAIL_FROM = "notification@mail.fr";
 
+    KafkaTemplate<String, RoutedNotification> kafkaTemplate;
+
     public MailNotificationConsumer(MailSendingService mailSendingService, LdapMailQueryService ldapMailQueryService){
         this.mailSendingService = mailSendingService;
         this.ldapMailQueryService = ldapMailQueryService;
     }
 
-    @Bean
-    public DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> kafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-                        kafkaTemplate,
-                        (record, ex) -> new TopicPartition("notifications.replayer", record.partition()));// Changement du Topic de sortie en notifications.replayer. On supprime les différents notifications.replay.*
-        return new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 0));
-    }
 
     @KafkaListener(topics = "ok.mail", groupId = "mail-consumer")
     public void consume(RoutedNotification routedNotification) {
-        log.debug("Notification mail reçue : {}", routedNotification);
-        Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
-        if(mailTo.isEmpty()){
-            log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
-        } else {
-            mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
-                    routedNotification.getNotification().getContent().getMessage());
+        try {
+            log.debug("Notification mail reçue : {}", routedNotification);
+            Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
+            if(mailTo.isEmpty()){
+                log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
+            } else {
+                mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
+                        routedNotification.getNotification().getContent().getMessage());
+            }
+        } catch (Exception e) {
+            log.warn("Une notification {} n'a pas pu être envoyée vers le mail, elle a été envoyée vers le replayer", routedNotification);
+            int retryCount = routedNotification.getRetryNumber();
+            routedNotification.setRetryNumber(++retryCount);
+            kafkaTemplate.send("notifications.replayer", routedNotification.getNotification().getHeader().getUserId(), routedNotification);
         }
     }
 
