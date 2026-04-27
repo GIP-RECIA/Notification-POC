@@ -54,7 +54,7 @@ ENTPersonProfils: National_1
 ENTPersonSexe: M
 ENTPersonStructRattach: ENTStructureSIREN=19290009000015,ou=structures,dc=es
  co-centre,dc=fr
-ESCODomaines: reunion.fr
+ESCODomaines: lycees.netocentre.fr
 ESCOEleveCodeEnseignements: 006600$ACCOMPAGNEMENT PERSONNALISE
 ESCOEleveCodeEnseignements: 062900$SCIENCES DE LA VIE ET DE LA TERRE
 ESCOEleveCodeEnseignements: 043800$ENSEIGNEMENT MORAL ET CIVIQUE

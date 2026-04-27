@@ -3,14 +3,17 @@ package fr.recia.delayer_poc.kafka;
 import fr.recia.delayer_poc.droitReconnexionConfig.Region;
 import fr.recia.delayer_poc.services.DroitDeconnexionService;
 import fr.recia.delayer_poc.services.LdapRegionService;
+import fr.recia.model_kafka_poc.model.RoutedNotification;
+import fr.recia.delayer_poc.configuration.KafkaSerdeConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.state.KeyValueStore;
-import fr.recia.model_kafka_poc.model.RoutedNotification;
+
 
 import java.time.Duration;
 
@@ -37,7 +40,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final static String SINK_DLT = "sink.dlt";
     private final static int NUM_RETRIES = 5;
 
-    private Duration scanFrequency = Duration.ofMinutes(5);
+    private Duration scanFrequency = Duration.ofSeconds(40);
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
         this.droitDeconnexionService = droitDeconnexionService;
@@ -53,6 +56,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         int replayCount = record.value().getRetryNumber();
         Region region = ldapRegionService.getRegionByUid(userId);
 
+
         if (replayCount == 0) {
             if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)) {
                 Duration delai = droitDeconnexionService.calculDelai(now, region);
@@ -61,7 +65,9 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
 
                 notification.setDeliveryTime(deliveryTime);
                 log.trace("La notification a été envoyée à {}", deliveryTime);
-                stateStore.put(notification.getNotification().getHeader().getNotificationId(), notification);
+
+                String clePrefix = String.format("%d_%s", deliveryTime, notification.getNotification().getHeader().getNotificationId());
+                stateStore.put(clePrefix, notification);
                 log.debug("Une notification {} envoyée dans le Store {}", notification, stateStore);
             } else {
                 context.forward(record, getSink(notification));
@@ -78,13 +84,15 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                     Duration delai = droitDeconnexionService.calculDelai(now, region);
                     long deliveryTime = now + delai.toMillis();
 
+                    String clePrefix = String.format("%d_%s", deliveryTime, notification.getNotification().getHeader().getNotificationId());
                     notification.setDeliveryTime(deliveryTime);
-                    stateStore.put(notification.getNotification().getHeader().getNotificationId(), notification);
+                    stateStore.put(clePrefix, notification);
                 }else {
                     log.debug("Une notification {} à rejouer a été envoyée dans le store {}. Elle a été rejouée {} fois",notification, stateStore, notification.getRetryNumber());
 
                     notification.setDeliveryTime(nowReplay);
-                    stateStore.put(notification.getNotification().getHeader().getNotificationId(), notification);
+                    String clePrefix = String.format("%d_%s", nowReplay, notification.getNotification().getHeader().getNotificationId());
+                    stateStore.put(clePrefix, notification);
                 }
             }
         }
@@ -95,11 +103,12 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         this.context = context;
         this.stateStore = context.getStateStore(STORE);
 
-        context.schedule(
-                scanFrequency,
+        context.schedule(scanFrequency,
                 PunctuationType.WALL_CLOCK_TIME,
                 timestamp -> {
-                    try (var iterator = stateStore.all()){
+                    String from = String.format("%d", 0L);
+                    String to = String.format("%d", timestamp) + "_\uFFFF";
+                    try (var iterator = stateStore.range(from, to)) {
                         while (iterator.hasNext()) {
                             var entry = iterator.next();
                             if (entry.value.getDeliveryTime() <= timestamp){
@@ -110,7 +119,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                         }
                     }
                 }
-        );
+                );
     }
 
     public String getSink(RoutedNotification notification) {

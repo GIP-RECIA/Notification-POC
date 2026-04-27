@@ -16,7 +16,6 @@ import java.time.*;
 public class DroitDeconnexionService {
     private final VacancesProperties vacancesProperties;
 
-    private final static String ILE_DE_LA_REUNION = "reunion";
 
     private ZoneId getZoneId(Region region) {
         return (region == Region.REUNION)
