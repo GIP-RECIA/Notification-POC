@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*expand-kafka-poc"
+pkill -f "java.*expander"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd consumer-push-poc
+cd consumer-push
 mvn spring-boot:run &
 mvn spring-boot:run &
 mvn spring-boot:run &

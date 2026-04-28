@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd redis-poc
+cd redis
 docker compose down
 cd ..

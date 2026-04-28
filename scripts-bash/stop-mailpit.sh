@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd mailpit-poc
+cd mailpit
 docker compose down
 cd ..

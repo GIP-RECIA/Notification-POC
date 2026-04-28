@@ -1,6 +1,0 @@
-server:
-  port: 8077
-
-spring:
-  application:
-    name: service-example-kafka-poc

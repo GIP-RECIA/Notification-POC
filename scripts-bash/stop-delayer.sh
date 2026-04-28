@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*delayer-poc"
+pkill -f "java.*delayer"

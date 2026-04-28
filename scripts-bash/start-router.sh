@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd routing-kafka-poc
+cd router
 mvn spring-boot:run &
 mvn spring-boot:run &
 mvn spring-boot:run &

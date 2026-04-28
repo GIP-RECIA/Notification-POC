@@ -1,6 +1,6 @@
 package fr.recia.notification_e2e_tests.clients;
 
-import fr.recia.model_kafka_poc.model.UserPreferences;
+import fr.recia.model_kafka.model.UserPreferences;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 

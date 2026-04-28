@@ -7,6 +7,5 @@
 ./scripts-bash/restart-preferences.sh
 ./scripts-bash/restart-router.sh
 ./scripts-bash/restart-expand.sh
-./scripts-bash/restart-replayer.sh
 ./scripts-bash/restart-service.sh
 ./scripts-bash/restart-delayer.sh

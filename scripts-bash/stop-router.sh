@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*routing-kafka-poc"
+pkill -f "java.*router"

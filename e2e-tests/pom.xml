@@ -53,13 +53,13 @@
         </dependency>
         <dependency>
             <groupId>fr.recia</groupId>
-            <artifactId>event-rest-client-kafka-poc</artifactId>
+            <artifactId>event-rest-client-kafka</artifactId>
             <version>1.0.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.recia</groupId>
-            <artifactId>model-kafka-poc</artifactId>
-            <version>1.0.25-SNAPSHOT</version>
+            <artifactId>model-kafka</artifactId>
+            <version>1.0.26-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

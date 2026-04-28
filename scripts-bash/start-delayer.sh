@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd delayer-poc
+cd delayer
 mvn spring-boot:run &
 mvn spring-boot:run &
 mvn spring-boot:run &
