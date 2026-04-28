@@ -1,29 +1,29 @@
 #!/bin/bash
 
-cd consumer-mail-poc
+cd consumer-mail
 mvn spring-boot:run &
 cd ..
-cd consumer-push-poc
+cd consumer-push
 mvn spring-boot:run &
 cd ..
-cd consumer-kafka-poc
+cd consumer-web
 mvn spring-boot:run -Dspring-boot.run.profiles=node1 &
 cd ..
-cd producer-api-poc
+cd producer-api
 mvn spring-boot:run -Dspring-boot.run.profiles=node1 &
 cd ..
-cd preferences-api-poc
+cd preferences-api
 mvn spring-boot:run &
 cd ..
-cd routing-kafka-poc
+cd router
 mvn spring-boot:run &
 cd ..
-cd expand-kafka-poc
+cd expander
 mvn spring-boot:run &
 cd ..
-cd service-example-kafka-poc
+cd service-example-kafka
 mvn spring-boot:run &
 cd ..
-cd delayer-poc
+cd delayer
 mvn spring-boot:run &
 cd ..

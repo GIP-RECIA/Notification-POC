@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd producer-api-poc
+cd producer-api
 mvn spring-boot:run -Dspring-boot.run.profiles=node1 &
 mvn spring-boot:run -Dspring-boot.run.profiles=node2 &
 mvn spring-boot:run -Dspring-boot.run.profiles=node3 &

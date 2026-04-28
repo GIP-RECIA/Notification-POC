@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*preferences-api-poc"
+pkill -f "java.*preferences-api"

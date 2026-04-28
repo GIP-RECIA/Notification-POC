@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*consumer-kafka-poc"
+pkill -f "java.*consumer-web"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Démarrage du kafka
-cd kafka-poc
+cd kafka
 docker compose up -d
 sleep 10
 

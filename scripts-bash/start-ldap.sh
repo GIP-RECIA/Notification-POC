@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd ldap-poc
+cd ldap
 ./run-ldap.sh
 cd ..

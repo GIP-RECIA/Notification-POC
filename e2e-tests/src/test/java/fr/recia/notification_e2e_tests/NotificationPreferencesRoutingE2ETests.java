@@ -1,10 +1,10 @@
 package fr.recia.notification_e2e_tests;
 
-import fr.recia.model_kafka_poc.model.ChannelPreferences;
-import fr.recia.model_kafka_poc.model.Priority;
-import fr.recia.model_kafka_poc.model.ServicePreferences;
-import fr.recia.model_kafka_poc.model.StoredNotification;
-import fr.recia.model_kafka_poc.model.UserPreferences;
+import fr.recia.model_kafka.model.ChannelPreferences;
+import fr.recia.model_kafka.model.Priority;
+import fr.recia.model_kafka.model.ServicePreferences;
+import fr.recia.model_kafka.model.StoredNotification;
+import fr.recia.model_kafka.model.UserPreferences;
 import fr.recia.notification_e2e_tests.clients.InputPreferencesApiClient;
 import fr.recia.notification_e2e_tests.clients.InputServiceEventApiClient;
 import fr.recia.notification_e2e_tests.clients.OutputNotificationApiClient;

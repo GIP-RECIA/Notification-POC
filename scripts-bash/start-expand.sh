@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd expand-kafka-poc
+cd expander
 mvn spring-boot:run &
 mvn spring-boot:run &
 mvn spring-boot:run &

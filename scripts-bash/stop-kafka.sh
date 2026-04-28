@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd kafka-poc
+cd kafka
 docker compose down
 cd ..

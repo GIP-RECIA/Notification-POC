@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pkill -f "java.*producer-api-poc"
+pkill -f "java.*producer-api"
