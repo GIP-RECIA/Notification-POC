@@ -6,7 +6,7 @@ Ce projet englobe tous les modules nécessaires au lancement du POC de la platef
 
 Le schéma de l’architecture mise en place est le suivant :
 
-![Schéma notifications](docs/images/notifications.png)
+![Schéma notifications](docs/images/notifications2.png)
 
 Technologies utilisées :
 - Serveur kafka 4.2 (latest)
@@ -33,6 +33,10 @@ API, producer et consumer Kafka qui a 2 rôles, récupérer et permettre l'affic
 
 Stream Kafka au centre de l'architecture qui gère le routage des notifications. Il dépose les notifications entrantes dans le bon topic de sortie en fonction des préférences utilisateurs.
 
+## [delayer](delayer/README.md)
+
+Stream Kafka qui permet de gérer le délai de chaque notification pour respecter le droit à la deconnexion et le replay des notifications au cas où il y a un problème externe au Kafka.
+
 ## Consumers
 
 La plateforme possède 3 consommateurs qui écoutent sur des topics différents en fonction du moyen d'émission :
@@ -49,9 +53,6 @@ Ce consumer écoute les notifications à envoyer par mail. Il récupère l'adres
 
 Ce consumer écoute les notifications à envoyer par méthode push (mobile). Il enregistre les tokens depuis l'appli mobile et envoie des requêtes API à Firebase.
 
-## [Replayer-kafka-poc](replayer-kafka-poc/README.md)
-
-Consumer et producer qui se charge de rejouer les notifications qui sont à rejouer à cause du droit à la déconnexion. Il n'est lancé que pendant les heures pendants lesquelles les cibles des notifications ont la possibilité d'en recevoir. Ce mode de fonctionnement sera à revoir.
 
 ## Librairies
 

@@ -71,8 +71,8 @@ public class DroitDeconnexionService {
         //Si l'heure est en dehors des horaires autorisés, et que toutes les conditions précédentes n'ont pas été validées, on check si on est minuit passé,
         // si oui, on donne à dateTime la valeur du jour même à 8h, sinon, on donne la valeur du lendemain 8h.
         if (!estHeureAutorisee(dateTime)) {
-            if (dateTime.getHour() < 18) {
-                return date.atTime(16, 40).atZone(getZoneId(region));
+            if (dateTime.getHour() < 8) {
+                return date.atTime(8, 0).atZone(getZoneId(region));
             }else {
                 ZonedDateTime demain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
                 return prochainMomentAutorise(demain, region);
@@ -127,7 +127,7 @@ public class DroitDeconnexionService {
 
     private boolean estHeureAutorisee(ZonedDateTime dateTime) {
         int heure = dateTime.getHour();
-        return heure >= 17 && heure <= 18;
+        return heure >= 8 && heure <= 18;
     }
 
     private boolean estVacances(LocalDate date, Region region){
