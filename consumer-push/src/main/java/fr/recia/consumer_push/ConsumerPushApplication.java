@@ -1,13 +1,13 @@
-package fr.recia.consumer_mail;
+package fr.recia.consumer_push;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConsumerMailPocApplication {
+public class ConsumerPushApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConsumerMailPocApplication.class, args);
+		SpringApplication.run(ConsumerPushApplication.class, args);
 	}
 
 }

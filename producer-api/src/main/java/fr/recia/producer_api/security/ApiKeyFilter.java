@@ -1,6 +1,6 @@
-package fr.recia.producer_api_poc.security;
+package fr.recia.producer_api.security;
 
-import fr.recia.producer_api_poc.configuration.ApiKeyProperties;
+import fr.recia.producer_api.configuration.ApiKeyProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

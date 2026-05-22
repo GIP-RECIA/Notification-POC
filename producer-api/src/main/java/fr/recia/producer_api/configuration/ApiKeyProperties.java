@@ -1,4 +1,4 @@
-package fr.recia.producer_api_poc.configuration;
+package fr.recia.producer_api.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

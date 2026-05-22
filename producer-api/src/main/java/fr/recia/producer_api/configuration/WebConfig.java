@@ -1,6 +1,6 @@
-package fr.recia.producer_api_poc.configuration;
+package fr.recia.producer_api.configuration;
 
-import fr.recia.producer_api_poc.security.ApiKeyFilter;
+import fr.recia.producer_api.security.ApiKeyFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

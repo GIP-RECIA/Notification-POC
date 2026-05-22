@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class DelayerPocApplication {
+public class DelayerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DelayerPocApplication.class, args);
+        SpringApplication.run(DelayerApplication.class, args);
     }
 
 }

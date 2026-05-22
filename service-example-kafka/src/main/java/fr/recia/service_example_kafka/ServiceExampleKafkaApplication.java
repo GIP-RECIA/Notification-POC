@@ -1,11 +1,13 @@
-package fr.recia.routing_kafka_poc;
+package fr.recia.service_example_kafka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RoutingKafkaPocApplication {
+public class ServiceExampleKafkaApplication {
+
 	public static void main(String[] args) {
-		SpringApplication.run(RoutingKafkaPocApplication.class, args);
+		SpringApplication.run(ServiceExampleKafkaPocApplication.class, args);
 	}
+
 }

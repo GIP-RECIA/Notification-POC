@@ -1,4 +1,4 @@
-package fr.recia.producer_api_poc.controller;
+package fr.recia.producer_api.controller;
 
 import fr.recia.model_kafka.model.ServiceEvent;
 import lombok.extern.slf4j.Slf4j;
