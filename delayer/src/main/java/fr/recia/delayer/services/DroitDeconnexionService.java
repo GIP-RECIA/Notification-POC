@@ -50,7 +50,7 @@ public class DroitDeconnexionService {
         // Si vacances, on sélectionne le lundi de la rentrée, et on appelle la méthode avec pour savoir si c'est un jour où l'envoie est possible.
         if (estVacances(date, region)) {
             LocalDate finVacances = getFinVacances(date, region);
-            ZonedDateTime repriseVacances = finVacances.plusDays(1).atTime(8, 0).atZone(getZoneId(region));
+            ZonedDateTime repriseVacances = finVacances.atTime(8, 0).atZone(getZoneId(region));
 
             return prochainMomentAutorise(repriseVacances, region);
         }
@@ -90,6 +90,7 @@ public class DroitDeconnexionService {
     // Check si on peut envoyer la notif ou non.
     public boolean peutRecevoirNotif(String userId, long timestamp, Region region) {
         log.debug("le calendrier {}", vacancesProperties);
+        log.info("le calendrier {}", vacancesProperties);
         ZonedDateTime dateTime = Instant.ofEpochMilli(timestamp).atZone(getZoneId(region));
         LocalDate date = dateTime.toLocalDate();
 
