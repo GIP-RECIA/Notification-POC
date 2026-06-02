@@ -1,6 +1,6 @@
-package fr.recia.consumer_web.service;
+package fr.recia.expander.service;
 
-import fr.recia.consumer_web.configuration.LdapGroupRequestProperties;
+import fr.recia.expander.configuration.LdapGroupRequestProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;

@@ -1,13 +1,12 @@
-package fr.recia.consumer_web.kafka;
+package fr.recia.expander.kafka;
 
-import fr.recia.consumer_web.service.LdapGroupService;
-import fr.recia.consumer_web.service.LdapMailService;
+import fr.recia.expander.service.LdapGroupService;
+import fr.recia.expander.service.LdapMailService;
 import fr.recia.model_kafka.model.Notification;
 import fr.recia.model_kafka.model.NotificationHeader;
 import fr.recia.model_kafka.model.ServiceEvent;
 import fr.recia.model_kafka.model.TargetType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
