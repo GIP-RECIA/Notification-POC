@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.routing_kafka_poc" level="TRACE"/>
+    <logger name="fr.recia.router" level="TRACE"/>
 
 </configuration>
