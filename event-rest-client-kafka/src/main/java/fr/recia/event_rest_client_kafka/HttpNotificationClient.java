@@ -8,6 +8,7 @@ import fr.recia.model_kafka.model.Priority;
 import fr.recia.model_kafka.model.ServiceEvent;
 import fr.recia.model_kafka.model.Target;
 import fr.recia.model_kafka.model.TargetType;
+import org.apache.kafka.common.protocol.types.Field;
 
 import java.io.IOException;
 import java.net.URI;
@@ -48,15 +49,15 @@ public class HttpNotificationClient {
     }
 
     public void sendLowPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
-        sendNotification(title, message, link, userId, channels, Priority.LOW, TargetType.USER);
+        sendNotification(title, message, link, userId, channels, Priority.LOW, TargetType.UID);
     }
 
     public void sendNormalPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
-        sendNotification(title, message, link, userId, channels, Priority.NORMAL, TargetType.USER);
+        sendNotification(title, message, link, userId, channels, Priority.NORMAL, TargetType.UID);
     }
 
     public void sendHighPriorityToUser(String title, String message, String link, String userId, List<Channel> channels) {
-        sendNotification(title, message, link, userId, channels, Priority.HIGH, TargetType.USER);
+        sendNotification(title, message, link, userId, channels, Priority.HIGH, TargetType.UID);
     }
 
     public void sendLowPriorityToGroup(String title, String message, String link, String groupId, List<Channel> channels) {
