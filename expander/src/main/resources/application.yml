@@ -11,8 +11,10 @@ spring:
       group-id: expanded-consumer
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.value.default.type: fr.recia.model_kafka.model.ServiceEvent
         spring.json.trusted.packages: "*"
         security.protocol: SASL_PLAINTEXT
         sasl.mechanism: PLAIN
@@ -37,9 +39,12 @@ spring:
     username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
     password: admin
 
-request:
+ldap-group:
   branch-base: ou=groups
   retrieved-attribute: hasMember
   filter: "(&(objectClass=groupOfNames)(cn={0}))"
 
-
+ldap-mail:
+  branch-base: ou=people
+  retrieved-attribute: uid
+  filter: "(mail={0})"

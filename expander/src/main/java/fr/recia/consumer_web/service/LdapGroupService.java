@@ -1,6 +1,6 @@
 package fr.recia.consumer_web.service;
 
-import fr.recia.consumer_web.configuration.LdapRequestProperties;
+import fr.recia.consumer_web.configuration.LdapGroupRequestProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -19,19 +19,19 @@ import java.util.List;
 public class LdapGroupService {
 
     private final LdapTemplate ldapTemplate;
-    private final LdapRequestProperties ldapRequestProperties;
+    private final LdapGroupRequestProperties ldapGroupRequestProperties;
 
-    public LdapGroupService(LdapTemplate ldapTemplate, LdapRequestProperties ldapRequestProperties) {
+    public LdapGroupService(LdapTemplate ldapTemplate, LdapGroupRequestProperties ldapGroupRequestProperties) {
         this.ldapTemplate = ldapTemplate;
-        this.ldapRequestProperties = ldapRequestProperties;
+        this.ldapGroupRequestProperties = ldapGroupRequestProperties;
     }
 
     public List<String> getGroupMembers(String groupCn) {
 
-        String filter = MessageFormat.format(ldapRequestProperties.getFilter(), groupCn);
+        String filter = MessageFormat.format(ldapGroupRequestProperties.getFilter(), groupCn);
         log.trace("Filtre LDAP utilisé : {}", filter);
 
-        return ldapTemplate.search(ldapRequestProperties.getBranchBase(), filter, this::mapMembers)
+        return ldapTemplate.search(ldapGroupRequestProperties.getBranchBase(), filter, this::mapMembers)
                 .stream()
                 .flatMap(Collection::stream)
                 .filter(this::isUser)
@@ -40,7 +40,7 @@ public class LdapGroupService {
 
     private List<String> mapMembers(Attributes attrs) throws NamingException {
         List<String> members = new ArrayList<>();
-        Attribute memberAttr = attrs.get(ldapRequestProperties.getRetrievedAttribute());
+        Attribute memberAttr = attrs.get(ldapGroupRequestProperties.getRetrievedAttribute());
         if (memberAttr != null) {
             NamingEnumeration<?> all = memberAttr.getAll();
             while (all.hasMore()) {
