@@ -1,8 +1,5 @@
-server :
-  port: 8071
-
-proxy :
-  smtp-port: 1025
+proxy:
+  smtp-port: 1026
 
 notification-api:
   url: "http://localhost:8179/event/emit"
