@@ -13,22 +13,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class NextCloudNotificationHandler implements SimpleMessageListener {
+
     private final HttpNotificationClient notificationClient;
-
-    private static final Pattern URL_PATTERN = Pattern.compile(
-            "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])",
-            Pattern.CASE_INSENSITIVE);
-
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", Pattern.CASE_INSENSITIVE);
 
     @Override
     public boolean accept(String from, String mail) {
@@ -38,6 +38,7 @@ public class NextCloudNotificationHandler implements SimpleMessageListener {
     @Override
     public void deliver(String from, String dest, InputStream data) {
         log.info("[SMTP-PROXY] Nouveau mail intercepté ! De : {} | Pour : {}", from, dest);
+        log.info("[SMTP-PROXY] Nouveau mail intercepté ! Data : {}", new BufferedReader(new InputStreamReader(data)).lines().collect(Collectors.joining("\n")));
 
         try {
             Session session = Session.getDefaultInstance(new Properties());
