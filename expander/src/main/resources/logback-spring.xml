@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.consumer_web" level="TRACE"/>
+    <logger name="fr.recia.expander" level="TRACE"/>
 
 </configuration>

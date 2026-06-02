@@ -31,7 +31,7 @@ public class DemoController {
     public String sendNotification(@RequestParam String target, @RequestParam String id, @RequestParam String title, @RequestParam String message, @RequestParam String link) {
         if(target.equals("user")){
             System.out.println("Sent to user");
-            notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.USER);
+            notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.UID);
         } else {
             System.out.println("Sent to group");
             notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.GROUP);

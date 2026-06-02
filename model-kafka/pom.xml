@@ -4,12 +4,12 @@
   <groupId>fr.recia</groupId>
   <artifactId>model-kafka</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.26-SNAPSHOT</version>
+  <version>1.0.28-SNAPSHOT</version>
   <name>model-kafka</name>
   <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
   </properties>
   <dependencies>
     <dependency>

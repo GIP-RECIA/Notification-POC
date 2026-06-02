@@ -7,6 +7,6 @@
 ./scripts-bash/stop-preferences.sh
 ./scripts-bash/stop-router.sh
 ./scripts-bash/stop-expand.sh
-./scripts-bash/stop-replayer.sh
 ./scripts-bash/stop-service.sh
 ./scripts-bash/stop-delayer.sh
+./scripts-bash/stop-smtp-proxy.sh

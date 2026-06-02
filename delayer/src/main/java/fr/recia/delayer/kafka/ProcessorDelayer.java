@@ -40,7 +40,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final static String SINK_DLT = "sink.dlt";
     private final static int NUM_RETRIES = 5;
 
-    private Duration scanFrequency = Duration.ofSeconds(40);
+    private Duration scanFrequency = Duration.ofSeconds(60);
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
         this.droitDeconnexionService = droitDeconnexionService;
