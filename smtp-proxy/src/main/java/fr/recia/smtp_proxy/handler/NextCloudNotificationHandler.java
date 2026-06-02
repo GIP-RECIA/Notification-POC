@@ -1,6 +1,5 @@
 package fr.recia.smtp_proxy.handler;
 
-import fr.recia.smtp_proxy.service.LdapUidFromMailService;
 import fr.recia.event_rest_client_kafka.HttpNotificationClient;
 import fr.recia.model_kafka.model.Channel;
 import fr.recia.model_kafka.model.Priority;
@@ -24,7 +23,6 @@ import java.util.regex.Pattern;
 @Slf4j
 @RequiredArgsConstructor
 public class NextCloudNotificationHandler implements SimpleMessageListener {
-    private final LdapUidFromMailService ldapUidFromMailService;
     private final HttpNotificationClient notificationClient;
 
     private static final Pattern URL_PATTERN = Pattern.compile(
@@ -48,18 +46,17 @@ public class NextCloudNotificationHandler implements SimpleMessageListener {
             String title = mimeMessage.getSubject();
             String message = extractPlainBody(mimeMessage);
             String link = extractUrl(message);
-            String uid = ldapUidFromMailService.getUidByMail(dest);
 
-            log.info("Les données ont été récupérée avec succés. La notification est pour {}, son uid est {}, le contenu du message est : {} et le lien est : {}", dest, uid, message, link);
+            log.info("Les données ont été récupérée avec succés. La notification est pour {}, le contenu du message est : {} et le lien est : {}", dest, message, link);
 
             notificationClient.sendNotification(
                     title,
                     message.trim(),
                     link,
-                    uid,
+                    dest,
                     List.of(Channel.WEB),
                     Priority.NORMAL,
-                    TargetType.USER
+                    TargetType.EMAIL
             );
         } catch (Exception e) {
             log.error("erreur : Les données n'ont pas été interceptées");

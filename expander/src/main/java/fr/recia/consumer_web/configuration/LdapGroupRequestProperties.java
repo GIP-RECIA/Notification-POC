@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "request")
+@ConfigurationProperties(prefix = "ldap-group")
 @Data
-public class LdapRequestProperties {
+public class LdapGroupRequestProperties {
     private String branchBase;
     private String retrievedAttribute;
     private String filter;
