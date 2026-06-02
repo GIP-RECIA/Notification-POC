@@ -9,3 +9,4 @@
 ./scripts-bash/stop-expand.sh
 ./scripts-bash/stop-service.sh
 ./scripts-bash/stop-delayer.sh
+./scripts-bash/stop-smtp-proxy.sh

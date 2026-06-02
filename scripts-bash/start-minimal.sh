@@ -1,4 +1,4 @@
-#!/bin/bash
+  #!/bin/bash
 
 cd consumer-mail
 mvn spring-boot:run &
@@ -25,5 +25,8 @@ cd service-example-kafka
 mvn spring-boot:run &
 cd ..
 cd delayer
+mvn spring-boot:run &
+cd ..
+cd smtp-proxy
 mvn spring-boot:run &
 cd ..

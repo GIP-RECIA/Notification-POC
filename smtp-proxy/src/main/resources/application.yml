@@ -1,0 +1,25 @@
+server :
+  port: 8071
+
+proxy :
+  smtp-port: 1025
+
+notification-api:
+  url: "http://localhost:8179/event/emit"
+  service-name: "NEXTCLOUD"
+  api-key: "Xif0duNVWzCPvzkk9LIcAZvpdYukD6ws"
+
+spring:
+  application:
+    smtp-proxy
+
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=esco-centre,dc=fr
+    username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+    password: admin
+
+request:
+  branch-base: ou=people
+  retrieved-attribute: uid
+  filter: "(mail={0})"
