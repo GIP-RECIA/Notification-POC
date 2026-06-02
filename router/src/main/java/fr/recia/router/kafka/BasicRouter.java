@@ -1,17 +1,7 @@
-package fr.recia.routing_kafka_poc.kafka;
+package fr.recia.router.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.recia.model_kafka.model.Channel;
-import fr.recia.model_kafka.model.ChannelPreferences;
-import fr.recia.model_kafka.model.Notification;
-import fr.recia.model_kafka.model.NotificationSerde;
-import fr.recia.model_kafka.model.PreferencesNotification;
-import fr.recia.model_kafka.model.Priority;
-import fr.recia.model_kafka.model.RoutedNotification;
-import fr.recia.model_kafka.model.RoutedNotificationSerde;
-import fr.recia.model_kafka.model.ServicePreferences;
-import fr.recia.model_kafka.model.UserPreferences;
-import fr.recia.model_kafka.model.UserPreferencesSerde;
+import fr.recia.model_kafka.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;

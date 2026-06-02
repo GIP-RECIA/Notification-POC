@@ -41,6 +41,9 @@ prefs:
     - GLC
     - GROUPER
     - DEMO-SERVICE
+    - PUBLISHER
+    - MCE
+    - NEXTCLOUD
   default-channels:
     ws: true
     mail: false
