@@ -1,4 +1,4 @@
-package fr.recia.routing_kafka_poc.configuration;
+package fr.recia.router.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ServiceExampleKafkaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ServiceExampleKafkaPocApplication.class, args);
+		SpringApplication.run(ServiceExampleKafkaApplication.class, args);
 	}
 
 }

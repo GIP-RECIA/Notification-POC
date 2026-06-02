@@ -1,6 +1,6 @@
-package fr.recia.routing_kafka_poc.kafka;
+package fr.recia.router.kafka;
 
-import fr.recia.routing_kafka_poc.configuration.KafkaStreamProperties;
+import fr.recia.router.configuration.KafkaStreamProperties;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
