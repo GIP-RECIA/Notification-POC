@@ -1,13 +1,12 @@
 package fr.recia.delayer.kafka;
 
+import fr.recia.delayer.configuration.FrequencyDuration;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import fr.recia.delayer.services.DroitDeconnexionService;
 import fr.recia.delayer.services.LdapRegionService;
 import fr.recia.model_kafka.model.RoutedNotification;
-import fr.recia.delayer.configuration.KafkaSerdeConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
@@ -26,6 +25,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final DroitDeconnexionService droitDeconnexionService;
     private final LdapRegionService ldapRegionService;
     private PunctuatorTopology topology;
+    private FrequencyDuration frequencyDuration;
 
     private final static String SINK_WEB = "sink.web";
     private final static String SINK_MAIL = "sink.mail";
@@ -40,7 +40,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final static String SINK_DLT = "sink.dlt";
     private final static int NUM_RETRIES = 5;
 
-    private Duration scanFrequency = Duration.ofSeconds(60);
+    private Duration scanFrequency = Duration.ofSeconds(frequencyDuration.getDuration());
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
         this.droitDeconnexionService = droitDeconnexionService;
