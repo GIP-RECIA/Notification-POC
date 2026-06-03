@@ -21,11 +21,13 @@ import java.util.Set;
 @Slf4j
 public class PushNotificationConsumer {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
+    private final FcmService fcmService;
 
-    @Autowired
-    private FcmService fcmService;
+    public PushNotificationConsumer(TokenService tokenService, FcmService fcmService){
+        this.tokenService = tokenService;
+        this.fcmService = fcmService;
+    }
 
     KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 

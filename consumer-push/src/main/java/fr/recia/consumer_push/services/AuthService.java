@@ -20,8 +20,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class AuthService {
 
-    private HttpClient httpClient;
-    private CASProperties casProperties;
+    private final HttpClient httpClient;
+    private final CASProperties casProperties;
 
     public AuthService(CASProperties casProperties){
         this.httpClient = HttpClient.newHttpClient();

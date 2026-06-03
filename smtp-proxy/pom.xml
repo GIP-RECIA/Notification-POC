@@ -31,11 +31,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -49,7 +44,7 @@
         <dependency>
             <groupId>fr.recia</groupId>
             <artifactId>event-rest-client-kafka</artifactId>
-            <version>1.0.10-java-11-SNAPSHOT</version>
+            <version>1.0.10-SNAPSHOT</version>
         </dependency>
 
         <dependency>

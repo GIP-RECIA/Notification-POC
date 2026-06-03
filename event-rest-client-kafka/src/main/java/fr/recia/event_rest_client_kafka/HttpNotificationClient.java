@@ -8,7 +8,6 @@ import fr.recia.model_kafka.model.Priority;
 import fr.recia.model_kafka.model.ServiceEvent;
 import fr.recia.model_kafka.model.Target;
 import fr.recia.model_kafka.model.TargetType;
-import org.apache.kafka.common.protocol.types.Field;
 
 import java.io.IOException;
 import java.net.URI;

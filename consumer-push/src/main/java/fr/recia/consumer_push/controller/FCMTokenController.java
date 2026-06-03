@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class FCMTokenController {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
+    private final AuthService authService;
 
-    @Autowired
-    private AuthService authService;
+    public FCMTokenController(TokenService tokenService, AuthService authService){
+        this.tokenService = tokenService;
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody TokenDto tokenDto) {

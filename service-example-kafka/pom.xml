@@ -55,7 +55,7 @@
 		<dependency>
 			<groupId>fr.recia</groupId>
 			<artifactId>event-rest-client-kafka</artifactId>
-			<version>1.0.10-java-11-SNAPSHOT</version>
+			<version>1.0.10-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

@@ -31,8 +31,11 @@ public class KafkaStreamsConfig {
     public static final String STORE_NAME = "push-tokens-store";
     public static final String TOPIC_NAME = "push.tokens";
 
-    @Autowired
-    private KafkaStreamProperties kafkaStreamProperties;
+    private final KafkaStreamProperties kafkaStreamProperties;
+
+    public KafkaStreamsConfig(KafkaStreamProperties kafkaStreamProperties){
+        this.kafkaStreamProperties = kafkaStreamProperties;
+    }
 
     @Bean
     public GlobalKTable<String, DeviceTokenSet> preferencesTable(StreamsBuilder builder, ObjectMapper objectMapper) {
