@@ -40,7 +40,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final static String SINK_DLT = "sink.dlt";
     private final static int NUM_RETRIES = 5;
 
-    private Duration scanFrequency = Duration.ofSeconds(frequencyDuration.getDuration());
+    private Duration scanFrequency;
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
         this.droitDeconnexionService = droitDeconnexionService;
@@ -55,7 +55,6 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         long nowReplay = now + Duration.ofMinutes(30).toMillis();
         int replayCount = record.value().getRetryNumber();
         Region region = ldapRegionService.getRegionByUid(userId);
-
 
         if (replayCount == 0) {
             if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)) {
