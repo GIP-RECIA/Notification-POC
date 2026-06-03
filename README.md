@@ -6,7 +6,7 @@ Ce projet englobe tous les modules nécessaires au lancement du POC de la platef
 
 Le schéma de l’architecture mise en place est le suivant :
 
-![Schéma notifications](docs/images/notifications2.png)
+![Schéma notifications](docs/images/notifications3.png)
 
 Technologies utilisées :
 - Serveur kafka 4.2 (latest)
