@@ -6,7 +6,7 @@ routing:
     - header: From
       regex: ".*Nextcloud.*"
       processor: NextcloudProcessor
-      service-name: "NEXTCLOUD"
+      service: "NEXTCLOUD"
       api-key: "Xif0duNVWzCPvzkk9LIcAZvpdYukD6ws"
 
 notification-api:
@@ -15,14 +15,15 @@ notification-api:
 spring:
   application:
     smtp-proxy
+  mail:
+    host: localhost
+    port: 1025
+    #username: proxy
+    #password: secure
+    #properties:
+      #mail:
+        #smtp:
+          #auth: true
+          #starttls:
+            #enable: true
 
-  ldap:
-    urls: ldap://localhost:389
-    base: dc=esco-centre,dc=fr
-    username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
-    password: admin
-
-request:
-  branch-base: ou=people
-  retrieved-attribute: uid
-  filter: "(mail={0})"

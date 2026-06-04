@@ -1,16 +1,20 @@
 package fr.recia.smtp_proxy.handler;
 
+import fr.recia.smtp_proxy.configuration.SMTPRoutingProperties;
+import fr.recia.smtp_proxy.configuration.SMTPRoutingRule;
 import fr.recia.smtp_proxy.registry.ProcessorRegistry;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -18,6 +22,8 @@ import java.util.Properties;
 public class MailNotificationHandler implements SimpleMessageListener {
 
     private final ProcessorRegistry processorRegistry;
+    private final SMTPRoutingProperties smtpRoutingProperties;
+    private final JavaMailSender javaMailSender;
 
     @Override
     public boolean accept(String from, String mail) {
@@ -30,13 +36,29 @@ public class MailNotificationHandler implements SimpleMessageListener {
         Session session = Session.getDefaultInstance(new Properties());
         try {
             MimeMessage mimeMessage = new MimeMessage(session, data);
-            // TODO : logique pour choisir le bon processor en fonction des règles de routage
-            String processor = "NextcloudProcessor";
-            log.info("Debug From - {}", Arrays.toString(mimeMessage.getHeader("From")));
-            log.info("Debug Received - {}", Arrays.toString(mimeMessage.getHeader("Received")));
-            processorRegistry.get(processor).process(from, dest, mimeMessage);
+
+            for (int i=0 ; i < smtpRoutingProperties.getRules().size(); i++){
+
+                SMTPRoutingRule rule = smtpRoutingProperties.getRules().get(i);
+                String header = mimeMessage.getHeader(rule.getHeader())[0];
+
+                Pattern pattern = Pattern.compile(rule.getRegex());
+                Matcher matcher = pattern.matcher(header);
+
+
+                if (matcher.find()){
+                    String processor = rule.getProcessor();
+                    processorRegistry.get(processor).process(from, dest, mimeMessage);
+                    return;
+                }
+            }
+
+            log.info("Aucune règle ne correspond. Transfer du mail au destinataire initial : {}", dest);
+            javaMailSender.send(mimeMessage);
+
         } catch (Exception e) {
             log.error("erreur : Les données n'ont pas été interceptées");
+
         }
     }
 

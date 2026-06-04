@@ -8,5 +8,5 @@
 ./scripts-bash/start-router.sh
 ./scripts-bash/start-expand.sh
 ./scripts-bash/start-service.sh
-./scripts-bash/start-dalyer.sh
+./scripts-bash/start-delayer.sh
 ./scripts-bash/start-smtp-proxy.sh

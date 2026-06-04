@@ -1,5 +1,6 @@
 package fr.recia.delayer.services;
 
+import fr.recia.delayer.droitReconnexionConfig.BornesHoraires;
 import fr.recia.delayer.droitReconnexionConfig.PeriodesVacances;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import fr.recia.delayer.droitReconnexionConfig.VacancesProperties;
@@ -15,7 +16,7 @@ import java.time.*;
 @RequiredArgsConstructor
 public class DroitDeconnexionService {
     private final VacancesProperties vacancesProperties;
-
+    private final BornesHoraires bornesHoraires;
 
     private ZoneId getZoneId(Region region) {
         return (region == Region.REUNION)
@@ -71,7 +72,7 @@ public class DroitDeconnexionService {
         //Si l'heure est en dehors des horaires autorisés, et que toutes les conditions précédentes n'ont pas été validées, on check si on est minuit passé,
         // si oui, on donne à dateTime la valeur du jour même à 8h, sinon, on donne la valeur du lendemain 8h.
         if (!estHeureAutorisee(dateTime)) {
-            if (dateTime.getHour() < 8) {
+            if (dateTime.getHour() < bornesHoraires.getInf()) {
                 return date.atTime(8, 0).atZone(getZoneId(region));
             }else {
                 ZonedDateTime demain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
@@ -127,8 +128,9 @@ public class DroitDeconnexionService {
 
 
     private boolean estHeureAutorisee(ZonedDateTime dateTime) {
+
         int heure = dateTime.getHour();
-        return heure >= 8 && heure <= 18;
+        return heure >= bornesHoraires.getInf() && heure <= bornesHoraires.getSup();
     }
 
     private boolean estVacances(LocalDate date, Region region){

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DroitDeconnexionServiceTest {
     private DroitDeconnexionService droitDeconnexionService;
     private VacancesProperties vacancesProperties;
+    private BornesHoraires bornesHoraires;
 
     @BeforeEach
     void setUpCalculDelaiHeure() {
@@ -29,7 +30,7 @@ public class DroitDeconnexionServiceTest {
         reunion.setJoursFeries(new ArrayList<>());
         vacancesProperties.setReunion(reunion);
 
-        droitDeconnexionService = new DroitDeconnexionService(vacancesProperties);
+        droitDeconnexionService = new DroitDeconnexionService(vacancesProperties, bornesHoraires);
     }
 
     @Test
@@ -80,6 +81,7 @@ public class DroitDeconnexionServiceTest {
     void setUpCalculDelaiVacance() {
         vacancesProperties = new VacancesProperties();
 
+
         CalendrierRegion centre = new CalendrierRegion();
         centre.setVacances(new ArrayList<>());
         centre.setJoursFeries(new ArrayList<>());
@@ -90,7 +92,7 @@ public class DroitDeconnexionServiceTest {
         reunion.setJoursFeries(new ArrayList<>());
         vacancesProperties.setReunion(reunion);
 
-        droitDeconnexionService = new DroitDeconnexionService(vacancesProperties);
+        droitDeconnexionService = new DroitDeconnexionService(vacancesProperties, bornesHoraires);
 
         // On crée une période : du 20 Octobre au 2 Novembre 2026
         PeriodesVacances toussaint = new PeriodesVacances();
