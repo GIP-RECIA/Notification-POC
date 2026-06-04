@@ -21,10 +21,10 @@ public class WebNotificationConsumer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @KafkaListener(topics = "ok.web", groupId = "web-consumer")
+    @KafkaListener(topics = "notifications.web", groupId = "web-consumer")
     public void consume(RoutedNotification routedNotification) {
         try {
-        log.debug("Notification web ok reçue : {}", routedNotification);
+        log.debug("Notification web reçue : {}", routedNotification);
         redisNotificationStore.save(routedNotification.getNotification());
 
         }catch (Exception e) {

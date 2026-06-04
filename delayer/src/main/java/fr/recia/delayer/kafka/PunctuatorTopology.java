@@ -24,9 +24,9 @@ public class PunctuatorTopology {
     private final static String SINK_PUSH = "sink.push";
     private final static String SINK_DLT = "sink.dlt";
 
-    private final static String TOPIC_OUT_WEB = "ok.web";
-    private final static String TOPIC_OUT_MAIL = "ok.mail";
-    private final static String TOPIC_OUT_PUSH = "ok.push";
+    private final static String TOPIC_OUT_WEB = "notifications.web";
+    private final static String TOPIC_OUT_MAIL = "notifications.mail";
+    private final static String TOPIC_OUT_PUSH = "notifications.push";
     private final static String TOPIC_OUT_DLT = "notifications.dlt";
 
     private final static String TOPIC_IN_ROUTER = "notifications.router";
