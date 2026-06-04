@@ -31,7 +31,7 @@ public class NextcloudProcessor implements MailProcessor {
         String message = extractPlainBody(mimeMessage);
         String link = extractUrl(message);
 
-        log.info("Les données ont été récupérée avec succés. La notification est pour {}, le contenu du message est : {} et le lien est : {}", dest, message, link);
+        log.info("Les données ont été récupérées avec succés. La notification est pour {}, le contenu du message est : {} et le lien est : {}", dest, message, link);
 
         httpNotificationClient.sendNotification(
                 title,

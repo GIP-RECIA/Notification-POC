@@ -41,10 +41,8 @@ public class MailNotificationHandler implements SimpleMessageListener {
 
                 SMTPRoutingRule rule = smtpRoutingProperties.getRules().get(i);
                 String header = mimeMessage.getHeader(rule.getHeader())[0];
-
                 Pattern pattern = Pattern.compile(rule.getRegex());
                 Matcher matcher = pattern.matcher(header);
-
 
                 if (matcher.find()){
                     String processor = rule.getProcessor();
@@ -54,10 +52,11 @@ public class MailNotificationHandler implements SimpleMessageListener {
             }
 
             log.info("Aucune règle ne correspond. Transfer du mail au destinataire initial : {}", dest);
+            log.debug("Data du message associé : {}", mimeMessage.getContent());
             javaMailSender.send(mimeMessage);
 
         } catch (Exception e) {
-            log.error("erreur : Les données n'ont pas été interceptées");
+            log.error("Une erreur est survenue pendant l'interception d'un mail", e);
 
         }
     }

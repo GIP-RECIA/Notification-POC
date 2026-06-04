@@ -21,9 +21,9 @@ public class ProcessorRegistry {
     private final SMTPRoutingProperties smtpRoutingProperties;
 
     public ProcessorRegistry(NotificationClientProperties notificationClientProperties, SMTPRoutingProperties smtpRoutingProperties){
-        this.smtpRoutingProperties = smtpRoutingProperties;
         this.registry = new HashMap<>();
         this.notificationClientProperties = notificationClientProperties;
+        this.smtpRoutingProperties = smtpRoutingProperties;
     }
 
     public MailProcessor get(String name) {
@@ -32,27 +32,17 @@ public class ProcessorRegistry {
 
     @PostConstruct
     public void init() {
-
         String url = notificationClientProperties.getUrl();
-
         for (SMTPRoutingRule rule : smtpRoutingProperties.getRules()) {
             String processorName = rule.getProcessor();
             String service = rule.getService();
             String apiKey = rule.getApiKey();
-
-            MailProcessor processor = null;;
-
             switch (processorName) {
                 case "NextcloudProcessor" :
-                    processor = new NextcloudProcessor(url, service, apiKey);
-            }
-
-            if (processor != null) {
-                register(processorName, processor);
+                    register(processorName, new NextcloudProcessor(url, service, apiKey));
+                    log.info("Registered new {}", processorName);
             }
         }
-
-
     }
 
     private void register(String name, MailProcessor processor) {
