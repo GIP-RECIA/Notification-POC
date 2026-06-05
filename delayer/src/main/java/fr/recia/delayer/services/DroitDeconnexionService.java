@@ -73,7 +73,7 @@ public class DroitDeconnexionService {
         // si oui, on donne à dateTime la valeur du jour même à 8h, sinon, on donne la valeur du lendemain 8h.
         if (!estHeureAutorisee(dateTime)) {
             if (dateTime.getHour() < bornesHoraires.getInf()) {
-                return date.atTime(8, 0).atZone(getZoneId(region));
+                return date.atTime(17, 10).atZone(getZoneId(region));
             }else {
                 ZonedDateTime demain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
                 return prochainMomentAutorise(demain, region);
