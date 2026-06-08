@@ -1,7 +1,6 @@
 package fr.recia.delayer.services;
 
-import fr.recia.delayer.configuration.LdapRequestProperties;
-import fr.recia.delayer.services.LdapRegionService;
+import fr.recia.delayer.configuration.LdapRequestDomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.DomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 
@@ -26,7 +25,7 @@ public class LdapRegionServiceTest {
     private LdapTemplate ldapTemplate;
 
     @Mock
-    private LdapRequestProperties ldapRequestProperties;
+    private LdapRequestDomainesProperties ldapRequestDomainesProperties;
 
     @Mock
     private DomainesProperties domainesProperties;
@@ -35,15 +34,15 @@ public class LdapRegionServiceTest {
 
     @BeforeEach
     void setUp() {
-        ldapRegionService = new LdapRegionService(ldapTemplate, ldapRequestProperties, domainesProperties);
+        ldapRegionService = new LdapRegionService(ldapTemplate, ldapRequestDomainesProperties, domainesProperties);
     }
 
     @Test
     void shouldReturnCentreWhenUserHasCentreDomaine(){
         String uid = "F1700ivg";
 
-        when(ldapRequestProperties.getFilter()).thenReturn("uid={0}");
-        when(ldapRequestProperties.getBranchBase()).thenReturn("ou=users,dc=recia,dc=fr");
+        when(ldapRequestDomainesProperties.getFilter()).thenReturn("uid={0}");
+        when(ldapRequestDomainesProperties.getBranchBase()).thenReturn("ou=users,dc=recia,dc=fr");
         when(domainesProperties.getCentre()).thenReturn(List.of("lycees.netocentre.fr", "cfa.netocentre.fr", "recia.netocentre.fr"));
 
         when(ldapTemplate.search(anyString(), anyString(), any(AttributesMapper.class))).thenReturn(List.of(List.of("lycees.netocentre.fr")));
@@ -57,8 +56,8 @@ public class LdapRegionServiceTest {
     void shouldReturnReunionWhenUSerHasReunionDomaine() {
         String uid = "F1000abc";
 
-        when(ldapRequestProperties.getFilter()).thenReturn("uid={0}");
-        when(ldapRequestProperties.getBranchBase()).thenReturn("ou=users,dc=recia,dc=fr");
+        when(ldapRequestDomainesProperties.getFilter()).thenReturn("uid={0}");
+        when(ldapRequestDomainesProperties.getBranchBase()).thenReturn("ou=users,dc=recia,dc=fr");
         when(domainesProperties.getCentre()).thenReturn(List.of("lycees.netocentre.fr", "cfa.netocentre.fr", "recia.netocentre.fr"));
 
         when(ldapTemplate.search(anyString(), anyString(), any(AttributesMapper.class))).thenReturn(List.of(List.of("reunion.fr")));

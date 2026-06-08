@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Data
-@ConfigurationProperties(prefix = "request2")
+@ConfigurationProperties(prefix = "bypass-request")
 @Configuration
 public class LdapRequestBypassProperties {
     private String branchBase;

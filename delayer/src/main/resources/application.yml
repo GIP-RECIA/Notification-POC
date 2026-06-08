@@ -17,7 +17,7 @@ spring:
     username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
     password: admin
 
-request:
+domaines-request:
   branch-base: ou=people
   retrieved-attribute: ESCODomaines
   filter: "(uid={0})"
@@ -29,7 +29,7 @@ bornes :
   inf: 7
   sup: 20
 
-request2:
+bypass-request:
   branch-base: ou=people
   retrieved-attribute: ENTPersonProfils
   filter: "(uid={0})"

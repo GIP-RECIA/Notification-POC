@@ -61,13 +61,11 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
 
         if (replayCount == 0) {
             if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
-                log.info("LA PERSONNE NE PEUT PAS BYPASS LE DROIT À LA DECONNEXION, NOTIFICATION ENVOYÉE DIRECTEMENT");
+                log.debug("La personne ne peut pas bypass le droit à la deconnexion, notification envoyée avec delai.");
 
                 Duration delai = droitDeconnexionService.calculDelai(now, region);
                 long deliveryTime = now + delai.toMillis();
                 log.trace("La région de l'utilisateur {} a bien été trouvée, c'est la région {}", userId, region);
-
-                log.info("LA PERSONNE NE PEUT PAS BYPASS LE DROIT À LA DECONNEXION, NOTIFICATION ENVOYÉE DIRECTEMENT, SON DELIVERY TIME EST {}", deliveryTime);
 
                 notification.setDeliveryTime(deliveryTime);
                 log.trace("La notification a été envoyée à {}", deliveryTime);

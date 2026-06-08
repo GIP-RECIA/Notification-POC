@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "request")
+@ConfigurationProperties(prefix = "domaines-request")
 @Data
-public class LdapRequestProperties {
+public class LdapRequestDomainesProperties {
     private String branchBase;
     private String retrievedAttribute;
     private String filter;
