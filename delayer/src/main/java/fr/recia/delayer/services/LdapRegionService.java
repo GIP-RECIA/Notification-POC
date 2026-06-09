@@ -1,6 +1,6 @@
 package fr.recia.delayer.services;
 
-import fr.recia.delayer.configuration.LdapRequestProperties;
+import fr.recia.delayer.configuration.LdapRequestDomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.DomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +20,12 @@ import java.util.List;
 @Slf4j
 public class LdapRegionService {
     private final LdapTemplate ldapTemplate;
-    private final LdapRequestProperties ldapRequestProperties;
+    private final LdapRequestDomainesProperties ldapRequestDomainesProperties;
     private final DomainesProperties domainesProperties;
 
-    public LdapRegionService(LdapTemplate ldapTemplate, LdapRequestProperties ldapRequestProperties, DomainesProperties domainesProperties) {
+    public LdapRegionService(LdapTemplate ldapTemplate, LdapRequestDomainesProperties ldapRequestDomainesProperties, DomainesProperties domainesProperties) {
         this.ldapTemplate = ldapTemplate;
-        this.ldapRequestProperties = ldapRequestProperties;
+        this.ldapRequestDomainesProperties = ldapRequestDomainesProperties;
         this.domainesProperties = domainesProperties;
     }
 
@@ -42,9 +42,9 @@ public class LdapRegionService {
 
 
     public List<String> getListDomaineCentre(String uid) {
-        String filter = MessageFormat.format(ldapRequestProperties.getFilter(), uid);
+        String filter = MessageFormat.format(ldapRequestDomainesProperties.getFilter(), uid);
 
-        return ldapTemplate.search(ldapRequestProperties.getBranchBase(), filter, this::mapDomaines)
+        return ldapTemplate.search(ldapRequestDomainesProperties.getBranchBase(), filter, this::mapDomaines)
                 .stream()
                 .flatMap(Collection::stream)
                 .toList();
@@ -52,7 +52,7 @@ public class LdapRegionService {
 
     private List<String> mapDomaines(Attributes attrs) throws NamingException {
         List<String> domaines = new ArrayList<>();
-        Attribute domainesAttr = attrs.get(ldapRequestProperties.getRetrievedAttribute());
+        Attribute domainesAttr = attrs.get(ldapRequestDomainesProperties.getRetrievedAttribute());
         if (domainesAttr !=null) {
             NamingEnumeration<?> all = domainesAttr.getAll();
             while (all.hasMore()) {

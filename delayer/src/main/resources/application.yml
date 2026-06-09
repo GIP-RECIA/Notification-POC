@@ -17,7 +17,7 @@ spring:
     username: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
     password: admin
 
-request:
+domaines-request:
   branch-base: ou=people
   retrieved-attribute: ESCODomaines
   filter: "(uid={0})"
@@ -26,8 +26,14 @@ frequency:
   duration: 60
 
 bornes :
-  inf: 8
-  sup: 18
+  inf: 7
+  sup: 20
+
+bypass-request:
+  branch-base: ou=people
+  retrieved-attribute: ENTPersonProfils
+  filter: "(uid={0})"
+
 
 domaines :
     -centre :
@@ -36,6 +42,11 @@ domaines :
       - recia.netocentre.fr
     -reunion :
       - reunion.fr
+
+bypass:
+  profil:
+    - National_ETA
+    - National_DIR
 
 vacances :
   centre:

@@ -1,15 +1,14 @@
 package fr.recia.delayer.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.delayer.configuration.FrequencyDuration;
 import fr.recia.model_kafka.model.RoutedNotificationSerde;
-import fr.recia.delayer.configuration.KafkaSerdeConfig;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.state.Stores;
 import org.apache.kafka.common.serialization.Serdes;
 import fr.recia.delayer.services.DroitDeconnexionService;
 import fr.recia.delayer.services.LdapRegionService;
+import fr.recia.delayer.services.LdapBypassDroitDeconnexionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.stereotype.Component;
@@ -51,7 +50,7 @@ public class PunctuatorTopology {
     }
 
     @Bean
-    public Topology topology(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService, RoutedNotificationSerde routedNotificationSerde, FrequencyDuration frequencyDuration) {
+    public Topology topology(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService, LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService, RoutedNotificationSerde routedNotificationSerde, FrequencyDuration frequencyDuration) {
 
         Topology topology = new Topology();
 
@@ -80,7 +79,7 @@ public class PunctuatorTopology {
         topology.addProcessor(
                 PROCESSOR_DELAYER,
                 () -> {
-                    ProcessorDelayer processor = new ProcessorDelayer(droitDeconnexionService, ldapRegionService);
+                    ProcessorDelayer processor = new ProcessorDelayer(droitDeconnexionService, ldapRegionService, ldapBypassDroitDeconnexionService);
                     processor.setScanFrequency(Duration.ofSeconds(frequencyDuration.getDuration()));
                     return processor;
                 },

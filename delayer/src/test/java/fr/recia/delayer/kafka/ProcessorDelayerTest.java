@@ -3,6 +3,7 @@ package fr.recia.delayer.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import fr.recia.delayer.services.DroitDeconnexionService;
+import fr.recia.delayer.services.LdapBypassDroitDeconnexionService;
 import fr.recia.delayer.services.LdapRegionService;
 import fr.recia.model_kafka.model.Content;
 import fr.recia.model_kafka.model.EventHeader;
@@ -42,6 +43,7 @@ class ProcessorDelayerTest {
 
     private DroitDeconnexionService droitDeconnexionService;
     private LdapRegionService ldapRegionService;
+    private LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService;
     private KeyValueStore<String, RoutedNotification> stateStore;
 
     private final static String STORE_NAME = "delayer-store";
@@ -51,6 +53,7 @@ class ProcessorDelayerTest {
     void setUp() {
         droitDeconnexionService = Mockito.mock(DroitDeconnexionService.class);
         ldapRegionService = Mockito.mock(LdapRegionService.class);
+        ldapBypassDroitDeconnexionService = Mockito.mock(LdapBypassDroitDeconnexionService.class);
 
         Topology topology = new Topology();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,7 +69,7 @@ class ProcessorDelayerTest {
         topology.addSource("Source", stringDeserializer, routedDeserializer, "input-topic");
 
         ProcessorSupplier<String, RoutedNotification, String, RoutedNotification> processorSupplier =
-                () -> new ProcessorDelayer(droitDeconnexionService, ldapRegionService);
+                () -> new ProcessorDelayer(droitDeconnexionService, ldapRegionService, ldapBypassDroitDeconnexionService);
 
         topology.addProcessor("ProcessDelayer", processorSupplier, "Source");
 

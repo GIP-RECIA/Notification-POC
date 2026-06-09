@@ -66,14 +66,14 @@ public class DroitDeconnexionService {
         // Si week-end, on cherche le prochain jour où l'on pourra envoyer la notif, donc le prochain lundi.
         if (estWeekend(dateTime)) {
                 LocalDate lundi = date.with(DayOfWeek.MONDAY);
-                return lundi.atTime(8, 0).atZone(getZoneId(region));
+                return lundi.atTime(7, 0).atZone(getZoneId(region));
         }
 
         //Si l'heure est en dehors des horaires autorisés, et que toutes les conditions précédentes n'ont pas été validées, on check si on est minuit passé,
         // si oui, on donne à dateTime la valeur du jour même à 8h, sinon, on donne la valeur du lendemain 8h.
         if (!estHeureAutorisee(dateTime)) {
             if (dateTime.getHour() < bornesHoraires.getInf()) {
-                return date.atTime(8, 0).atZone(getZoneId(region));
+                return date.atTime(7, 0).atZone(getZoneId(region));
             }else {
                 ZonedDateTime demain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
                 return prochainMomentAutorise(demain, region);

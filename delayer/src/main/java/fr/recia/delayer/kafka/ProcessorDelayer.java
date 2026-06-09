@@ -4,6 +4,7 @@ import fr.recia.delayer.configuration.FrequencyDuration;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import fr.recia.delayer.services.DroitDeconnexionService;
 import fr.recia.delayer.services.LdapRegionService;
+import fr.recia.delayer.services.LdapBypassDroitDeconnexionService;
 import fr.recia.model_kafka.model.RoutedNotification;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private KeyValueStore<String, RoutedNotification> stateStore;
     private final DroitDeconnexionService droitDeconnexionService;
     private final LdapRegionService ldapRegionService;
+    private final LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService;
     private PunctuatorTopology topology;
     private FrequencyDuration frequencyDuration;
 
@@ -42,9 +44,10 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
 
     private Duration scanFrequency;
 
-    public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService) {
+    public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService, LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService) {
         this.droitDeconnexionService = droitDeconnexionService;
         this.ldapRegionService = ldapRegionService;
+        this.ldapBypassDroitDeconnexionService = ldapBypassDroitDeconnexionService;
     }
 
     @Override
@@ -57,7 +60,9 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         Region region = ldapRegionService.getRegionByUid(userId);
 
         if (replayCount == 0) {
-            if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)) {
+            if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
+                log.debug("La personne ne peut pas bypass le droit à la deconnexion, notification envoyée avec delai.");
+
                 Duration delai = droitDeconnexionService.calculDelai(now, region);
                 long deliveryTime = now + delai.toMillis();
                 log.trace("La région de l'utilisateur {} a bien été trouvée, c'est la région {}", userId, region);
@@ -77,7 +82,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                 log.debug("Notification {} has already been replayed {} times. Putting it to dead letter topic.", notification, replayCount);
                 context.forward(record, SINK_DLT);
             }else {
-                if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)) {
+                if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
                     log.debug("Notification {} has been replayed {} times. Putting it in Store to be replayed ", notification, replayCount);
 
                     Duration delai = droitDeconnexionService.calculDelai(now, region);
@@ -88,7 +93,6 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                     stateStore.put(clePrefix, notification);
                 }else {
                     log.debug("Une notification {} à rejouer a été envoyée dans le store {}. Elle a été rejouée {} fois",notification, stateStore, notification.getRetryNumber());
-
                     notification.setDeliveryTime(nowReplay);
                     String clePrefix = String.format("%d_%s", nowReplay, notification.getNotification().getHeader().getNotificationId());
                     stateStore.put(clePrefix, notification);
