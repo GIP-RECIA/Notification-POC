@@ -54,10 +54,10 @@ try:
 
         try:
             r = requests.post(URL, json=payload, headers=headers, timeout=5)
-            if r.status_code == 200:
+            if r.status_code == 202:
                 print(f"message numéro : {count} envoyé avec succés")
             else:
-                print("ERREUR: le message n'a pas pu être envoyé")
+                print(f"ERREUR: le message n'a pas pu être envoyé.")
 
         except Exception as e:
             print(f"ERREUR: {e}")
@@ -69,5 +69,5 @@ try:
 
 except KeyboardInterrupt:
     print("\n======================================================")
-    print(f"Fin du stress-test. Total envoyé : {count} notifications.")
+    print(f"Fin du stress-test. Notifications envoyées : {count} ")
     print("======================================================")
