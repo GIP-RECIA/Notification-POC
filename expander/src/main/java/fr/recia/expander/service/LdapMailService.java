@@ -2,6 +2,7 @@ package fr.recia.expander.service;
 
 import fr.recia.expander.configuration.LdapMailRequestProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class LdapMailService {
         this.ldapMailRequestProperties = ldapMailRequestProperties;
     }
 
-
+    @Cacheable(value = "ldapUidByMail", key = "#mail")
     public String getUidByMail(String mail) {
         if (mail == null || mail.isEmpty()) {
             return null;

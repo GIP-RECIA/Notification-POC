@@ -7,6 +7,7 @@ import fr.recia.model_kafka.model.NotificationHeader;
 import fr.recia.model_kafka.model.ServiceEvent;
 import fr.recia.model_kafka.model.TargetType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -51,6 +52,8 @@ public class ServiceEventConsumer {
     @KafkaListener(topics = TOPIC_IN, groupId = GROUP_ID)
     public void consume(ServiceEvent serviceEvent) {
         log.trace("ServiceEvent {} reçu en entrée depuis le topic {}", serviceEvent, TOPIC_IN);
+        log.info("LDAPGROUPSERVICE CLASS: {}", ldapGroupService.getClass().getName());
+
         // Si c'est une liste de user le traitement est facile, on créé une notif par user
         if(serviceEvent.getTarget().getType().equals(TargetType.UID)){
             log.trace("Expansion de l'event par utilisateurs");

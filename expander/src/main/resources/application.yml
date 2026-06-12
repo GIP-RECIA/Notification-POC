@@ -3,6 +3,11 @@ logging:
     path: logs
 
 spring:
+  cache:
+    type: caffeine
+    cache-names: ldapUidByMail, ldapGroupMembers
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=24h
   application:
     name: expanded-kafka-poc
   kafka:

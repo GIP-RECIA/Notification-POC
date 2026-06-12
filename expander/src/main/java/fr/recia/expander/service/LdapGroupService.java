@@ -2,6 +2,7 @@ package fr.recia.expander.service;
 
 import fr.recia.expander.configuration.LdapGroupRequestProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,9 @@ public class LdapGroupService {
         this.ldapGroupRequestProperties = ldapGroupRequestProperties;
     }
 
+    @Cacheable(value = "ldapGroupMembers", key = "#groupCn")
     public List<String> getGroupMembers(String groupCn) {
+
 
         String filter = MessageFormat.format(ldapGroupRequestProperties.getFilter(), groupCn);
         log.trace("Filtre LDAP utilisé : {}", filter);
