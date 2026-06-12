@@ -4,7 +4,7 @@
   <groupId>fr.recia</groupId>
   <artifactId>event-rest-client-kafka</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.10-SNAPSHOT</version>
+  <version>1.0.10</version>
   <name>event-rest-client-kafka</name>
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>fr.recia</groupId>
       <artifactId>model-kafka</artifactId>
-      <version>1.0.28-SNAPSHOT</version>
+      <version>1.0.28</version>
     </dependency>
   </dependencies>
 </project>

@@ -4,7 +4,7 @@
   <groupId>fr.recia</groupId>
   <artifactId>model-kafka</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.28-SNAPSHOT</version>
+  <version>1.0.28</version>
   <name>model-kafka</name>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>

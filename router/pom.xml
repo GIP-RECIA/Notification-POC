@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia</groupId>
 	<artifactId>router</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	<name>router</name>
 	<description>Internal Kafka Routing for notification POC</description>
@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>fr.recia</groupId>
 			<artifactId>model-kafka</artifactId>
-			<version>1.0.28-SNAPSHOT</version>
+			<version>1.0.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
