@@ -6,6 +6,12 @@ logging:
     path: logs
 
 spring:
+  cache:
+    type: caffeine
+    cache-names: ldapProfile, ldapRegion
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=24h
+
   application:
     name: delayer
   Kafka:

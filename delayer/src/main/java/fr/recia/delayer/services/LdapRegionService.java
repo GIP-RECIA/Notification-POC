@@ -4,6 +4,7 @@ import fr.recia.delayer.configuration.LdapRequestDomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.DomainesProperties;
 import fr.recia.delayer.droitReconnexionConfig.Region;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class LdapRegionService {
         this.domainesProperties = domainesProperties;
     }
 
+    @Cacheable(value = "ldapRegion", key = "#userId")
     public Region getRegionByUid(String userId) {
         List<String> userDomaines = getListDomaineCentre(userId);
 
