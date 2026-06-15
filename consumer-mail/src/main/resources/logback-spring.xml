@@ -31,6 +31,6 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="fr.recia.consumer_mail" level="TRACE"/>
+    <logger name="fr.recia.notifications.consumer_mail" level="TRACE"/>
 
 </configuration>

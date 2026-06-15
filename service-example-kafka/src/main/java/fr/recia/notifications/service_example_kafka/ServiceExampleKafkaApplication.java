@@ -1,0 +1,13 @@
+package fr.recia.notifications.service_example_kafka;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ServiceExampleKafkaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ServiceExampleKafkaApplication.class, args);
+	}
+
+}

@@ -8,7 +8,7 @@
         <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.example</groupId>
+    <groupId>fr.recia.notifications</groupId>
     <artifactId>smtp-proxy</artifactId>
     <version>0.0.1</version>
     <name>smtp-proxy</name>
@@ -42,7 +42,7 @@
         </dependency>
 
         <dependency>
-            <groupId>fr.recia</groupId>
+            <groupId>fr.recia.notifications</groupId>
             <artifactId>event-rest-client-kafka</artifactId>
             <version>1.0.10</version>
         </dependency>
