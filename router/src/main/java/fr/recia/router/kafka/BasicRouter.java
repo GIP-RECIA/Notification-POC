@@ -123,13 +123,13 @@ public class BasicRouter {
     public KStream<String, Notification> basicRouting(StreamsBuilder builder, Serde<Notification> notificationSerde, Serde<UserPreferences> prefsSerde, Serde<RoutedNotification> routedNotificationSerde) {
 
         // Stream pour récupérer les notifications
-        KStream<String, Notification> input = builder.stream("events.expanded", Consumed.with(Serdes.String(), notificationSerde));
+        KStream<String, Notification> input = builder.stream("notifications.events.expanded", Consumed.with(Serdes.String(), notificationSerde));
         input.peek((key, value) -> {
             log.trace("Nouvel event : key={}, value={}", key, value);
         });
 
         // KTable pour récupérer les préferences utilisateur
-        KTable<String, UserPreferences> preferences = builder.table("user.preferences", Consumed.with(Serdes.String(), prefsSerde));
+        KTable<String, UserPreferences> preferences = builder.table("notifications.user.preferences", Consumed.with(Serdes.String(), prefsSerde));
         preferences.toStream().peek((key, prefs) -> {
             log.trace("Nouvelle préférence : key={}, value={}", key, prefs);
         });

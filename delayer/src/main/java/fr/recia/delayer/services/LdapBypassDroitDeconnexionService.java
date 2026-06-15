@@ -3,6 +3,7 @@ package fr.recia.delayer.services;
 import fr.recia.delayer.configuration.LdapRequestBypassProperties;
 import fr.recia.delayer.droitReconnexionConfig.BypassDroitDeconnexionConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class LdapBypassDroitDeconnexionService {
         this.bypassDroitDeconnexionConfig = bypassDroitDeconnexionConfig;
     }
 
+    @Cacheable(value = "ldapProfile", key = "#userId")
     public boolean canBypass(String userId) {
         String userProfil = getProfile(userId);
 
@@ -41,7 +43,6 @@ public class LdapBypassDroitDeconnexionService {
 
         return false;
     }
-
 
     public String getProfile(String uid) {
         String filter = MessageFormat.format(ldapRequestBypassProperties.getFilter(), uid);

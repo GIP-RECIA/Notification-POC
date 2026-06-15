@@ -24,7 +24,7 @@ public class EventController {
     @PostMapping("/emit")
     public ResponseEntity<Void> emit(@RequestBody ServiceEvent event) {
         try {
-            kafkaTemplate.send("events.requested", event.getHeader().getEventId(), event);
+            kafkaTemplate.send("notifications.events.requested", event.getHeader().getEventId(), event);
             log.trace("Produced ServiceEvent {} in kafka", event);
         } catch (Exception e) {
             log.error("Unable to produce ServiceEvent {} to kafka", event, e);
