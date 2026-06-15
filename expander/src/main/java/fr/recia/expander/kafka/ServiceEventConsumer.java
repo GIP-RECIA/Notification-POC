@@ -7,7 +7,6 @@ import fr.recia.model_kafka.model.NotificationHeader;
 import fr.recia.model_kafka.model.ServiceEvent;
 import fr.recia.model_kafka.model.TargetType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -22,8 +21,8 @@ import java.util.UUID;
 @Slf4j
 public class ServiceEventConsumer {
 
-    private final static String TOPIC_OUT = "events.expanded";
-    private final static String TOPIC_IN = "events.requested";
+    private final static String TOPIC_OUT = "notifications.events.expanded";
+    private final static String TOPIC_IN = "notifications.events.requested";
     private final static String GROUP_ID = "expanded-consumer";
 
     private final KafkaTemplate<String, Notification> kafkaTemplate;
@@ -52,7 +51,6 @@ public class ServiceEventConsumer {
     @KafkaListener(topics = TOPIC_IN, groupId = GROUP_ID)
     public void consume(ServiceEvent serviceEvent) {
         log.trace("ServiceEvent {} reçu en entrée depuis le topic {}", serviceEvent, TOPIC_IN);
-        log.info("LDAPGROUPSERVICE CLASS: {}", ldapGroupService.getClass().getName());
 
         // Si c'est une liste de user le traitement est facile, on créé une notif par user
         if(serviceEvent.getTarget().getType().equals(TargetType.UID)){
@@ -72,7 +70,7 @@ public class ServiceEventConsumer {
         } else if (serviceEvent.getTarget().getType().equals(TargetType.EMAIL)) {
             List<String> emailIDs = serviceEvent.getTarget().getIds();
             String email = emailIDs.get(0);
-            log.info("L'utilisateur a un email en identifiant, son mail est {}, recherche de son UID", email);
+            log.trace("L'utilisateur a un email en identifiant, son mail est {}, recherche de son UID", email);
             String uid = ldapMailService.getUidByMail(email);
             sendToKafkaForEmailId(uid, serviceEvent);
         }

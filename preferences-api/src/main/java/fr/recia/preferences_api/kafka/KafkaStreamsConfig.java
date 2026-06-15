@@ -27,7 +27,7 @@ import java.util.UUID;
 public class KafkaStreamsConfig {
 
     public static final String STORE_NAME = "user-prefs-store";
-    public static final String TOPIC_NAME = "user.preferences";
+    public static final String TOPIC_NAME = "notifications.user.preferences";
 
     @Autowired
     private KafkaStreamProperties kafkaStreamProperties;

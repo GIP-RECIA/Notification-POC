@@ -29,7 +29,7 @@ import java.util.UUID;
 public class KafkaStreamsConfig {
 
     public static final String STORE_NAME = "push-tokens-store";
-    public static final String TOPIC_NAME = "push.tokens";
+    public static final String TOPIC_NAME = "notifications.push.tokens";
 
     private final KafkaStreamProperties kafkaStreamProperties;
 
