@@ -8,7 +8,7 @@
 		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>fr.recia</groupId>
+	<groupId>fr.recia.notifications</groupId>
 	<artifactId>service-example-kafka</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
@@ -53,7 +53,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>fr.recia</groupId>
+			<groupId>fr.recia.notifications</groupId>
 			<artifactId>event-rest-client-kafka</artifactId>
 			<version>1.0.10</version>
 		</dependency>

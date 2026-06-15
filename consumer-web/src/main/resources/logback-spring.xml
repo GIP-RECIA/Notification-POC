@@ -31,7 +31,7 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="fr.recia.consumer_web" level="TRACE"/>
+    <logger name="fr.recia.notifications.consumer_web" level="TRACE"/>
     <!--logger name="org.springframework.security" level="TRACE"/-->
 
 </configuration>

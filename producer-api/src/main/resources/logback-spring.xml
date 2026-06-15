@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.producer_api_poc" level="TRACE"/>
+    <logger name="fr.recia.notifications.producer_api_poc" level="TRACE"/>
 
 </configuration>
