@@ -23,7 +23,7 @@ public class ServiceEventConsumer {
 
     private final static String TOPIC_OUT = "notifications.events.expanded";
     private final static String TOPIC_IN = "notifications.events.requested";
-    private final static String GROUP_ID = "expanded-consumer";
+    private final static String GROUP_ID = "notifications-expanded-consumer";
 
     private final KafkaTemplate<String, Notification> kafkaTemplate;
     private final LdapGroupService ldapGroupService;

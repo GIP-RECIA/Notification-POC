@@ -7,7 +7,7 @@ logging:
 
 spring:
   application:
-    name: consumer-push
+    name: notifications-consumer-push
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:
@@ -37,7 +37,7 @@ spring:
 
 streams:
   bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
-  application-id: push-tokens
+  application-id: notifications-push-tokens
   replication-factor: 3
   security-protocol: SASL_PLAINTEXT
   sasl-mechanism: PLAIN

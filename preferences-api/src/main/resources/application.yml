@@ -27,7 +27,7 @@ spring:
 
 streams:
   bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
-  application-id: preferences-ap
+  application-id: preferences-api
   replication-factor: 3
   security-protocol: SASL_PLAINTEXT
   sasl-mechanism: PLAIN

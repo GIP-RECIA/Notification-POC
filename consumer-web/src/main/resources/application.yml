@@ -15,7 +15,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:
-      group-id: web-consumer
+      group-id: notifications-web-consumer
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
