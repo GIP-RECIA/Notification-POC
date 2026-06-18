@@ -7,11 +7,11 @@ logging:
 
 spring:
   application:
-    name: notifications-consumer-push
+    name: consumer-push
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:
-      group-id: web-consumer
+      group-id: notifications-consumer-push
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
