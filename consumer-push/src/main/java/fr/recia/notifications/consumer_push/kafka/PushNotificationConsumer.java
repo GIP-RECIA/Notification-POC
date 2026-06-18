@@ -26,7 +26,7 @@ public class PushNotificationConsumer {
 
     private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
 
-    @KafkaListener(topics = "notifications.push", groupId = "push-consumer")
+    @KafkaListener(topics = "notifications.push")
     public void consume(RoutedNotification routedNotification) {
         log.debug("Notification push reçue : {}", routedNotification);
         try {

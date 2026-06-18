@@ -21,7 +21,7 @@ public class WebNotificationConsumer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @KafkaListener(topics = "notifications.web", groupId = "web-consumer")
+    @KafkaListener(topics = "notifications.web")
     public void consume(RoutedNotification routedNotification) {
         try {
         log.debug("Notification web reçue : {}", routedNotification);

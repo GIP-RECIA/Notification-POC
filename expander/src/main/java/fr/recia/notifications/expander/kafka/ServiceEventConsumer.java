@@ -23,7 +23,6 @@ public class ServiceEventConsumer {
 
     private final static String TOPIC_OUT = "notifications.events.expanded";
     private final static String TOPIC_IN = "notifications.events.requested";
-    private final static String GROUP_ID = "notifications-expanded-consumer";
 
     private final KafkaTemplate<String, Notification> kafkaTemplate;
     private final LdapGroupService ldapGroupService;
@@ -48,7 +47,7 @@ public class ServiceEventConsumer {
         kafkaTemplate.send(TOPIC_OUT, userId, notification);
     }
 
-    @KafkaListener(topics = TOPIC_IN, groupId = GROUP_ID)
+    @KafkaListener(topics = TOPIC_IN)
     public void consume(ServiceEvent serviceEvent) {
         log.trace("ServiceEvent {} reçu en entrée depuis le topic {}", serviceEvent, TOPIC_IN);
 

@@ -26,7 +26,7 @@ public class MailNotificationConsumer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @KafkaListener(topics = "notifications.mail", groupId = "mail-consumer")
+    @KafkaListener(topics = "notifications.mail")
     public void consume(RoutedNotification routedNotification) {
         try {
             log.debug("Notification mail reçue : {}", routedNotification);
