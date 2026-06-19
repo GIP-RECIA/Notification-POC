@@ -2,6 +2,7 @@ package fr.recia.notifications.router.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.notifications.model_kafka.model.*;
+import fr.recia.notifications.model_kafka_serde.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
