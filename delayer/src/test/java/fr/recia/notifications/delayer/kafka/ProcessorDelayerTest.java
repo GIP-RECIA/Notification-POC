@@ -10,7 +10,7 @@ import fr.recia.notifications.model_kafka.model.EventHeader;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.NotificationHeader;
 import fr.recia.notifications.model_kafka.model.RoutedNotification;
-import fr.recia.notifications.model_kafka.model.RoutedNotificationSerde;
+import fr.recia.notifications.model_kafka_serde.model.*;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -270,7 +270,7 @@ class ProcessorDelayerTest {
 
         // On a besoin d'écouter le topic Dead Letter (sink.dlt) configuré dans ton code
         ObjectMapper objectMapper = new ObjectMapper();
-        try (var routedNotificationSerde = new fr.recia.notifications.model_kafka.model.RoutedNotificationSerde(objectMapper)) {
+        try (var routedNotificationSerde = new fr.recia.notifications.model_kafka_serde.model.RoutedNotificationSerde(objectMapper)) {
             TestOutputTopic<String, RoutedNotification> outputDltTopic =
                     testDriver.createOutputTopic("output-topic-dlt", org.apache.kafka.common.serialization.Serdes.String().deserializer(), routedNotificationSerde.deserializer());
 

@@ -1,7 +1,7 @@
 package fr.recia.notifications.delayer.kafka;
 
 import fr.recia.notifications.delayer.configuration.FrequencyDuration;
-import fr.recia.notifications.model_kafka.model.RoutedNotificationSerde;
+import fr.recia.notifications.model_kafka_serde.model.RoutedNotificationSerde;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.state.Stores;

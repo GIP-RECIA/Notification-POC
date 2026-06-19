@@ -1,6 +1,6 @@
 package fr.recia.notifications.e2e_tests.clients;
 
-import fr.recia.event_rest_client_kafka.HttpNotificationClient;
+import fr.recia.notifications.event_rest_client_kafka.HttpNotificationClient;
 
 public class InputServiceEventApiClient {
 

@@ -1,5 +1,6 @@
-package fr.recia.notifications.model_kafka.model;
+package fr.recia.notifications.model_kafka_serde.model;
 
+import fr.recia.notifications.model_kafka.model.RoutedNotification;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;

@@ -2,7 +2,7 @@ package fr.recia.notifications.preferences_api.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.notifications.model_kafka.model.UserPreferences;
-import fr.recia.notifications.model_kafka.model.UserPreferencesSerde;
+import fr.recia.notifications.model_kafka_serde.model.UserPreferencesSerde;
 import fr.recia.notifications.preferences_api.configuration.KafkaStreamProperties;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;

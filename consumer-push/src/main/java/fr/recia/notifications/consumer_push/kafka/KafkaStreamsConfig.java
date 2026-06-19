@@ -3,7 +3,7 @@ package fr.recia.notifications.consumer_push.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.notifications.consumer_push.configuration.KafkaStreamProperties;
 import fr.recia.notifications.model_kafka.model.DeviceTokenSet;
-import fr.recia.notifications.model_kafka.model.DeviceTokenSetSerde;
+import fr.recia.notifications.model_kafka_serde.model.DeviceTokenSetSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.StreamsBuilder;
