@@ -1,7 +1,7 @@
 package fr.recia.notifications.delayer.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.recia.notifications.model_kafka.model.RoutedNotificationSerde;
+import fr.recia.notifications.model_kafka_serde.model.RoutedNotificationSerde;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
