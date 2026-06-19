@@ -1,5 +1,6 @@
-package fr.recia.notifications.model_kafka.model;
+package fr.recia.notifications.model_kafka_serde.model;
 
+import fr.recia.notifications.model_kafka.model.ServiceEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
@@ -10,48 +11,45 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class NotificationSerde implements Serde<Notification> {
+public class ServiceEventSerde implements Serde<ServiceEvent> {
 
     private final ObjectMapper objectMapper;
 
-    public NotificationSerde(ObjectMapper objectMapper) {
+    public ServiceEventSerde(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public Serializer<Notification> serializer() {
+    public Serializer<ServiceEvent> serializer() {
         return new Serializer<>() {
 
             @Override
-            public byte[] serialize(String topic, Headers headers, Notification data) {
+            public byte[] serialize(String topic, Headers headers, ServiceEvent data) {
                 try {
                     headers.add(
                             "__TypeId__",
-                            Notification.class.getName().getBytes(StandardCharsets.UTF_8)
+                            ServiceEvent.class.getName().getBytes(StandardCharsets.UTF_8)
                     );
                     return objectMapper.writeValueAsBytes(data);
                 } catch (Exception e) {
-                    throw new RuntimeException("Notification serialization error", e);
+                    throw new RuntimeException("ServiceEvent serialization error", e);
                 }
             }
 
             @Override
-            public byte[] serialize(String topic, Notification data) {
+            public byte[] serialize(String topic, ServiceEvent data) {
                 return serialize(topic, new RecordHeaders(), data);
             }
         };
     }
 
     @Override
-    public Deserializer<Notification> deserializer() {
-        return new Deserializer<>() {
-            @Override
-            public Notification deserialize(String topic, byte[] data) {
-                try {
-                    return objectMapper.readValue(data, Notification.class);
-                } catch (Exception e) {
-                    throw new RuntimeException("KafkaEvent deserialization error", e);
-                }
+    public Deserializer<ServiceEvent> deserializer() {
+        return (topic, data) -> {
+            try {
+                return objectMapper.readValue(data, ServiceEvent.class);
+            } catch (Exception e) {
+                throw new RuntimeException("UserPreferences deserialization error", e);
             }
         };
     }

@@ -1,5 +1,6 @@
-package fr.recia.notifications.model_kafka.model;
+package fr.recia.notifications.model_kafka_serde.model;
 
+import fr.recia.notifications.model_kafka.model.UserPreferences;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
@@ -10,43 +11,43 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class ServiceEventSerde implements Serde<ServiceEvent> {
+public class UserPreferencesSerde implements Serde<UserPreferences> {
 
     private final ObjectMapper objectMapper;
 
-    public ServiceEventSerde(ObjectMapper objectMapper) {
+    public UserPreferencesSerde(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public Serializer<ServiceEvent> serializer() {
+    public Serializer<UserPreferences> serializer() {
         return new Serializer<>() {
 
             @Override
-            public byte[] serialize(String topic, Headers headers, ServiceEvent data) {
+            public byte[] serialize(String topic, Headers headers, UserPreferences data) {
                 try {
                     headers.add(
                             "__TypeId__",
-                            ServiceEvent.class.getName().getBytes(StandardCharsets.UTF_8)
+                            UserPreferences.class.getName().getBytes(StandardCharsets.UTF_8)
                     );
                     return objectMapper.writeValueAsBytes(data);
                 } catch (Exception e) {
-                    throw new RuntimeException("ServiceEvent serialization error", e);
+                    throw new RuntimeException("UserPreferences serialization error", e);
                 }
             }
 
             @Override
-            public byte[] serialize(String topic, ServiceEvent data) {
+            public byte[] serialize(String topic, UserPreferences data) {
                 return serialize(topic, new RecordHeaders(), data);
             }
         };
     }
 
     @Override
-    public Deserializer<ServiceEvent> deserializer() {
+    public Deserializer<UserPreferences> deserializer() {
         return (topic, data) -> {
             try {
-                return objectMapper.readValue(data, ServiceEvent.class);
+                return objectMapper.readValue(data, UserPreferences.class);
             } catch (Exception e) {
                 throw new RuntimeException("UserPreferences deserialization error", e);
             }

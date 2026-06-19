@@ -1,4 +1,4 @@
-package fr.recia.notifications.model_kafka.model;
+package fr.recia.notifications.model_kafka_serde.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
