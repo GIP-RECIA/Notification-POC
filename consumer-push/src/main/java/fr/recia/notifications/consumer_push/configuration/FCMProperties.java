@@ -10,5 +10,6 @@ import org.springframework.stereotype.Component;
 public class FCMProperties {
     private String serviceAccountPath;
     private String fcmUrl;
+    private String fcmScope;
     private String firebaseAuthUrl;
 }

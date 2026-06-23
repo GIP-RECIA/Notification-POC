@@ -60,9 +60,12 @@ public class FcmService {
                 if(error.getError().getDetails().getFirst().getErrorCode().equals("UNREGISTERED")){
                     tokenService.removeToken(notification.getHeader().getUserId(), deviceToken);
                     log.info("Device token {} removed from token list because device is unregistered", deviceToken);
+                } else {
+                    log.error("Unknown error : {}", error.getError());
+                    throw new RuntimeException(response.body());
                 }
             } catch (Exception e) {
-                log.error("Parsing error. Couldn't read error response", e);
+                log.error("Notification was not sent successfully.", e);
                 throw new RuntimeException(response.body());
             }
         } else {
@@ -78,8 +81,9 @@ public class FcmService {
         }
         // Sinon on en demande un
         log.debug("Access token is no longer valid, getting a new one");
+        // TODO : auth method deprecated
         GoogleCredentials credentials = GoogleCredentials.fromStream(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(this.fcmProperties.getServiceAccountPath())))
-                        .createScoped(List.of(this.fcmProperties.getFirebaseAuthUrl()));
+                        .createScoped(List.of(fcmProperties.getFcmScope()));
         credentials.refreshIfExpired();
         this.accessToken = credentials.getAccessToken().getTokenValue();
         this.tokenExpiration = System.currentTimeMillis() + 55 * 60 * 1000;
@@ -97,11 +101,6 @@ public class FcmService {
                 "notification", Map.of(
                         "title", notification.getContent().getTitle(),
                         "body", notification.getContent().getMessage()
-                ),
-                // Data supplémentaire custom et libre
-                "data", Map.of(
-                        "key1", "value1",
-                        "key2", "value2"
                 )
             )
         );

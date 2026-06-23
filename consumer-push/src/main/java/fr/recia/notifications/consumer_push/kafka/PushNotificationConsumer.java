@@ -2,6 +2,7 @@ package fr.recia.notifications.consumer_push.kafka;
 
 import fr.recia.notifications.consumer_push.services.FcmService;
 import fr.recia.notifications.consumer_push.services.TokenService;
+import fr.recia.notifications.model_kafka.model.DeviceTokenSet;
 import fr.recia.notifications.model_kafka.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -31,16 +32,22 @@ public class PushNotificationConsumer {
         log.debug("Notification push reçue : {}", routedNotification);
         try {
             final String uid = routedNotification.getNotification().getHeader().getUserId();
-            Set<String> tokensForUser = tokenService.getTokens(uid);
+            DeviceTokenSet tokensForUser = tokenService.getTokens(uid);
             if(tokensForUser.isEmpty()){
                 log.info("User {} has configured push notifications but has no token !", uid);
             }
             for(String token : tokensForUser){
-                fcmService.sendNotification(routedNotification.getNotification(), token);
+                if(token != null){
+                    log.debug("Creating notification for token {} for user {}", token, uid);
+                    fcmService.sendNotification(routedNotification.getNotification(), token);
+                } else {
+                    log.warn("Token for user {} is null ! Can't send notification.", uid);
+                }
             }
         } catch (Exception e) {
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
+            // TODO : Cannot invoke "org.springframework.kafka.core.KafkaTemplate.send(String, Object, Object)" because "this.kafkaTemplate" is null
             kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
             log.warn("An error occured while sending the notification to firebase", e);
         }

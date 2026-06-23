@@ -57,9 +57,7 @@ public class TokenService {
             }
         }
         try {
-            DeviceTokenSet tokens = store.get(userId);
-            log.trace("Got preferences {} from store for user {}", tokens, userId);
-            return tokens;
+            return store.get(userId);
         } catch (InvalidStateStoreException e){
             throw new RuntimeException("API is still starting...", e);
         }

@@ -8,6 +8,18 @@
     <artifactId>model-kafka-serde</artifactId>
     <version>1.0.2</version>
 
+    <name>model-kafka-serde</name>
+    <distributionManagement>
+        <repository>
+            <id>esco-releases</id>
+            <url>https://nexus.recia.dev/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>esco-snapshots</id>
+            <url>https://nexus.recia.dev/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
