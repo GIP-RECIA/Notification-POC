@@ -15,17 +15,17 @@ import java.util.Set;
 @Slf4j
 public class PushNotificationConsumer {
 
+    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
     private final TokenService tokenService;
     private final FcmService fcmService;
+    private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    public PushNotificationConsumer(TokenService tokenService, FcmService fcmService){
+    public PushNotificationConsumer(TokenService tokenService, FcmService fcmService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
         this.tokenService = tokenService;
         this.fcmService = fcmService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    KafkaTemplate<String, RoutedNotification> kafkaTemplate;
-
-    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
 
     @KafkaListener(topics = "notifications.push")
     public void consume(RoutedNotification routedNotification) {
@@ -47,7 +47,6 @@ public class PushNotificationConsumer {
         } catch (Exception e) {
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            // TODO : Cannot invoke "org.springframework.kafka.core.KafkaTemplate.send(String, Object, Object)" because "this.kafkaTemplate" is null
             kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
             log.warn("An error occured while sending the notification to firebase", e);
         }
