@@ -66,18 +66,23 @@ public class ServiceEventConsumer {
                 uniqueUidsOfUsersInGroup.addAll(listOfUidsOfUsersInGroup);
             }
             sendToKafkaForUserList(new ArrayList<>(uniqueUidsOfUsersInGroup), serviceEvent);
+        // Si c'est un email, alors on récupère d'abord l'uid, puis on envoie la notification
         } else if (serviceEvent.getTarget().getType().equals(TargetType.EMAIL)) {
             List<String> emailIDs = serviceEvent.getTarget().getIds();
             String email = emailIDs.get(0);
             log.trace("L'utilisateur a un email en identifiant, son mail est {}, recherche de son UID", email);
             String uid = ldapMailService.getUidByMail(email);
-            sendToKafkaForEmailId(uid, serviceEvent);
+            
+            if(uid != null) {
+                sendToKafkaForEmailId(uid, serviceEvent);
+            }else {
+                log.warn("Aucun UID trouvé dans le LDAP pour l'email {}. La notification est ignorée.", email);
+            }
         }
         else {
             log.error("Type de target pour l'event {} inconnu !", serviceEvent);
             throw new RuntimeException("Unknown target type !");
         }
     }
-
 }
 
