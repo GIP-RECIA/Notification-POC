@@ -38,7 +38,7 @@ public class NextcloudProcessor implements MailProcessor {
                 message.trim(),
                 link,
                 dest,
-                List.of(Channel.WEB),
+                List.of(Channel.WEB, Channel.MAIL, Channel.PUSH),
                 Priority.NORMAL,
                 TargetType.EMAIL
         );
