@@ -42,22 +42,19 @@ public class ServiceEventConsumer {
         }
     }
 
-    public void sendToKafkaForEmailId(String userId, ServiceEvent serviceEvent) {
-        Notification notification = new Notification(new NotificationHeader(UUID.randomUUID().toString(), userId, serviceEvent.getHeader()), serviceEvent.getContent());
-        kafkaTemplate.send(TOPIC_OUT, userId, notification);
-    }
 
     @KafkaListener(topics = TOPIC_IN)
     public void consume(ServiceEvent serviceEvent) {
+        TargetType target = serviceEvent.getTarget().getType();
         log.trace("ServiceEvent {} reçu en entrée depuis le topic {}", serviceEvent, TOPIC_IN);
 
         // Si c'est une liste de user le traitement est facile, on créé une notif par user
-        if(serviceEvent.getTarget().getType().equals(TargetType.UID)){
+        if(target.equals(TargetType.UID)){
             log.trace("Expansion de l'event par utilisateurs");
             sendToKafkaForUserList(serviceEvent.getTarget().getIds(), serviceEvent);
         }
         // Si c'est une liste de groupes, alors il faut d'abord trouver tous les users de tous les groupes, puis on créé une notif par user
-        else if(serviceEvent.getTarget().getType().equals(TargetType.GROUP)){
+        else if(target.equals(TargetType.GROUP)){
             log.trace("Expansion de l'event par groupes");
             Set<String> uniqueUidsOfUsersInGroup = new HashSet<>();
             for(String group : serviceEvent.getTarget().getIds()){
@@ -67,14 +64,14 @@ public class ServiceEventConsumer {
             }
             sendToKafkaForUserList(new ArrayList<>(uniqueUidsOfUsersInGroup), serviceEvent);
         // Si c'est un email, alors on récupère d'abord l'uid, puis on envoie la notification
-        } else if (serviceEvent.getTarget().getType().equals(TargetType.EMAIL)) {
+        } else if (target.equals(TargetType.EMAIL)) {
             List<String> emailIDs = serviceEvent.getTarget().getIds();
             String email = emailIDs.get(0);
             log.trace("L'utilisateur a un email en identifiant, son mail est {}, recherche de son UID", email);
-            String uid = ldapMailService.getUidByMail(email);
+            List<String> userId = ldapMailService.getUidByMail(email);
             
-            if(uid != null) {
-                sendToKafkaForEmailId(uid, serviceEvent);
+            if(userId != null && !userId.isEmpty()) {
+                sendToKafkaForUserList(userId, serviceEvent);
             }else {
                 log.warn("Aucun UID trouvé dans le LDAP pour l'email {}. La notification est ignorée.", email);
             }

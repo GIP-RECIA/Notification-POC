@@ -6,9 +6,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -22,26 +27,32 @@ public class LdapMailService {
     }
 
     @Cacheable(value = "ldapUidByMail", key = "#mail")
-    public String getUidByMail(String mail) {
+    public List<String> getUidByMail(String mail) {
         if (mail == null || mail.isEmpty()) {
             return null;
         }
-
         String filter = MessageFormat.format(ldapMailRequestProperties.getFilter(), mail);
 
         return ldapTemplate.search(ldapMailRequestProperties.getBranchBase(), filter, this::mapUid)
                 .stream()
-                .findFirst()
-                .orElse(null);
-
+                .flatMap(Collection::stream)
+                .filter(this::isUser)
+                .toList();
     }
 
-
-    private String mapUid(Attributes attrs) throws NamingException {
-        var uidAttr = attrs.get(ldapMailRequestProperties.getRetrievedAttribute());
+    private List<String> mapUid(Attributes attrs) throws NamingException {
+        List<String> uid =  new ArrayList<>();
+        Attribute uidAttr = attrs.get(ldapMailRequestProperties.getRetrievedAttribute());
         if (uidAttr != null && uidAttr.get() != null) {
-            return uidAttr.get().toString();
+            NamingEnumeration<?> all = uidAttr.getAll();
+            while (all.hasMore())  {
+                uid.add(all.next().toString());
+            }
         }
-        return null;
+        return uid;
+    }
+
+    private boolean isUser(String value) {
+        return value.length() == 8 && (value.startsWith("F") || value.startsWith("f"));
     }
 }
