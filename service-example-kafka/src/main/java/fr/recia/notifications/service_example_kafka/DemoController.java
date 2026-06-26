@@ -32,9 +32,11 @@ public class DemoController {
         if(target.equals("user")){
             System.out.println("Sent to user");
             notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.UID);
-        } else {
+        } else if (target.equals("group")){
             System.out.println("Sent to group");
             notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.GROUP);
+        } else if (target.equals("email")){
+            notificationClient.sendNotification(title, message, link, id, List.of(Channel.WEB, Channel.PUSH, Channel.MAIL), Priority.NORMAL, TargetType.EMAIL);
         }
         return "redirect:/?sent=true";
     }
