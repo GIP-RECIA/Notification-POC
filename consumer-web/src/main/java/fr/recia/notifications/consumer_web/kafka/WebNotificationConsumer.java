@@ -29,6 +29,7 @@ public class WebNotificationConsumer {
 
         }catch (Exception e) {
             log.warn("Une notification {} n'a pas pu être traitée, envoie vers le delayer", routedNotification);
+            log.error("Erreur au niveau du Redis : ", e);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
             kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);

@@ -1,7 +1,9 @@
 package fr.recia.notifications.consumer_web.services;
 
+import fr.recia.notifications.consumer_web.configuration.TtlConf;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
@@ -25,11 +27,14 @@ public class RedisNotificationStore {
     private final RedisTemplate<String, StoredNotification> notificationRedisTemplate;
     private final RedisTemplate<String, String> userIndexRedisTemplate;
     private static final int SCAN_COUNT = 500;
+    private TtlConf ttlConf;
 
     public RedisNotificationStore(RedisTemplate<String, StoredNotification> notificationRedisTemplate,
-                                  RedisTemplate<String, String> userIndexRedisTemplate) {
+                                  RedisTemplate<String, String> userIndexRedisTemplate,
+                                  TtlConf ttlConf) {
         this.notificationRedisTemplate = notificationRedisTemplate;
         this.userIndexRedisTemplate = userIndexRedisTemplate;
+        this.ttlConf = ttlConf;
     }
 
     private String getNotificationKeyForRedis(Notification notification){
@@ -52,7 +57,7 @@ public class RedisNotificationStore {
         StoredNotification stored = new StoredNotification(notif, false);
         // Stocker la notification en elle-même
         String notifKey = getNotificationKeyForRedis(notif);
-        notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(7));
+        notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(ttlConf.getJours()));
         log.trace("Notification {} added to redis for key {}", notifKey, stored);
         // Stocker le lien user --> ensemble des notifs
         String userIndex = getUserIndexKeyForRedis(notif);
