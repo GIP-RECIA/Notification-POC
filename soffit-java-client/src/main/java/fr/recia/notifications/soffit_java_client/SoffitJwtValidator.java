@@ -16,7 +16,7 @@ public class SoffitJwtValidator {
     private final JwtParser jwtParser;
 
     public SoffitJwtValidator(String signatureKey) {
-        this.jwtParser = Jwts.parserBuilder().setSigningKey(signatureKey.getBytes(StandardCharsets.UTF_8)).build();
+        this.jwtParser = Jwts.parserBuilder().setSigningKey(signatureKey).build();
     }
 
     public Authentication authenticate(String token) {
