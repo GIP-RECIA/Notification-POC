@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia.notifications</groupId>
 	<artifactId>expander</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	<name>expander</name>
 	<description>First step of internal Kafka routing for notification POC</description>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>model-kafka</artifactId>
-			<version>1.0.30</version>
+			<version>1.0.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

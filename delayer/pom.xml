@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.recia.notifications</groupId>
     <artifactId>delayer</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
     <name>delayer</name>
     <description>Kafka streams for notification delay</description>
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>fr.recia.notifications</groupId>
             <artifactId>model-kafka</artifactId>
-            <version>1.0.30</version>
+            <version>1.0.31</version>
         </dependency>
 
         <dependency>

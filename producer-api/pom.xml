@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia.notifications</groupId>
 	<artifactId>producer-api</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>war</packaging>
 	<name>producer-api</name>
 	<description>POC API Rest producer for notification platform</description>
@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>model-kafka</artifactId>
-			<version>1.0.30</version>
+			<version>1.0.31</version>
 		</dependency>
 
 		<dependency>

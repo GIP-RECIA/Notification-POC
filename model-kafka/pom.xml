@@ -4,7 +4,7 @@
   <groupId>fr.recia.notifications</groupId>
   <artifactId>model-kafka</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.30</version>
+  <version>1.0.31</version>
   <name>model-kafka</name>
   <distributionManagement>
     <repository>
