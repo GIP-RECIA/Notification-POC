@@ -41,10 +41,14 @@ prefs:
     - GLC
     - GROUPER
     - DEMO-SERVICE
-    - PUBLISHER
-    - MCE
-    - NEXTCLOUD
+    - Publication de contenus
+    - ESCO-MCE-new
+    - Nextcloud
+    - MyPads
+    - GRR2_netocentre
   default-channels:
     ws: true
     mail: false
     push: false
+  system-services:
+    - Publication de contenus

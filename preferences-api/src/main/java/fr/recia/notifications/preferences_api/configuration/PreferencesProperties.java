@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,6 +17,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "prefs")
 public class PreferencesProperties {
     private List<String> notificationServices;
+    private List<String> systemServices = new ArrayList<>();
     private ChannelPreferences defaultChannels;
 }
 

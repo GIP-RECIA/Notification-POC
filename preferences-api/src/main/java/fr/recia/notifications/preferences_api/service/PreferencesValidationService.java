@@ -22,9 +22,12 @@ public class PreferencesValidationService {
         this.preferencesProperties = preferencesProperties;
     }
 
-    public ServicePreferences createEmptyServicePreferences(){
+    public ServicePreferences createEmptyServicePreferences(String serviceName){
         ServicePreferences servicePreferences = new ServicePreferences();
         servicePreferences.setEnabled(true);
+        boolean isSystem = preferencesProperties.getSystemServices() != null
+                && preferencesProperties.getSystemServices().contains(serviceName);
+        servicePreferences.setAlwaysOn(isSystem);
         Map<Priority, ChannelPreferences> priorities = new HashMap<>();
         for(Priority priority : Priority.values()){
             priorities.put(priority, new ChannelPreferences(false, false, false));
@@ -41,7 +44,7 @@ public class PreferencesValidationService {
                 preferencesProperties.getDefaultChannels().isMail(), preferencesProperties.getDefaultChannels().isPush()));
         Map<String, ServicePreferences> services = new HashMap<>();
         for(String serviceName : serviceList){
-            services.put(serviceName, createEmptyServicePreferences());
+            services.put(serviceName, createEmptyServicePreferences(serviceName));
         }
         userPreferences.setServices(services);
         return userPreferences;
@@ -52,7 +55,11 @@ public class PreferencesValidationService {
         for(String serviceName : serviceList){
             if(!userPreferences.getServices().containsKey(serviceName)){
                 log.trace("Adding missing service {} to preferences for user {}", serviceName, userPreferences.getUserId());
-                userPreferences.getServices().put(serviceName, createEmptyServicePreferences());
+                userPreferences.getServices().put(serviceName, createEmptyServicePreferences(serviceName));
+            }else {
+                boolean isSystem = preferencesProperties.getSystemServices() != null
+                        && preferencesProperties.getSystemServices().contains(serviceName);
+                userPreferences.getServices().get(serviceName).setAlwaysOn(isSystem);
             }
         }
     }
