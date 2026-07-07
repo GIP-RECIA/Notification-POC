@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia.notifications</groupId>
 	<artifactId>consumer-web</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>war</packaging>
 	<name>consumer-web</name>
 	<description>Kafka consumer for notification platform</description>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>model-kafka</artifactId>
-			<version>1.0.31</version>
+			<version>1.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>

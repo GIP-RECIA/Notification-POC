@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia.notifications</groupId>
 	<artifactId>service-example-kafka</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>war</packaging>
 	<name>service-example-kafka</name>
 	<description>Example service that emits events for notifications POC</description>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>event-rest-client-kafka</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.14</version>
 		</dependency>
 
 	</dependencies>
