@@ -13,5 +13,4 @@ public class ServicePreferences {
     private boolean enabled;
     private boolean override;
     private Map<Priority, ChannelPreferences> priorities;
-    private boolean alwaysOn;
 }

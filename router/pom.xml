@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.recia.notifications</groupId>
 	<artifactId>router</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>jar</packaging>
 	<name>router</name>
 	<description>Internal Kafka Routing for notification POC</description>
@@ -66,12 +66,12 @@
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>model-kafka</artifactId>
-			<version>1.0.31</version>
+			<version>1.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.recia.notifications</groupId>
 			<artifactId>model-kafka-serde</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

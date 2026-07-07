@@ -50,5 +50,3 @@ prefs:
     ws: true
     mail: false
     push: false
-  system-services:
-    - Publication de contenus
