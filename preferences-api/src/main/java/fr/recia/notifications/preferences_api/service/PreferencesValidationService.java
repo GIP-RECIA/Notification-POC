@@ -25,9 +25,11 @@ public class PreferencesValidationService {
     public ServicePreferences createEmptyServicePreferences(){
         ServicePreferences servicePreferences = new ServicePreferences();
         servicePreferences.setEnabled(true);
+        servicePreferences.setOverride(true);
         Map<Priority, ChannelPreferences> priorities = new HashMap<>();
         for(Priority priority : Priority.values()){
-            priorities.put(priority, new ChannelPreferences(false, false, false));
+            priorities.put(priority, new ChannelPreferences(preferencesProperties.getDefaultChannels().isWs(),
+                    preferencesProperties.getDefaultChannels().isMail(), preferencesProperties.getDefaultChannels().isPush()));
         }
         servicePreferences.setPriorities(priorities);
         return servicePreferences;
