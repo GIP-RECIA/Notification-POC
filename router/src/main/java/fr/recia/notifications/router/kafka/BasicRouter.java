@@ -126,19 +126,19 @@ public class BasicRouter {
         // Stream pour récupérer les notifications
         KStream<String, Notification> input = builder.stream("notifications.events.expanded", Consumed.with(Serdes.String(), notificationSerde));
         input.peek((key, value) -> {
-            log.trace("Nouvel event : key={}, value={}", key, value);
+            log.trace("New event : key={}, value={}", key, value);
         });
 
         // KTable pour récupérer les préferences utilisateur
         KTable<String, UserPreferences> preferences = builder.table("notifications.user.preferences", Consumed.with(Serdes.String(), prefsSerde));
         preferences.toStream().peek((key, prefs) -> {
-            log.trace("Nouvelle préférence : key={}, value={}", key, prefs);
+            log.trace("New preference : key={}, value={}", key, prefs);
         });
 
         // Jointure entre les notifications et les prefs utilisateur
         KStream<String, PreferencesNotification> enriched = input.leftJoin(preferences, (event, prefs) -> new PreferencesNotification(event, prefs));
         enriched.peek((key, notif) -> {
-            log.trace("Création d'une notification préférenciée : key={}, value={}", key, notif);
+            log.trace("Creation notification with preference : key={}, value={}", key, notif);
         });
 
         // Logique de routage

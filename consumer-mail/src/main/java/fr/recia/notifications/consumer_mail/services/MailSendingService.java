@@ -42,7 +42,7 @@ public class MailSendingService {
             Transport.send(message);
         } catch (Exception e) {
             log.error("Unable to send mail to {}", to, e);
-            throw new RuntimeException("Erreur lors de l'envoi du mail", e);
+            throw new RuntimeException("Error sending mail", e);
         }
     }
 }

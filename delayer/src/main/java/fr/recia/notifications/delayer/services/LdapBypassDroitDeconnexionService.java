@@ -30,12 +30,12 @@ public class LdapBypassDroitDeconnexionService {
     public boolean canBypass(String userId) {
         String userProfil = getProfile(userId);
 
-        log.debug("Le profil de l'utilisateur est : {}", userProfil);
+        log.debug("User's profile is : {}", userProfil);
 
 
         List<String> profil = bypassDroitDeconnexionConfig.getProfil();
 
-        log.debug("La liste des profils qui peuvent bypass est : {}", profil);
+        log.debug("List of profiles allowed to bypass : {}", profil);
 
         if(profil.contains(userProfil)){
             return true;

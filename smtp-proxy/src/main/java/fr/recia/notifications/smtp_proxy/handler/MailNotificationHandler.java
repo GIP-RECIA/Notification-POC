@@ -32,7 +32,7 @@ public class MailNotificationHandler implements SimpleMessageListener {
 
     @Override
     public void deliver(String from, String dest, InputStream data) {
-        log.info("[SMTP-PROXY] Nouveau mail intercepté ! De : {} | Pour : {}", from, dest);
+        log.info("[SMTP-PROXY] New mail intercepted ! From: {} | To: {}", from, dest);
         Session session = Session.getDefaultInstance(new Properties());
         try {
             MimeMessage mimeMessage = new MimeMessage(session, data);
@@ -51,13 +51,12 @@ public class MailNotificationHandler implements SimpleMessageListener {
                 }
             }
 
-            log.info("Aucune règle ne correspond. Transfer du mail au destinataire initial : {}", dest);
+            log.info("No matching rule found. Forwarding email to original recipient : {}", dest);
             log.debug("Data du message associé : {}", mimeMessage.getContent());
             javaMailSender.send(mimeMessage);
 
         } catch (Exception e) {
-            log.error("Une erreur est survenue pendant l'interception d'un mail", e);
-
+            log.error("An error occured while intercepting an email", e);
         }
     }
 

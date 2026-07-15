@@ -61,21 +61,21 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
 
         if (replayCount == 0) {
             if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
-                log.debug("La personne ne peut pas bypass le droit à la deconnexion, notification envoyée avec delai.");
+                log.debug("The user {} cannot bypass the 'droit à la deconnexion', notification sent with delay.", userId);
 
                 Duration delai = droitDeconnexionService.calculDelai(now, region);
                 long deliveryTime = now + delai.toMillis();
-                log.trace("La région de l'utilisateur {} a bien été trouvée, c'est la région {}", userId, region);
+                log.trace("Successfully found region for user {}, it is {}", userId, region);
 
                 notification.setDeliveryTime(deliveryTime);
-                log.trace("La notification a été envoyée à {}", deliveryTime);
+                log.trace("Notification sent at {}", deliveryTime);
 
                 String clePrefix = String.format("%d_%s", deliveryTime, notification.getNotification().getHeader().getNotificationId());
                 stateStore.put(clePrefix, notification);
-                log.debug("Une notification {} envoyée dans le Store {}", notification, stateStore);
+                log.debug("Added notification {} to the state store {}", notification, stateStore);
             } else {
                 context.forward(record, getSink(notification));
-                log.debug("Une notification {} a été transférée vers le topic {}", notification, notification.getRoutedTopic());
+                log.debug("Notification {} transferred to topic {}", notification, notification.getRoutedTopic());
             }
         }else {
             if(replayCount >= NUM_RETRIES){
@@ -83,7 +83,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                 context.forward(record, SINK_DLT);
             }else {
                 if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
-                    log.debug("Notification {} has been replayed {} times. Putting it in Store to be replayed ", notification, replayCount);
+                    log.debug("Notification {} has been replayed {} times. Putting it in Store to be replayed.", notification, replayCount);
 
                     Duration delai = droitDeconnexionService.calculDelai(now, region);
                     long deliveryTime = now + delai.toMillis();
@@ -92,7 +92,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                     notification.setDeliveryTime(deliveryTime);
                     stateStore.put(clePrefix, notification);
                 }else {
-                    log.debug("Une notification {} à rejouer a été envoyée dans le store {}. Elle a été rejouée {} fois",notification, stateStore, notification.getRetryNumber());
+                    log.debug("Notification {} added to the store {} for replay. Replayed {} times",notification, stateStore, notification.getRetryNumber());
                     notification.setDeliveryTime(nowReplay);
                     String clePrefix = String.format("%d_%s", nowReplay, notification.getNotification().getHeader().getNotificationId());
                     stateStore.put(clePrefix, notification);

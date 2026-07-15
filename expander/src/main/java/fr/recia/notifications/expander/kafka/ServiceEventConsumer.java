@@ -38,7 +38,7 @@ public class ServiceEventConsumer {
         for (String userId : ids) {
             Notification notification = new Notification(new NotificationHeader(UUID.randomUUID().toString(), userId, serviceEvent.getHeader()), serviceEvent.getContent());
             kafkaTemplate.send(TOPIC_OUT, userId, notification);
-            log.trace("Nouvelle notification {} déposée dans le topic {}", notification, TOPIC_OUT);
+            log.trace("New notification {} sent to topic {}", notification, TOPIC_OUT);
         }
     }
 
@@ -46,20 +46,20 @@ public class ServiceEventConsumer {
     @KafkaListener(topics = TOPIC_IN)
     public void consume(ServiceEvent serviceEvent) {
         TargetType target = serviceEvent.getTarget().getType();
-        log.trace("ServiceEvent {} reçu en entrée depuis le topic {}", serviceEvent, TOPIC_IN);
+        log.trace("ServiceEvent {} received from topic {}", serviceEvent, TOPIC_IN);
 
         // Si c'est une liste de user le traitement est facile, on créé une notif par user
         if(target.equals(TargetType.UID)){
-            log.trace("Expansion de l'event par utilisateurs");
+            log.trace("Expanding event by users");
             sendToKafkaForUserList(serviceEvent.getTarget().getIds(), serviceEvent);
         }
         // Si c'est une liste de groupes, alors il faut d'abord trouver tous les users de tous les groupes, puis on créé une notif par user
         else if(target.equals(TargetType.GROUP)){
-            log.trace("Expansion de l'event par groupes");
+            log.trace("Expanding event by groups");
             Set<String> uniqueUidsOfUsersInGroup = new HashSet<>();
             for(String group : serviceEvent.getTarget().getIds()){
                 List<String> listOfUidsOfUsersInGroup = ldapGroupService.getGroupMembers(group);
-                log.trace("Ajout de tous les utilisateurs {} pour le groupe {}", listOfUidsOfUsersInGroup, group);
+                log.trace("Adding all users {} for group {}", listOfUidsOfUsersInGroup, group);
                 uniqueUidsOfUsersInGroup.addAll(listOfUidsOfUsersInGroup);
             }
             sendToKafkaForUserList(new ArrayList<>(uniqueUidsOfUsersInGroup), serviceEvent);
@@ -67,17 +67,17 @@ public class ServiceEventConsumer {
         } else if (target.equals(TargetType.EMAIL)) {
             List<String> emailIDs = serviceEvent.getTarget().getIds();
             String email = emailIDs.get(0);
-            log.trace("L'utilisateur a un email en identifiant, son mail est {}, recherche de son UID", email);
+            log.trace("Looking up UID for email: {}", email);
             List<String> userId = ldapMailService.getUidByMail(email);
             
             if(userId != null && !userId.isEmpty()) {
                 sendToKafkaForUserList(userId, serviceEvent);
             }else {
-                log.warn("Aucun UID trouvé dans le LDAP pour l'email {}. La notification est ignorée.", email);
+                log.warn("No UID found in LDAP for email {}. Skipping notification.", email);
             }
         }
         else {
-            log.error("Type de target pour l'event {} inconnu !", serviceEvent);
+            log.error("Unknown target type for ServiceEvent {}", serviceEvent);
             throw new RuntimeException("Unknown target type !");
         }
     }

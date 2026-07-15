@@ -24,12 +24,12 @@ public class WebNotificationConsumer {
     @KafkaListener(topics = "notifications.web")
     public void consume(RoutedNotification routedNotification) {
         try {
-        log.debug("Notification web reçue : {}", routedNotification);
+        log.debug("Web notification received : {}", routedNotification);
         redisNotificationStore.save(routedNotification.getNotification());
 
         }catch (Exception e) {
-            log.warn("Une notification {} n'a pas pu être traitée, envoie vers le delayer", routedNotification);
-            log.error("Erreur au niveau du Redis : ", e);
+            log.warn("Unable to process notification {}, forwarding to delayer.", routedNotification);
+            log.error("UNexpected Redis error : ", e);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
             kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);

@@ -29,7 +29,7 @@ public class PushNotificationConsumer {
 
     @KafkaListener(topics = "notifications.push")
     public void consume(RoutedNotification routedNotification) {
-        log.debug("Notification push reçue : {}", routedNotification);
+        log.debug("Push notification received : {}", routedNotification);
         try {
             final String uid = routedNotification.getNotification().getHeader().getUserId();
             DeviceTokenSet tokensForUser = tokenService.getTokens(uid);

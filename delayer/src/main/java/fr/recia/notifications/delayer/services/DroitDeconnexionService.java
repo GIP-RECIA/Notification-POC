@@ -90,28 +90,28 @@ public class DroitDeconnexionService {
 
     // Check si on peut envoyer la notif ou non.
     public boolean peutRecevoirNotif(String userId, long timestamp, Region region) {
-        log.debug("le calendrier {}", vacancesProperties);
+        log.debug("Calendar {}", vacancesProperties);
         ZonedDateTime dateTime = Instant.ofEpochMilli(timestamp).atZone(getZoneId(region));
         LocalDate date = dateTime.toLocalDate();
 
         if (estWeekend(dateTime)){
-            log.debug("userId= {} en week-end", userId);
+            log.debug("User: {} on weekend", userId);
                     return false;
         }
 
         if (!estHeureAutorisee(dateTime)) {
-            log.debug("userId = {} en horaire interdit", userId);
+            log.debug("User: {} is outside allowed hours", userId);
                 return false;
 
         }
 
         if (estVacances(date, region)){
-            log.debug("userId {} en vacances ou en jour férié", userId);
+            log.debug("User: {} is on vacation or on public holiday", userId);
             return false;
         }
 
         if (estFerie(date, region)) {
-            log.debug("userId {} en jour férié", userId);
+            log.debug("User: {} is on public holiday", userId);
             return false;
         }
 

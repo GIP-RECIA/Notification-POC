@@ -32,7 +32,7 @@ public class LdapGroupService {
 
 
         String filter = MessageFormat.format(ldapGroupRequestProperties.getFilter(), groupCn);
-        log.trace("Filtre LDAP utilisé : {}", filter);
+        log.trace("LDAP filter used : {}", filter);
 
         return ldapTemplate.search(ldapGroupRequestProperties.getBranchBase(), filter, this::mapMembers)
                 .stream()

@@ -29,7 +29,7 @@ public class LdapMailQueryService {
     public Optional<String> getPersonMail(String uid) {
 
         String filter = MessageFormat.format(ldapRequestProperties.getFilter(), uid);
-        log.trace("Filtre LDAP utilisé : {}", filter);
+        log.trace("LDAP filter used : {}", filter);
 
         return ldapTemplate.search(ldapRequestProperties.getBranchBase(), filter, this::mapMail)
                 .stream()

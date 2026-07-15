@@ -29,7 +29,7 @@ public class MailNotificationConsumer {
     @KafkaListener(topics = "notifications.mail")
     public void consume(RoutedNotification routedNotification) {
         try {
-            log.debug("Notification mail reçue : {}", routedNotification);
+            log.debug("Email notification received : {}", routedNotification);
             Optional<String> mailTo = this.ldapMailQueryService.getPersonMail(routedNotification.getNotification().getHeader().getUserId());
             if(mailTo.isEmpty()){
                 log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
@@ -38,7 +38,7 @@ public class MailNotificationConsumer {
                         routedNotification.getNotification().getContent().getMessage());
             }
         } catch (Exception e) {
-            log.warn("Une notification {} n'a pas pu être envoyée vers le mail, elle a été envoyée vers le replayer", routedNotification);
+            log.warn("Unable to send a notification {} via mail, forwarded to replayer", routedNotification);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
             kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
