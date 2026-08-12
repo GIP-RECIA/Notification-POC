@@ -31,9 +31,9 @@ public class NotificationController {
     }
 
     @GetMapping("/read")
-    public ResponseEntity<Void> markNotificationAsRead(@RequestParam String notifId) {
-        // TODO : check if notif is from principal
-        redisNotificationStore.markAsRead(notifId);
+    public ResponseEntity<Void> markNotificationAsRead(@RequestParam String notifId, @AuthenticationPrincipal SoffitPrincipal principal) {
+        String userId = principal.getUsername();
+        redisNotificationStore.markAsRead(notifId, userId);
         return ResponseEntity.accepted().build();
     }
 

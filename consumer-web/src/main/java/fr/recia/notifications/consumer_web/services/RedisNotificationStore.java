@@ -3,14 +3,15 @@ package fr.recia.notifications.consumer_web.services;
 import fr.recia.notifications.consumer_web.configuration.TtlConf;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -66,17 +67,27 @@ public class RedisNotificationStore {
     }
 
     public void delete(String userId, String notifId) {
+        String notifKey = getNotificationKeyForRedis(notifId);
+        StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
+        if (stored == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
+        }
+        if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
+        }
         notificationRedisTemplate.delete(getNotificationKeyForRedis(notifId));
         userIndexRedisTemplate.opsForSet().remove(getUserIndexKeyForRedis(userId), getNotificationKeyForRedis(notifId));
         log.trace("Deleted notification {} and its mappings", notifId);
     }
 
-    public void markAsRead(String notificationId) {
+    public void markAsRead(String notificationId, String userId) {
         String notifKey = getNotificationKeyForRedis(notificationId);
         StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
         if (stored == null) {
-            log.warn("No notification found in redis for key {}", notificationId);
-            return;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
+        }
+        if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
         }
         stored.setRead(true);
         notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(1));
