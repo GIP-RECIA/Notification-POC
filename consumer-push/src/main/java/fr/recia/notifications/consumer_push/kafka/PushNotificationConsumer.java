@@ -39,7 +39,11 @@ public class PushNotificationConsumer {
             for(String token : tokensForUser){
                 if(token != null){
                     log.debug("Creating notification for token {} for user {}", token, uid);
-                    fcmService.sendNotification(routedNotification.getNotification(), token);
+                    try {
+                        fcmService.sendNotification(routedNotification.getNotification(), token);
+                    } catch (Exception e){
+                        log.warn("Couldn't send notification for token {}", token, e);
+                    }
                 } else {
                     log.warn("Token for user {} is null ! Can't send notification.", uid);
                 }
