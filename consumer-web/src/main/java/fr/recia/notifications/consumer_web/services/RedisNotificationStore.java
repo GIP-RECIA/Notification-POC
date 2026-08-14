@@ -4,7 +4,6 @@ import fr.recia.notifications.consumer_web.configuration.TtlConf;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,53 +66,46 @@ public class RedisNotificationStore {
         log.trace("Inverted index stored in redis : added {} to set for user {}", notifKey, userIndex);
     }
 
-    public void delete(String userId, String notifId) {
-        String notifKey = getNotificationKeyForRedis(notifId);
-        StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
-        if (stored == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
-        }
-        if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
-        }
-        notificationRedisTemplate.delete(getNotificationKeyForRedis(notifId));
-        userIndexRedisTemplate.opsForSet().remove(getUserIndexKeyForRedis(userId), getNotificationKeyForRedis(notifId));
-        log.trace("Deleted notification {} and its mappings", notifId);
-    }
-
-    public void deleteAll(String userId, List<String> notifIds) {
+    public void delete(String userId, List<String> notifIds) {
         for (String notifId : notifIds) {
             try {
-                delete(userId, notifId);
+                String notifKey = getNotificationKeyForRedis(notifId);
+                StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
+                if (stored == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
+                }
+                if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
+                }
+                notificationRedisTemplate.delete(notifKey);
+                userIndexRedisTemplate.opsForSet().remove(getUserIndexKeyForRedis(userId), notifKey);
+                log.trace("Deleted notification {} and its mappings", notifId);
             } catch (ResponseStatusException e) {
                 log.trace("Could not delete notification {} for user {} : {}", notifId, userId, e.getReason());
             }
         }
     }
 
-    public void markAsRead(String notificationId, String userId) {
-        String notifKey = getNotificationKeyForRedis(notificationId);
-        StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
-        if (stored == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
-        }
-        if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
-        }
-        stored.setRead(true);
-        notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(1));
-        log.trace("Marked notification {} as read", notificationId);
-    }
-
-    public void markAllAsRead(String userId, List<String> notifIds) {
-        for (String notifId : notifIds) {
+    public void markAsRead(String userId, List<String> notificationIds) {
+        for (String notificationId : notificationIds) {
             try {
-                markAsRead(notifId, userId);
+                String notifKey = getNotificationKeyForRedis(notificationId);
+                StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
+                if (stored == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification introuvable");
+                }
+                if (!stored.getNotification().getHeader().getUserId().equals(userId)) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès non autorisé à cette notification");
+                }
+                stored.setRead(true);
+                notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(1));
+                log.trace("Marked notification {} as read", notificationId);
             } catch (ResponseStatusException e) {
-                log.trace("Could not mark notification {} as read for user {} : {}", notifId, userId, e.getReason());
+                log.trace("Could not mark notification {} as read for user {} : {}", notificationId, userId, e.getReason());
             }
         }
     }
+
 
     public List<StoredNotification> findAllForUser(String userId) {
         log.trace("Getting notifications for user {}", userId);

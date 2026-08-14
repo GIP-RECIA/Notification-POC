@@ -3,12 +3,10 @@ package fr.recia.notifications.consumer_web.controller;
 import fr.recia.notifications.consumer_web.services.RedisNotificationStore;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
 import fr.recia.notifications.soffit_java_client.SoffitPrincipal;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.PublicKey;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,32 +28,32 @@ public class NotificationController {
     }
 
     @GetMapping("/read")
-    public ResponseEntity<Void> markNotificationAsRead(@RequestParam String notifId, @AuthenticationPrincipal SoffitPrincipal principal) {
+    public ResponseEntity<Void> markNotificationsAsRead(@RequestParam List<String> notifIds, @AuthenticationPrincipal SoffitPrincipal principal) {
         String userId = principal.getUsername();
-        redisNotificationStore.markAsRead(notifId, userId);
+        redisNotificationStore.markAsRead(userId, notifIds);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<Void> deleteNotification(@RequestParam String notifId, @AuthenticationPrincipal SoffitPrincipal principal) {
+    public ResponseEntity<Void> deleteNotifications(@RequestParam List<String> notifIds, @AuthenticationPrincipal SoffitPrincipal principal) {
         String userId = principal.getUsername();
-        redisNotificationStore.delete(userId, notifId);
+        redisNotificationStore.delete(userId, notifIds);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/delete-all")
-    public ResponseEntity<Void> deleteNotifications(@AuthenticationPrincipal SoffitPrincipal principal) {
+    public ResponseEntity<Void> deleteAllNotifications(@AuthenticationPrincipal SoffitPrincipal principal) {
         String userId = principal.getUsername();
         List<String> notifIds = redisNotificationStore.notifIdsList(userId);
-        redisNotificationStore.deleteAll(userId, notifIds);
+        redisNotificationStore.delete(userId, notifIds);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/read-all")
-    public ResponseEntity<Void> markNotificationsAsRead(@AuthenticationPrincipal SoffitPrincipal principal) {
+    public ResponseEntity<Void> markAllNotificationsAsRead(@AuthenticationPrincipal SoffitPrincipal principal) {
         String userId = principal.getUsername();
         List<String> notifIds = redisNotificationStore.notifIdsList(userId);
-        redisNotificationStore.markAllAsRead(userId, notifIds);
+        redisNotificationStore.markAsRead(userId, notifIds);
         return ResponseEntity.accepted().build();
     }
 
