@@ -57,7 +57,8 @@ public class FcmService {
             try {
                 ErrorResponse error = mapper.readValue(response.body(), ErrorResponse.class);
                 // Supprimer la device si elle n'est plus enregistrée
-                if(error.getError().getDetails().getFirst().getErrorCode().equals("UNREGISTERED")){
+                if(error.getError().getDetails().getFirst().getErrorCode().equals("UNREGISTERED") ||
+                        error.getError().getDetails().getFirst().getErrorCode().equals("THIRD_PARTY_AUTH_ERROR")){
                     tokenService.removeToken(notification.getHeader().getUserId(), deviceToken);
                     log.info("Device token {} removed from token list because device is unregistered", deviceToken);
                 } else {
