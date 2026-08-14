@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.notifications.expander" level="TRACE"/>
+    <logger name="fr.recia.notifications.expander" level="INFO"/>
 
 </configuration>

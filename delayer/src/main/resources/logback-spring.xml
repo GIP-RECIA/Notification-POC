@@ -43,6 +43,6 @@
     </root>
 
     <!-- Logs applicatifs -->
-    <logger name="fr.recia.notifications.notifications.delayer" level="TRACE"/>
+    <logger name="fr.recia.notifications.delayer" level="INFO"/>
 
 </configuration>
