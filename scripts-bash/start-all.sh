@@ -10,3 +10,4 @@
 ./scripts-bash/start-service.sh
 ./scripts-bash/start-delayer.sh
 ./scripts-bash/start-smtp-proxy.sh
+./scripts-bash/start-monitor.sh

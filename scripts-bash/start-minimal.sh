@@ -30,3 +30,6 @@ cd ..
 cd smtp-proxy
 mvn spring-boot:run &
 cd ..
+cd monitor
+mvn spring-boot:run &
+cd ..

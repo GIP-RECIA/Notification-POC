@@ -1,0 +1,42 @@
+server:
+  port: 8071
+
+logging:
+  file:
+    path: logs
+
+spring:
+  application:
+    name: monitor
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+      base-path: /actuator
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+monitor:
+  scan-interval: 10s
+  processes:
+    - name: consumer-mail
+      command-pattern: "Notification-POC/consumer-mail/"
+    - name: consumer-web
+      command-pattern: "Notification-POC/consumer-web/"
+    - name: consumer-push
+      command-pattern: "Notification-POC/consumer-push/"
+    - name: delayer
+      command-pattern: "Notification-POC/delayer/"
+    - name: expander
+      command-pattern: "Notification-POC/expander/"
+    - name: preferences-api
+      command-pattern: "Notification-POC/preferences-api/"
+    - name: producer-api
+      command-pattern: "Notification-POC/producer-api/"
+    - name: router
+      command-pattern: "Notification-POC/router/"
+    - name: smtp-proxy
+      command-pattern: "Notification-POC/smtp-proxy/"

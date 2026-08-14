@@ -40,3 +40,6 @@ cd smtp-proxy
 mvn clean package &
 cd ..
 sleep 1
+cd monitor
+mvn clean package &
+cd ..

@@ -10,3 +10,4 @@
 ./scripts-bash/stop-service.sh
 ./scripts-bash/stop-delayer.sh
 ./scripts-bash/stop-smtp-proxy.sh
+./scripts-bash/stop-monitor.sh
