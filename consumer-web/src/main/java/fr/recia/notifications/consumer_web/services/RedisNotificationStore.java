@@ -4,6 +4,7 @@ import fr.recia.notifications.consumer_web.configuration.TtlConf;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -80,6 +81,16 @@ public class RedisNotificationStore {
         log.trace("Deleted notification {} and its mappings", notifId);
     }
 
+    public void deleteAll(String userId, List<String> notifIds) {
+        for (String notifId : notifIds) {
+            try {
+                delete(userId, notifId);
+            } catch (ResponseStatusException e) {
+                log.trace("Could not delete notification {} for user {} : {}", notifId, userId, e.getReason());
+            }
+        }
+    }
+
     public void markAsRead(String notificationId, String userId) {
         String notifKey = getNotificationKeyForRedis(notificationId);
         StoredNotification stored = notificationRedisTemplate.opsForValue().get(notifKey);
@@ -92,6 +103,16 @@ public class RedisNotificationStore {
         stored.setRead(true);
         notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(1));
         log.trace("Marked notification {} as read", notificationId);
+    }
+
+    public void markAllAsRead(String userId, List<String> notifIds) {
+        for (String notifId : notifIds) {
+            try {
+                markAsRead(notifId, userId);
+            } catch (ResponseStatusException e) {
+                log.trace("Could not mark notification {} as read for user {} : {}", notifId, userId, e.getReason());
+            }
+        }
     }
 
     public List<StoredNotification> findAllForUser(String userId) {
@@ -116,6 +137,15 @@ public class RedisNotificationStore {
         allNotifs.sort(Comparator.comparing(n -> n.getNotification().getHeader().getEventHeader().getCreatedAt(), Comparator.reverseOrder()));
         log.trace("Found notification list {} for user {}", allNotifs, userId);
         return allNotifs;
+    }
+
+    public List<String> notifIdsList(String userId) {
+        List<StoredNotification> notifsList = findAllForUser(userId);
+        List<String> notifIds = new ArrayList<>();
+        for (int i = 0; i < notifsList.size(); i++) {
+            notifIds.add(notifsList.get(i).getNotification().getHeader().getNotificationId());
+        }
+        return notifIds;
     }
 
     // Tache qui s'éxécute à 1h30 tous les jours et qui nettoie dans le redis les clés dans les ensembles qui ne sont plus associées à rien
