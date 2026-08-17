@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Data
 public class FCMProperties {
     private String channelId;
+    private String notifIcon;
     private String serviceAccountPath;
     private String fcmUrl;
     private String fcmScope;

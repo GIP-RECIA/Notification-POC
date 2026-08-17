@@ -106,7 +106,8 @@ public class FcmService {
                 // Détails sur android poir la pousser dans le bon channel
                 "android", Map.of(
                         "notification", Map.of(
-                                "channel_id", fcmProperties.getChannelId()
+                                "channel_id", fcmProperties.getChannelId(),
+                                "icon", fcmProperties.getNotifIcon()
                                 )
                         )
             )
