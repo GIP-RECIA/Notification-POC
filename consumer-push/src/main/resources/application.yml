@@ -47,6 +47,7 @@ streams:
     password="UyyMjvvD5BhABhqR";
 
 fcm:
+  channel-id:
   service-account-path:
   fcm-url:
   fcm-scope: https://www.googleapis.com/auth/firebase.messaging

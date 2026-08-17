@@ -102,7 +102,13 @@ public class FcmService {
                 "notification", Map.of(
                         "title", notification.getContent().getTitle(),
                         "body", notification.getContent().getMessage()
-                )
+                ),
+                // Détails sur android poir la pousser dans le bon channel
+                "android", Map.of(
+                        "notification", Map.of(
+                                "channel_id", fcmProperties.getChannelId()
+                                )
+                        )
             )
         );
     }

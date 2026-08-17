@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "fcm")
 @Data
 public class FCMProperties {
+    private String channelId;
     private String serviceAccountPath;
     private String fcmUrl;
     private String fcmScope;
