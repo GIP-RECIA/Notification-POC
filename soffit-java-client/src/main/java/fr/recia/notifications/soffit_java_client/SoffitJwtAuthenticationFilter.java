@@ -29,7 +29,6 @@ public class SoffitJwtAuthenticationFilter extends OncePerRequestFilter {
         log.trace("Authentication : soffit filter execution...");
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.error("Authorization header is not valid !");
             // Important : on éxécute quand même la suite de chaine de filtres mais sans créer de principal authentifié
             // Sur les endpoints authentifés, on aura un 403 de la part de spring security, mais par contre on pourra bien atteindre les endpoints publics
             filterChain.doFilter(request, response);
@@ -39,7 +38,7 @@ public class SoffitJwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             Authentication authentication = jwtValidator.authenticate(authHeader.substring(7));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.trace("User successfully authenticated {}", authentication);
+            log.debug("User successfully authenticated {}", authentication);
         } catch (JwtException e) {
             log.error("Error during JWT decoding ! Soffit authentification failure", e);
             // Par contre si on a un champ Authorization qui est présent mais invalide, on peut directement refuser la requête
