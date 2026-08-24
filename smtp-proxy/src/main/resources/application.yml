@@ -11,6 +11,7 @@ routing:
 
 notification-api:
   url: "http://localhost:8179/event/emit"
+  titre-nextcloud: "Un fichier a été partagé avec vous."
 
 spring:
   application:

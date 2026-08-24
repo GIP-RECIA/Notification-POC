@@ -1,7 +1,7 @@
 
 # Monitor
 
-Application spring boot qui à pour rôle de monitorer les différents modules de la plateforme de notifications en exposant un heath-check et des exports prometheus.
+Application spring boot qui a pour rôle de monitorer les différents modules de la plateforme de notifications en exposant un heath-check et des exports prometheus.
 
 ## Dépendances
 

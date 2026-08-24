@@ -43,7 +43,8 @@ prefs:
     - DEMO-SERVICE
     - PublicationContenus
     - News
-    - ESCO-MCE-new
+    - Documents
+    - ESCO-MCE
     - Nextcloud
     - MyPads
     - GRR2_netocentre

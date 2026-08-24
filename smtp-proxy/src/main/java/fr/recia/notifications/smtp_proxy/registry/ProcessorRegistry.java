@@ -33,13 +33,14 @@ public class ProcessorRegistry {
     @PostConstruct
     public void init() {
         String url = notificationClientProperties.getUrl();
+        String titre = notificationClientProperties.getTitreNextcloud();
         for (SMTPRoutingRule rule : smtpRoutingProperties.getRules()) {
             String processorName = rule.getProcessor();
             String service = rule.getService();
             String apiKey = rule.getApiKey();
             switch (processorName) {
                 case "NextcloudProcessor" :
-                    register(processorName, new NextcloudProcessor(url, service, apiKey));
+                    register(processorName, new NextcloudProcessor(url, service, apiKey, titre));
                     log.info("Registered new {}", processorName);
             }
         }

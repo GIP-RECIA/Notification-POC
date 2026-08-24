@@ -8,6 +8,7 @@ import fr.recia.notifications.model_kafka.model.Priority;
 import fr.recia.notifications.model_kafka.model.ServiceEvent;
 import fr.recia.notifications.model_kafka.model.Target;
 import fr.recia.notifications.model_kafka.model.TargetType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 public class HttpNotificationClient {
 
     private final HttpClient httpClient;
@@ -92,7 +94,7 @@ public class HttpNotificationClient {
                         .build();
                 HttpResponse<Void> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.discarding());
                 if (response.statusCode() == 503) {
-                    System.out.println("Failed to sent notification. Retrying...");
+                    log.warn("Failed to sent notification. Retrying...");
                 } else if (response.statusCode() >= 400) {
                     throw new RuntimeException("Notification API error: HTTP " + response.statusCode());
                 } else {

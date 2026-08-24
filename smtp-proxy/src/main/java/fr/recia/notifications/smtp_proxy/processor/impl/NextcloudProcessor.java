@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.extern.slf4j.Slf4j;
 
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,19 +20,21 @@ public class NextcloudProcessor implements MailProcessor {
 
     private static final Pattern URL_PATTERN = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", Pattern.CASE_INSENSITIVE);
     private final HttpNotificationClient httpNotificationClient;
+    private final String titre;
 
-    public NextcloudProcessor(String apiUrl, String service, String apiKey){
+    public NextcloudProcessor(String apiUrl, String service, String apiKey, String titre){
         this.httpNotificationClient = new HttpNotificationClient(apiUrl, service, apiKey);
+        this.titre = titre;
     }
 
     @Override
     public void process(String from, String dest, MimeMessage mimeMessage) throws Exception {
 
-        String title = mimeMessage.getSubject();
-        String message = extractPlainBody(mimeMessage);
+        String title = titre;
+        String message = mimeMessage.getSubject();
         String link = extractUrl(message);
 
-        log.info("Data succesfully retrieved. Recipient {}, Message content : {} , Link : {}", dest, message, link);
+        log.info("Data successfully retrieved. Recipient {}, Message content : {} , Link : {}", dest, message, link);
 
         httpNotificationClient.sendNotification(
                 title,

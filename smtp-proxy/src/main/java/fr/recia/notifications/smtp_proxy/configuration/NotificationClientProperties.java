@@ -13,4 +13,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "notification-api")
 public class NotificationClientProperties {
     private String url;
+    private String titreNextcloud;
 }
