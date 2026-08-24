@@ -32,7 +32,7 @@ public class NextcloudProcessor implements MailProcessor {
 
         String title = titre;
         String message = mimeMessage.getSubject();
-        String link = extractUrl(message);
+        String link = extractUrl(extractPlainBody(mimeMessage));
 
         log.info("Data successfully retrieved. Recipient {}, Message content : {} , Link : {}", dest, message, link);
 
