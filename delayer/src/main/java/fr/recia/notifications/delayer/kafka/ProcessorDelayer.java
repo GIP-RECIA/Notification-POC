@@ -5,6 +5,7 @@ import fr.recia.notifications.delayer.droitDeconnexionConfig.Region;
 import fr.recia.notifications.delayer.services.DroitDeconnexionService;
 import fr.recia.notifications.delayer.services.LdapRegionService;
 import fr.recia.notifications.delayer.services.LdapBypassDroitDeconnexionService;
+import fr.recia.notifications.model_kafka.model.Priority;
 import fr.recia.notifications.model_kafka.model.RoutedNotification;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -58,9 +59,10 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
         long nowReplay = now + Duration.ofMinutes(30).toMillis();
         int replayCount = record.value().getRetryNumber();
         Region region = ldapRegionService.getRegionByUid(userId);
+        Priority priority = notification.getNotification().getHeader().getEventHeader().getPriority();
 
         if (replayCount == 0) {
-            if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
+            if (!droitDeconnexionService.peutRecevoirNotif(userId, now, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId) && priority != Priority.EXTREME) {
                 log.debug("The user {} cannot bypass the 'droit à la deconnexion', notification sent with delay.", userId);
 
                 Duration delai = droitDeconnexionService.calculDelai(now, region);
@@ -82,7 +84,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                 log.debug("Notification {} has already been replayed {} times. Putting it to dead letter topic.", notification, replayCount);
                 context.forward(record, SINK_DLT);
             }else {
-                if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId)) {
+                if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId) && priority != Priority.EXTREME) {
                     log.debug("Notification {} has been replayed {} times. Putting it in Store to be replayed.", notification, replayCount);
 
                     Duration delai = droitDeconnexionService.calculDelai(now, region);

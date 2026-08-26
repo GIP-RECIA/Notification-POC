@@ -32,6 +32,9 @@ public class LdapBypassDroitDeconnexionService {
 
         log.debug("User's profile is : {}", userProfil);
 
+        if (userProfil == null) {
+            return false;
+        }
 
         List<String> profil = bypassDroitDeconnexionConfig.getProfil();
 
