@@ -26,6 +26,8 @@ public class MailSendingService {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", mailProperties.getHost());
         properties.put("mail.smtp.port", mailProperties.getPort());
+        properties.put("mail.smtp.username", mailProperties.getUsername());
+        properties.put("mail.smtp.password", mailProperties.getPassword());
         properties.put("mail.smtp.auth", mailProperties.isAuth());
         properties.put("mail.smtp.starttls.enable", mailProperties.isStarttls());
         return Session.getInstance(properties);

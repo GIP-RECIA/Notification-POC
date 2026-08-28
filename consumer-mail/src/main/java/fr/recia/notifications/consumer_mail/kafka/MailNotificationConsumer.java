@@ -16,7 +16,7 @@ public class MailNotificationConsumer {
 
     private final MailSendingService mailSendingService;
     private final LdapMailQueryService ldapMailQueryService;
-    private static final String MAIL_FROM = "notification@mail.fr";
+    private static final String MAIL_FROM = "notifications@netocentre.fr";
     private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
     private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
