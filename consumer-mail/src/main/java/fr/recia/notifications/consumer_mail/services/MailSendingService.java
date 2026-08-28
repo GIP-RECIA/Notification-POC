@@ -1,7 +1,9 @@
 package fr.recia.notifications.consumer_mail.services;
 
 import fr.recia.notifications.consumer_mail.configuration.MailProperties;
+import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
@@ -21,16 +23,19 @@ public class MailSendingService {
         this.mailSession = createMailSession(mailProperties);
     }
 
-    private Session createMailSession(MailProperties mailProperties){
+    private Session createMailSession(MailProperties mailProperties) {
         log.trace("Creating a mail session with properties {}", mailProperties);
         Properties properties = new Properties();
         properties.put("mail.smtp.host", mailProperties.getHost());
         properties.put("mail.smtp.port", mailProperties.getPort());
-        properties.put("mail.smtp.username", mailProperties.getUsername());
-        properties.put("mail.smtp.password", mailProperties.getPassword());
         properties.put("mail.smtp.auth", mailProperties.isAuth());
         properties.put("mail.smtp.starttls.enable", mailProperties.isStarttls());
-        return Session.getInstance(properties);
+        return Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(mailProperties.getUsername(), mailProperties.getPassword());
+            }
+        });
     }
 
     public void sendTextMail(String from, String to, String subject, String body) {
