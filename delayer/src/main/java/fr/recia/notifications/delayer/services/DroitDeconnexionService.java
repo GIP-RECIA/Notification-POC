@@ -51,14 +51,14 @@ public class DroitDeconnexionService {
         // Si vacances, on sélectionne le lundi de la rentrée, et on appelle la méthode avec pour savoir si c'est un jour où l'envoie est possible.
         if (estVacances(date, region)) {
             LocalDate finVacances = getFinVacances(date, region);
-            ZonedDateTime repriseVacances = finVacances.atTime(8, 0).atZone(getZoneId(region));
+            ZonedDateTime repriseVacances = finVacances.atTime(bornesHoraires.getInf(), bornesHoraires.getMinutes()).atZone(getZoneId(region));
 
             return prochainMomentAutorise(repriseVacances, region);
         }
 
         // Si c'est un jour férié, on appelle la méthode avec le lendemain pour savoir si c'est un jour où l'envoie est possible ou pas.
         if (estFerie(date, region)){
-            ZonedDateTime lendemain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
+            ZonedDateTime lendemain = date.plusDays(bornesHoraires.getJour()).atTime(bornesHoraires.getInf(),bornesHoraires.getMinutes()).atZone(getZoneId(region));
 
             return prochainMomentAutorise(lendemain, region);
         }
@@ -66,16 +66,16 @@ public class DroitDeconnexionService {
         // Si week-end, on cherche le prochain jour où l'on pourra envoyer la notif, donc le prochain lundi.
         if (estWeekend(dateTime)) {
                 LocalDate lundi = date.with(DayOfWeek.MONDAY);
-                return lundi.atTime(7, 0).atZone(getZoneId(region));
+                return lundi.atTime(bornesHoraires.getInf(), bornesHoraires.getMinutes()).atZone(getZoneId(region));
         }
 
         //Si l'heure est en dehors des horaires autorisés, et que toutes les conditions précédentes n'ont pas été validées, on check si on est minuit passé,
         // si oui, on donne à dateTime la valeur du jour même à 8h, sinon, on donne la valeur du lendemain 8h.
         if (!estHeureAutorisee(dateTime)) {
             if (dateTime.getHour() < bornesHoraires.getInf()) {
-                return date.atTime(7, 0).atZone(getZoneId(region));
+                return date.atTime(bornesHoraires.getInf(), bornesHoraires.getMinutes()).atZone(getZoneId(region));
             }else {
-                ZonedDateTime demain = date.plusDays(1).atTime(8,0).atZone(getZoneId(region));
+                ZonedDateTime demain = date.plusDays(bornesHoraires.getJour()).atTime(bornesHoraires.getInf(),bornesHoraires.getMinutes()).atZone(getZoneId(region));
                 return prochainMomentAutorise(demain, region);
             }
         }
@@ -138,7 +138,7 @@ public class DroitDeconnexionService {
 
         for (PeriodesVacances periode : prop.getVacances()) {
             log.trace("date début : {} , date de fin {} , date actuelle {}", periode.getDebut(), periode.getFin(), date);
-            if (date.isAfter(periode.getDebut()) && date.isBefore(periode.getFin().minusDays(1))) {
+            if (date.isAfter(periode.getDebut()) && date.isBefore(periode.getFin().minusDays(bornesHoraires.getJour()))) {
                 return true;
             }
         }

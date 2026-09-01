@@ -36,18 +36,15 @@ streams:
     username="preferences-streams"
     password="wJ2ngZuYh1vRZ642";
 
+kafka-properties:
+  store: "user-prefs-store"
+  topic: "notifications.user.preferences"
+
 prefs:
   notification-services:
     - GLC
     - GROUPER
     - DEMO-SERVICE
-    - PublicationContenus
-    - News
-    - Documents
-    - ESCO-MCE
-    - Nextcloud
-    - MyPads
-    - GRR2_netocentre
   default-channels:
     ws: true
     mail: false

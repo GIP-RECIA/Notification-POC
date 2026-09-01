@@ -1,5 +1,6 @@
 package fr.recia.notifications.expander.kafka;
 
+import fr.recia.notifications.expander.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.expander.service.LdapGroupService;
 import fr.recia.notifications.expander.service.LdapMailService;
 import fr.recia.notifications.model_kafka.model.Notification;
@@ -21,14 +22,16 @@ import java.util.UUID;
 @Slf4j
 public class ServiceEventConsumer {
 
-    private final static String TOPIC_OUT = "notifications.events.expanded";
+    private final KafkaNotificationProperties kafkaNotificationProperties;
+
     private final static String TOPIC_IN = "notifications.events.requested";
 
     private final KafkaTemplate<String, Notification> kafkaTemplate;
     private final LdapGroupService ldapGroupService;
     private final LdapMailService ldapMailService;
 
-    public ServiceEventConsumer(KafkaTemplate<String, Notification> kafkaTemplate, LdapGroupService ldapGroupService, LdapMailService ldapMailService) {
+    public ServiceEventConsumer(KafkaNotificationProperties kafkaNotificationProperties, KafkaTemplate<String, Notification> kafkaTemplate, LdapGroupService ldapGroupService, LdapMailService ldapMailService) {
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.kafkaTemplate = kafkaTemplate;
         this.ldapGroupService = ldapGroupService;
         this.ldapMailService = ldapMailService;
@@ -37,8 +40,8 @@ public class ServiceEventConsumer {
     private void sendToKafkaForUserList(List<String> ids, ServiceEvent serviceEvent){
         for (String userId : ids) {
             Notification notification = new Notification(new NotificationHeader(UUID.randomUUID().toString(), userId, serviceEvent.getHeader()), serviceEvent.getContent());
-            kafkaTemplate.send(TOPIC_OUT, userId, notification);
-            log.trace("New notification {} sent to topic {}", notification, TOPIC_OUT);
+            kafkaTemplate.send(kafkaNotificationProperties.getTopicExpanded(), userId, notification);
+            log.trace("New notification {} sent to topic {}", notification, kafkaNotificationProperties.getTopicExpanded());
         }
     }
 

@@ -1,5 +1,6 @@
 package fr.recia.notifications.consumer_web.kafka;
 
+import fr.recia.notifications.consumer_web.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.consumer_web.services.RedisNotificationStore;
 import fr.recia.notifications.model_kafka.model.RoutedNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +14,16 @@ public class WebNotificationConsumer {
 
     private final RedisNotificationStore redisNotificationStore;
     private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
+    private final KafkaNotificationProperties kafkaNotificationProperties;
+    private final static String TOPIC_IN = "notifications.web";
 
-    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
-
-    public WebNotificationConsumer(RedisNotificationStore redisNotificationStore, KafkaTemplate<String, RoutedNotification> kafkaTemplate) {
+    public WebNotificationConsumer(RedisNotificationStore redisNotificationStore, KafkaTemplate<String, RoutedNotification> kafkaTemplate, KafkaNotificationProperties kafkaNotificationProperties) {
         this.redisNotificationStore = redisNotificationStore;
         this.kafkaTemplate = kafkaTemplate;
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
     }
 
-    @KafkaListener(topics = "notifications.web")
+    @KafkaListener(topics = TOPIC_IN)
     public void consume(RoutedNotification routedNotification) {
         try {
         log.debug("Web notification received : {}", routedNotification);
@@ -32,7 +34,7 @@ public class WebNotificationConsumer {
             log.error("UNexpected Redis error : ", e);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+            kafkaTemplate.send(kafkaNotificationProperties.getReplayer(), routedNotification.getNotification().getHeader().getUserId(), routedNotification);
         }
     }
 }

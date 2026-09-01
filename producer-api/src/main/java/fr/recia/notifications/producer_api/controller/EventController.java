@@ -1,6 +1,7 @@
 package fr.recia.notifications.producer_api.controller;
 
 import fr.recia.notifications.model_kafka.model.ServiceEvent;
+import fr.recia.notifications.producer_api.configuration.KafkaNotificationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class EventController {
 
+    private final KafkaNotificationProperties kafkaNotificationProperties;
+
     private final KafkaTemplate<String, ServiceEvent> kafkaTemplate;
 
-    public EventController(KafkaTemplate<String, ServiceEvent> kafkaTemplate) {
+    public EventController(KafkaNotificationProperties kafkaNotificationProperties, KafkaTemplate<String, ServiceEvent> kafkaTemplate) {
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.kafkaTemplate = kafkaTemplate;
     }
 
     @PostMapping("/emit")
     public ResponseEntity<Void> emit(@RequestBody ServiceEvent event) {
         try {
-            kafkaTemplate.send("notifications.events.requested", event.getHeader().getEventId(), event);
+            kafkaTemplate.send(kafkaNotificationProperties.getTopicEvent(), event.getHeader().getEventId(), event);
             log.trace("Produced ServiceEvent {} in kafka", event);
         } catch (Exception e) {
             log.error("Unable to produce ServiceEvent {} to kafka", event, e);

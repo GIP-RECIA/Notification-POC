@@ -34,6 +34,8 @@ frequency:
 bornes :
   inf: 7
   sup: 20
+  minutes: 0
+  jour: 1
 
 bypass-request:
   branch-base: ou=people
@@ -105,3 +107,19 @@ streams:
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username="delayer-streams"
     password="DkA5c4Ojd86sI6kk";
+kafka-properties:
+  router: "notifications.router"
+  replayer: "notifications.replayer"
+  web: "notifications.web"
+  mail: "notifications.mail"
+  push: "notifications.push"
+  dlt: "notifications.dlt"
+  sink-web: "sink.web"
+  sink-mail: "sink.mail"
+  sink-push: "sink.push"
+  sink-dlt: "sink.dlt"
+  store: "delayer-store"
+  processor: "processor-delayer"
+  source-router: "router"
+  source-replayer: "replayer"
+  retries: 5

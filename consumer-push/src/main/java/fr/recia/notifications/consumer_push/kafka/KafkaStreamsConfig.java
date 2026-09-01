@@ -1,6 +1,7 @@
 package fr.recia.notifications.consumer_push.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.notifications.consumer_push.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.consumer_push.configuration.KafkaStreamProperties;
 import fr.recia.notifications.model_kafka.model.DeviceTokenSet;
 import fr.recia.notifications.model_kafka_serde.model.DeviceTokenSetSerde;
@@ -25,12 +26,12 @@ import java.util.UUID;
 @Configuration
 public class KafkaStreamsConfig {
 
-    public static final String STORE_NAME = "push-tokens-store";
-    public static final String TOPIC_NAME = "notifications.push.tokens";
+    private final KafkaNotificationProperties kafkaNotificationProperties;
 
     private final KafkaStreamProperties kafkaStreamProperties;
 
-    public KafkaStreamsConfig(KafkaStreamProperties kafkaStreamProperties){
+    public KafkaStreamsConfig(KafkaNotificationProperties kafkaNotificationProperties, KafkaStreamProperties kafkaStreamProperties){
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.kafkaStreamProperties = kafkaStreamProperties;
     }
 
@@ -38,8 +39,8 @@ public class KafkaStreamsConfig {
     public GlobalKTable<String, DeviceTokenSet> preferencesTable(StreamsBuilder builder, ObjectMapper objectMapper) {
         // Création d'une KTable avec son store associé pour pouvoir accéder au topic des tokens
         DeviceTokenSetSerde deviceTokenSetSerde = new DeviceTokenSetSerde(objectMapper);
-        return builder.globalTable(TOPIC_NAME, Consumed.with(Serdes.String(), deviceTokenSetSerde),
-                Materialized.<String, DeviceTokenSet, KeyValueStore<Bytes, byte[]>>as(STORE_NAME)
+        return builder.globalTable(kafkaNotificationProperties.getTopicPush(), Consumed.with(Serdes.String(), deviceTokenSetSerde),
+                Materialized.<String, DeviceTokenSet, KeyValueStore<Bytes, byte[]>>as(kafkaNotificationProperties.getStore())
                         .withKeySerde(Serdes.String())
                         .withValueSerde(deviceTokenSetSerde)
         );

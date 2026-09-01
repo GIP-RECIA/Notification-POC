@@ -1,5 +1,6 @@
 package fr.recia.notifications.consumer_push.services;
 
+import fr.recia.notifications.consumer_push.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.consumer_push.kafka.KafkaStreamsConfig;
 import fr.recia.notifications.model_kafka.model.DeviceTokenSet;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TokenService {
 
+    private final KafkaNotificationProperties kafkaNotificationProperties;
     private final StreamsBuilderFactoryBean factoryBean;
     private ReadOnlyKeyValueStore<String, DeviceTokenSet> store;
     private final KafkaTemplate<String, DeviceTokenSet> kafkaTemplate;
 
-    public TokenService(StreamsBuilderFactoryBean factoryBean, KafkaTemplate<String, DeviceTokenSet> kafkaTemplate) {
+    public TokenService(KafkaNotificationProperties kafkaNotificationProperties, StreamsBuilderFactoryBean factoryBean, KafkaTemplate<String, DeviceTokenSet> kafkaTemplate) {
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.factoryBean = factoryBean;
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -32,7 +35,7 @@ public class TokenService {
         }
         if(!tokens.contains(token)){
             tokens.add(token);
-            kafkaTemplate.send(KafkaStreamsConfig.TOPIC_NAME, userId, tokens);
+            kafkaTemplate.send(kafkaNotificationProperties.getTopicPush(), userId, tokens);
             log.info("New token {} set for user {}", token, userId);
         } else {
             log.info("Token {} is already associated to user {}, no need to update kafka", token, userId);
@@ -44,7 +47,7 @@ public class TokenService {
         log.info("Removing token {} for user {}", token, userId);
         DeviceTokenSet tokens = getTokens(userId);
         tokens.remove(token);
-        kafkaTemplate.send(KafkaStreamsConfig.TOPIC_NAME, userId, tokens);
+        kafkaTemplate.send(kafkaNotificationProperties.getTopicPush(), userId, tokens);
     }
 
     public DeviceTokenSet getTokens(String userId) {
@@ -53,7 +56,7 @@ public class TokenService {
             if (streams == null) {
                 throw new IllegalStateException("Kafka streams isn't accessible at this time.");
             } else {
-                this.store = streams.store(StoreQueryParameters.fromNameAndType(KafkaStreamsConfig.STORE_NAME, QueryableStoreTypes.keyValueStore()));
+                this.store = streams.store(StoreQueryParameters.fromNameAndType(kafkaNotificationProperties.getStore(), QueryableStoreTypes.keyValueStore()));
             }
         }
         try {

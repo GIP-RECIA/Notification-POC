@@ -1,6 +1,6 @@
 package fr.recia.notifications.consumer_web.services;
 
-import fr.recia.notifications.consumer_web.configuration.TtlConf;
+import fr.recia.notifications.consumer_web.configuration.RedisProperties;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +27,14 @@ public class RedisNotificationStore {
 
     private final RedisTemplate<String, StoredNotification> notificationRedisTemplate;
     private final RedisTemplate<String, String> userIndexRedisTemplate;
-    private static final int SCAN_COUNT = 500;
-    private TtlConf ttlConf;
+    private RedisProperties redisProperties;
 
     public RedisNotificationStore(RedisTemplate<String, StoredNotification> notificationRedisTemplate,
                                   RedisTemplate<String, String> userIndexRedisTemplate,
-                                  TtlConf ttlConf) {
+                                  RedisProperties redisProperties) {
         this.notificationRedisTemplate = notificationRedisTemplate;
         this.userIndexRedisTemplate = userIndexRedisTemplate;
-        this.ttlConf = ttlConf;
+        this.redisProperties = redisProperties;
     }
 
     private String getNotificationKeyForRedis(Notification notification){
@@ -58,7 +57,7 @@ public class RedisNotificationStore {
         StoredNotification stored = new StoredNotification(notif, false);
         // Stocker la notification en elle-même
         String notifKey = getNotificationKeyForRedis(notif);
-        notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(ttlConf.getJours()));
+        notificationRedisTemplate.opsForValue().set(notifKey, stored, Duration.ofDays(redisProperties.getTtl()));
         log.trace("Notification {} added to redis for key {}", notifKey, stored);
         // Stocker le lien user --> ensemble des notifs
         String userIndex = getUserIndexKeyForRedis(notif);
@@ -144,7 +143,7 @@ public class RedisNotificationStore {
     @Scheduled(cron = "0 30 1 * * *")
     public void cleanupOrphanNotifications() {
         log.info("Launching notification GC for inverted indexes...");
-        ScanOptions options = ScanOptions.scanOptions().match("user:*:notifications").count(SCAN_COUNT).build();
+        ScanOptions options = ScanOptions.scanOptions().match("user:*:notifications").count(redisProperties.getScanCount()).build();
         try (Cursor<String> cursor = userIndexRedisTemplate.scan(options)) {
             while (cursor.hasNext()) {
                 String userIndexKey = cursor.next();

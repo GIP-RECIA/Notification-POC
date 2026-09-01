@@ -1,7 +1,7 @@
 package fr.recia.notifications.preferences_api.service;
 
 import fr.recia.notifications.model_kafka.model.UserPreferences;
-import fr.recia.notifications.preferences_api.kafka.KafkaStreamsConfig;
+import fr.recia.notifications.preferences_api.configuration.KafkaNotificationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
@@ -19,15 +19,17 @@ public class PreferencesQueryService {
     private final StreamsBuilderFactoryBean factoryBean;
     private ReadOnlyKeyValueStore<String, UserPreferences> store;
     private final KafkaTemplate<String, UserPreferences> kafkaTemplate;
+    private final KafkaNotificationProperties kafkaNotificationProperties;
 
     // Possible de récupérer une StreamsBuilderFactoryBean car on a initialisé le Bean defaultKafkaStreamsConfig + annotation @EnableKafkaStreams
-    public PreferencesQueryService(StreamsBuilderFactoryBean factoryBean, KafkaTemplate<String, UserPreferences> kafkaTemplate) {
+    public PreferencesQueryService(StreamsBuilderFactoryBean factoryBean, KafkaTemplate<String, UserPreferences> kafkaTemplate, KafkaNotificationProperties kafkaNotificationProperties) {
         this.factoryBean = factoryBean;
         this.kafkaTemplate = kafkaTemplate;
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
     }
 
     public void postPreferences(String userId, UserPreferences preferences){
-        kafkaTemplate.send(KafkaStreamsConfig.TOPIC_NAME, userId, preferences);
+        kafkaTemplate.send(kafkaNotificationProperties.getTopic(), userId, preferences);
         log.info("New preferences {} set for user {}", preferences, userId);
     }
 
@@ -38,7 +40,7 @@ public class PreferencesQueryService {
             if (streams == null) {
                 throw new IllegalStateException("Kafka streams isn't accessible at this time.");
             } else {
-                this.store = streams.store(StoreQueryParameters.fromNameAndType(KafkaStreamsConfig.STORE_NAME, QueryableStoreTypes.keyValueStore()));
+                this.store = streams.store(StoreQueryParameters.fromNameAndType(kafkaNotificationProperties.getStore(), QueryableStoreTypes.keyValueStore()));
             }
         }
         try {

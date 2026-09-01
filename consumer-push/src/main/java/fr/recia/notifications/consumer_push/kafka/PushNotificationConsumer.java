@@ -1,5 +1,6 @@
 package fr.recia.notifications.consumer_push.kafka;
 
+import fr.recia.notifications.consumer_push.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.consumer_push.services.FcmService;
 import fr.recia.notifications.consumer_push.services.TokenService;
 import fr.recia.notifications.model_kafka.model.DeviceTokenSet;
@@ -15,12 +16,13 @@ import java.util.Set;
 @Slf4j
 public class PushNotificationConsumer {
 
-    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
+    private final KafkaNotificationProperties kafkaNotificationProperties;
     private final TokenService tokenService;
     private final FcmService fcmService;
     private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    public PushNotificationConsumer(TokenService tokenService, FcmService fcmService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
+    public PushNotificationConsumer(KafkaNotificationProperties kafkaNotificationProperties, TokenService tokenService, FcmService fcmService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.tokenService = tokenService;
         this.fcmService = fcmService;
         this.kafkaTemplate = kafkaTemplate;
@@ -51,7 +53,7 @@ public class PushNotificationConsumer {
         } catch (Exception e) {
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+            kafkaTemplate.send(kafkaNotificationProperties.getTopicReplayer(), routedNotification.getNotification().getHeader().getUserId(), routedNotification);
             log.warn("An error occured while sending the notification to firebase", e);
         }
     }

@@ -10,4 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class BornesHoraires {
     int inf;
     int sup;
+    int minutes;
+    int jour;
 }

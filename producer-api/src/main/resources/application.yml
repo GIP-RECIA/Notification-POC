@@ -22,18 +22,13 @@ spring:
         username="notif-producer"
         password="FhDnnbK1vYVMeFqC";
 
+kafka-topic:
+  topic-event: "notifications.events.requested"
+
 security:
   api-keys:
     GLC: VRgpwzuVYurP2q9PkVU9QFvfUrFplNf0
     GROUPER: jD60tftTJemjfldxdf4d19CQS82XZN9I
     DEMO-SERVICE: wtxcI80Xn2qS7yajJh6R74rkoCSbSstV
-    PublicationContenus:
-    News:
-    Documents:
-    ESCO-MCE:
-    Nextcloud:
-    MyPads:
-    GRR2_netocentre:
-    ELEA: 
   allowed-ips:
     - 127.0.0.1/24

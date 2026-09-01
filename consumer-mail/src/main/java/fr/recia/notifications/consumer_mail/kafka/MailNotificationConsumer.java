@@ -14,13 +14,14 @@ import java.util.Optional;
 @Slf4j
 public class MailNotificationConsumer {
 
+    private final KafkaNotificationProperties kafkaNotificationProperties;
+
     private final MailSendingService mailSendingService;
     private final LdapMailQueryService ldapMailQueryService;
-    private static final String MAIL_FROM = "notifications@netocentre.fr";
-    private final static String TOPIC_OUT_REPLAY = "notifications.replayer";
     private final KafkaTemplate<String, RoutedNotification> kafkaTemplate;
 
-    public MailNotificationConsumer(MailSendingService mailSendingService, LdapMailQueryService ldapMailQueryService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
+    public MailNotificationConsumer(KafkaNotificationProperties kafkaNotificationProperties, MailSendingService mailSendingService, LdapMailQueryService ldapMailQueryService, KafkaTemplate<String, RoutedNotification> kafkaTemplate){
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
         this.mailSendingService = mailSendingService;
         this.ldapMailQueryService = ldapMailQueryService;
         this.kafkaTemplate = kafkaTemplate;
@@ -41,7 +42,7 @@ public class MailNotificationConsumer {
             log.warn("Unable to send a notification {} via mail, forwarded to replayer", routedNotification);
             int retryCount = routedNotification.getRetryNumber();
             routedNotification.setRetryNumber(++retryCount);
-            kafkaTemplate.send(TOPIC_OUT_REPLAY, routedNotification.getNotification().getHeader().getUserId(), routedNotification);
+            kafkaTemplate.send(kafkaNotificationProperties.getTopicReplayer(), routedNotification.getNotification().getHeader().getUserId(), routedNotification);
         }
     }
 }

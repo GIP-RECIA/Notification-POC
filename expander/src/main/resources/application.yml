@@ -53,3 +53,6 @@ ldap-mail:
   branch-base: ou=people
   retrieved-attribute: uid
   filter: "(mail={0})"
+
+kafka-topic:
+  topic-expanded: "notifications.events.expanded"

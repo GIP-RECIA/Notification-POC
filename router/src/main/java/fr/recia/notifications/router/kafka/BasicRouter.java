@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.notifications.model_kafka.model.*;
 import fr.recia.notifications.model_kafka_serde.model.*;
+import fr.recia.notifications.router.configuration.KafkaNotificationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -21,10 +22,14 @@ import java.util.Set;
 @Slf4j
 public class BasicRouter {
 
-    private final static String TOPIC_OUT = "notifications.router";
+    private final KafkaNotificationProperties kafkaNotificationProperties;
 
     private static final Map<Channel, String> channelToTopic = Map.of(Channel.WEB, "notifications.web",
             Channel.MAIL, "notifications.mail", Channel.PUSH, "notifications.push");
+
+    public BasicRouter(KafkaNotificationProperties kafkaNotificationProperties) {
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
+    }
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -124,13 +129,13 @@ public class BasicRouter {
     public KStream<String, Notification> basicRouting(StreamsBuilder builder, Serde<Notification> notificationSerde, Serde<UserPreferences> prefsSerde, Serde<RoutedNotification> routedNotificationSerde) {
 
         // Stream pour récupérer les notifications
-        KStream<String, Notification> input = builder.stream("notifications.events.expanded", Consumed.with(Serdes.String(), notificationSerde));
+        KStream<String, Notification> input = builder.stream(kafkaNotificationProperties.getTopicExpanded(), Consumed.with(Serdes.String(), notificationSerde));
         input.peek((key, value) -> {
             log.trace("New event : key={}, value={}", key, value);
         });
 
         // KTable pour récupérer les préferences utilisateur
-        KTable<String, UserPreferences> preferences = builder.table("notifications.user.preferences", Consumed.with(Serdes.String(), prefsSerde));
+        KTable<String, UserPreferences> preferences = builder.table(kafkaNotificationProperties.getTopicPrefs(), Consumed.with(Serdes.String(), prefsSerde));
         preferences.toStream().peek((key, prefs) -> {
             log.trace("New preference : key={}, value={}", key, prefs);
         });
@@ -151,7 +156,7 @@ public class BasicRouter {
                     .toList();
         //.to attend en retour un TopicNameExtractor qui va retourner le nom du topic dans lequel on va mettre la notif et un Produced pour la sérialisation
         }).to(
-                (key, value, ctx) -> TOPIC_OUT,
+                (key, value, ctx) -> kafkaNotificationProperties.getTopicRouter(),
                 Produced.with(Serdes.String(), routedNotificationSerde)
         );
 

@@ -3,6 +3,7 @@ package fr.recia.notifications.preferences_api.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.notifications.model_kafka.model.UserPreferences;
 import fr.recia.notifications.model_kafka_serde.model.UserPreferencesSerde;
+import fr.recia.notifications.preferences_api.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.preferences_api.configuration.KafkaStreamProperties;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
@@ -26,18 +27,21 @@ import java.util.UUID;
 @Configuration
 public class KafkaStreamsConfig {
 
-    public static final String STORE_NAME = "user-prefs-store";
-    public static final String TOPIC_NAME = "notifications.user.preferences";
+    private final KafkaNotificationProperties kafkaNotificationProperties;
 
     @Autowired
     private KafkaStreamProperties kafkaStreamProperties;
+
+    public KafkaStreamsConfig(KafkaNotificationProperties kafkaNotificationProperties) {
+        this.kafkaNotificationProperties = kafkaNotificationProperties;
+    }
 
     @Bean
     public GlobalKTable<String, UserPreferences> preferencesTable(StreamsBuilder builder, ObjectMapper objectMapper) {
         // Création d'une KTable avec son store associé pour pouvoir accéder au topic des préférences utilisateur
         UserPreferencesSerde prefsSerde = new UserPreferencesSerde(objectMapper);
-        return builder.globalTable(TOPIC_NAME, Consumed.with(Serdes.String(), prefsSerde),
-                Materialized.<String, UserPreferences, KeyValueStore<Bytes, byte[]>>as(STORE_NAME)
+        return builder.globalTable(kafkaNotificationProperties.getTopic(), Consumed.with(Serdes.String(), prefsSerde),
+                Materialized.<String, UserPreferences, KeyValueStore<Bytes, byte[]>>as(kafkaNotificationProperties.getStore())
                         .withKeySerde(Serdes.String())
                         .withValueSerde(prefsSerde)
         );

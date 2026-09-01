@@ -56,3 +56,7 @@ mail:
     auth: false
     starttls: false
 
+kafka-mail-properties:
+  mail-from: "notification@mail.fr"
+  topic-replayer: "notifications.replayer"
+

@@ -16,3 +16,8 @@ streams:
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username="router-streams"
     password="VtS1g4Rru56xF6ff";
+
+kafka-topic:
+  topic-expanded: "notifications.events.expanded"
+  topic-prefs: "notifications.user.preferences"
+  topic-router: "notifications.router"

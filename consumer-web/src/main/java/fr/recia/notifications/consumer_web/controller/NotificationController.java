@@ -56,5 +56,4 @@ public class NotificationController {
         redisNotificationStore.markAsRead(userId, notifIds);
         return ResponseEntity.accepted().build();
     }
-
 }

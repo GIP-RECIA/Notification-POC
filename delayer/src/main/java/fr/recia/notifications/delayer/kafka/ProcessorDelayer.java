@@ -1,6 +1,7 @@
 package fr.recia.notifications.delayer.kafka;
 
 import fr.recia.notifications.delayer.configuration.FrequencyDuration;
+import fr.recia.notifications.delayer.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.delayer.droitDeconnexionConfig.Region;
 import fr.recia.notifications.delayer.services.DroitDeconnexionService;
 import fr.recia.notifications.delayer.services.LdapRegionService;
@@ -29,20 +30,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     private final LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService;
     private PunctuatorTopology topology;
     private FrequencyDuration frequencyDuration;
-
-    private final static String SINK_WEB = "sink.web";
-    private final static String SINK_MAIL = "sink.mail";
-    private final static String SINK_PUSH = "sink.push";
-
-    private final static String ROUTED_TOPIC_WEB = "notifications.web";
-    private final static String ROUTED_TOPIC_MAIL = "notifications.mail";
-    private final static String ROUTED_TOPIC_PUSH = "notifications.push";
-
-    private final static String STORE = "delayer-store";
-
-    private final static String SINK_DLT = "sink.dlt";
-    private final static int NUM_RETRIES = 5;
-
+    private KafkaNotificationProperties kafkaNotificationProperties;
     private Duration scanFrequency;
 
     public ProcessorDelayer(DroitDeconnexionService droitDeconnexionService, LdapRegionService ldapRegionService, LdapBypassDroitDeconnexionService ldapBypassDroitDeconnexionService) {
@@ -80,9 +68,9 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
                 log.debug("Notification {} transferred to topic {}", notification, notification.getRoutedTopic());
             }
         }else {
-            if(replayCount >= NUM_RETRIES){
+            if(replayCount >= kafkaNotificationProperties.getRetries()){
                 log.debug("Notification {} has already been replayed {} times. Putting it to dead letter topic.", notification, replayCount);
-                context.forward(record, SINK_DLT);
+                context.forward(record, kafkaNotificationProperties.getSinkDlt());
             }else {
                 if (!droitDeconnexionService.peutRecevoirNotif(userId, nowReplay, region)  && !ldapBypassDroitDeconnexionService.canBypass(userId) && priority != Priority.EXTREME) {
                     log.debug("Notification {} has been replayed {} times. Putting it in Store to be replayed.", notification, replayCount);
@@ -106,7 +94,7 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     @Override
     public void init(ProcessorContext<String, RoutedNotification> context) {
         this.context = context;
-        this.stateStore = context.getStateStore(STORE);
+        this.stateStore = context.getStateStore(kafkaNotificationProperties.getStore());
 
         context.schedule(scanFrequency,
                 PunctuationType.WALL_CLOCK_TIME,
@@ -128,14 +116,14 @@ public class ProcessorDelayer implements Processor<String, RoutedNotification, S
     }
 
     public String getSink(RoutedNotification notification) {
-        String sink = switch (notification.getRoutedTopic()) {
-            case ROUTED_TOPIC_WEB -> SINK_WEB;
-            case ROUTED_TOPIC_MAIL -> SINK_MAIL;
-            case ROUTED_TOPIC_PUSH -> SINK_PUSH;
-            default -> {
-                yield null;
-            }
-        };
+        String sink = null;
+        if (notification.getRoutedTopic().equals(kafkaNotificationProperties.getWeb())) {
+            sink = kafkaNotificationProperties.getSinkWeb();
+        } else if (notification.getRoutedTopic().equals(kafkaNotificationProperties.getMail())) {
+            sink = kafkaNotificationProperties.getSinkMail();
+        } else if (notification.getRoutedTopic().equals(kafkaNotificationProperties.getPush())) {
+            sink = kafkaNotificationProperties.getSinkPush();
+        }
         return sink;
     }
 }

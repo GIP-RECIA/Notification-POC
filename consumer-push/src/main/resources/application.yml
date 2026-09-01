@@ -1,5 +1,5 @@
 server:
-  port: 8076
+  port: 8075
 
 logging:
   file:
@@ -57,3 +57,8 @@ fcm:
 cas:
   service-url: https://auth.recia.fr/appMobile
   validate-url: https://auth.recia.fr/cas/serviceValidate
+
+kafka-properties:
+  topic-push: "notifications.push.tokens"
+  topic-replayer: "notifications.replayer"
+  store: "push-tokens-store"

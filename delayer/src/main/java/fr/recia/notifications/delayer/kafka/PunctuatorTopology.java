@@ -1,7 +1,9 @@
 package fr.recia.notifications.delayer.kafka;
 
 import fr.recia.notifications.delayer.configuration.FrequencyDuration;
+import fr.recia.notifications.delayer.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.model_kafka_serde.model.RoutedNotificationSerde;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.state.Stores;
@@ -16,28 +18,10 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 
 @Component
+@RequiredArgsConstructor
 public class PunctuatorTopology {
 
-    private final static String SINK_WEB = "sink.web";
-    private final static String SINK_MAIL = "sink.mail";
-    private final static String SINK_PUSH = "sink.push";
-    private final static String SINK_DLT = "sink.dlt";
-
-    private final static String TOPIC_OUT_WEB = "notifications.web";
-    private final static String TOPIC_OUT_MAIL = "notifications.mail";
-    private final static String TOPIC_OUT_PUSH = "notifications.push";
-    private final static String TOPIC_OUT_DLT = "notifications.dlt";
-
-    private final static String TOPIC_IN_ROUTER = "notifications.router";
-    private final static String TOPIC_IN_REPLAYER = "notifications.replayer";
-
-    private final static String STORE = "delayer-store";
-
-    private final static String PROCESSOR_DELAYER = "processor-delayer";
-
-    private final static String SOURCE_ROUTER = "router";
-    private final static String SOURCE_REPLAYER = "replayer";
-
+    private final KafkaNotificationProperties kafkaNotificationProperties;
 
     @Bean
     public KafkaStreams kafkaStreams(Topology topology, KafkaStreamsConfiguration defaultKafkaStreamsConfig) {
@@ -56,72 +40,73 @@ public class PunctuatorTopology {
 
         topology.addStateStore(
                 Stores.keyValueStoreBuilder(
-                        Stores.persistentKeyValueStore(STORE),
+                        Stores.persistentKeyValueStore(kafkaNotificationProperties.getStore()),
                         Serdes.String(),
                         routedNotificationSerde
                 )
         );
 
         topology.addSource(
-                SOURCE_ROUTER,
+                kafkaNotificationProperties.getSourceRouter(),
                 Serdes.String().deserializer(),
                 routedNotificationSerde.deserializer(),
-                TOPIC_IN_ROUTER
+                kafkaNotificationProperties.getRouter()
         );
 
         topology.addSource(
-                SOURCE_REPLAYER,
+                kafkaNotificationProperties.getSourceReplayer(),
                 Serdes.String().deserializer(),
                 routedNotificationSerde.deserializer(),
-                TOPIC_IN_REPLAYER
+                kafkaNotificationProperties.getReplayer()
         );
 
         topology.addProcessor(
-                PROCESSOR_DELAYER,
+                kafkaNotificationProperties.getProcessor(),
                 () -> {
                     ProcessorDelayer processor = new ProcessorDelayer(droitDeconnexionService, ldapRegionService, ldapBypassDroitDeconnexionService);
                     processor.setScanFrequency(Duration.ofSeconds(frequencyDuration.getDuration()));
+                    processor.setKafkaNotificationProperties(kafkaNotificationProperties);
                     return processor;
                 },
-                SOURCE_ROUTER,
-                SOURCE_REPLAYER
+                kafkaNotificationProperties.getSourceRouter(),
+                kafkaNotificationProperties.getSourceReplayer()
         );
 
         topology.connectProcessorAndStateStores(
-                PROCESSOR_DELAYER,
-                STORE
+                kafkaNotificationProperties.getProcessor(),
+                kafkaNotificationProperties.getStore()
         );
 
         topology.addSink(
-                SINK_WEB,
-                TOPIC_OUT_WEB,
+                kafkaNotificationProperties.getSinkWeb(),
+                kafkaNotificationProperties.getWeb(),
                 Serdes.String().serializer(),
                 routedNotificationSerde.serializer(),
-                PROCESSOR_DELAYER
+                kafkaNotificationProperties.getProcessor()
         );
 
         topology.addSink(
-                SINK_MAIL,
-                TOPIC_OUT_MAIL,
+                kafkaNotificationProperties.getSinkMail(),
+                kafkaNotificationProperties.getMail(),
                 Serdes.String().serializer(),
                 routedNotificationSerde.serializer(),
-                PROCESSOR_DELAYER
+                kafkaNotificationProperties.getProcessor()
         );
 
         topology.addSink(
-                SINK_PUSH,
-                TOPIC_OUT_PUSH,
+                kafkaNotificationProperties.getSinkPush(),
+                kafkaNotificationProperties.getPush(),
                 Serdes.String().serializer(),
                 routedNotificationSerde.serializer(),
-                PROCESSOR_DELAYER
+                kafkaNotificationProperties.getProcessor()
         );
 
         topology.addSink(
-                SINK_DLT,
-                TOPIC_OUT_DLT,
+                kafkaNotificationProperties.getSinkDlt(),
+                kafkaNotificationProperties.getDlt(),
                 Serdes.String().serializer(),
                 routedNotificationSerde.serializer(),
-                PROCESSOR_DELAYER
+                kafkaNotificationProperties.getProcessor()
         );
 
         return topology;
