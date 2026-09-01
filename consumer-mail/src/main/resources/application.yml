@@ -57,6 +57,6 @@ mail:
     starttls: false
 
 kafka-mail-properties:
-  mail-from: "notification@mail.fr"
+  mail-from: "notifications@netocentre.fr"
   topic-replayer: "notifications.replayer"
 
