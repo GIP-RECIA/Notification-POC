@@ -1,5 +1,6 @@
 package fr.recia.notifications.consumer_mail.kafka;
 
+import fr.recia.notifications.consumer_mail.configuration.KafkaNotificationProperties;
 import fr.recia.notifications.consumer_mail.services.LdapMailQueryService;
 import fr.recia.notifications.consumer_mail.services.MailSendingService;
 import fr.recia.notifications.model_kafka.model.RoutedNotification;
@@ -35,7 +36,7 @@ public class MailNotificationConsumer {
             if(mailTo.isEmpty()){
                 log.error("No valid email address found for {}", routedNotification.getNotification().getHeader().getUserId());
             } else {
-                mailSendingService.sendTextMail(MAIL_FROM, mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
+                mailSendingService.sendTextMail(kafkaNotificationProperties.getMailFrom(), mailTo.get(), routedNotification.getNotification().getContent().getTitle(),
                         routedNotification.getNotification().getContent().getMessage());
             }
         } catch (Exception e) {
