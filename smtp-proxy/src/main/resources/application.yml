@@ -7,7 +7,7 @@ routing:
       regex: ".*Nextcloud.*"
       processor: NextcloudProcessor
       service: "NEXTCLOUD"
-      api-key: "Xif0duNVWzCPvzkk9LIcAZvpdYukD6ws"
+      api-key: "API_KEY"
 
 notification-api:
   url: "http://localhost:8179/event/emit"
@@ -28,3 +28,12 @@ spring:
           #starttls:
             #enable: true
 
+smtp:
+  require-auth: true
+  require-tls: true
+  keystore-path: /home/user/Notification-POC/smtp-proxy/smtp-proxy.p12
+  keystore-password: "password"
+  key-password: "password"
+  credentials:
+    user-1: "password1"
+    user-2: "password2"
