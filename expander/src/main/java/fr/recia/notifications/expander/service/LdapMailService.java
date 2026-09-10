@@ -36,7 +36,6 @@ public class LdapMailService {
         return ldapTemplate.search(ldapMailRequestProperties.getBranchBase(), filter, this::mapUid)
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(this::isUser)
                 .toList();
     }
 
@@ -52,7 +51,4 @@ public class LdapMailService {
         return uid;
     }
 
-    private boolean isUser(String value) {
-        return value.length() == 8 && (value.startsWith("F") || value.startsWith("f"));
-    }
 }

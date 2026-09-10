@@ -11,4 +11,5 @@ public class LdapGroupRequestProperties {
     private String branchBase;
     private String retrievedAttribute;
     private String filter;
+    private String uidRegex;
 }

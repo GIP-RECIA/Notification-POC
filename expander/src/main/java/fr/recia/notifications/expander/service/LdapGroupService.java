@@ -54,7 +54,7 @@ public class LdapGroupService {
     }
 
     private boolean isUser(String value) {
-        return value.length() == 8 && (value.startsWith("F") || value.startsWith("f"));
+        return value.matches(ldapGroupRequestProperties.getUidRegex());
     }
 }
 
