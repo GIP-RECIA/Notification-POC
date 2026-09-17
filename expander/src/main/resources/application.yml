@@ -48,7 +48,7 @@ ldap-group:
   branch-base: ou=groups
   retrieved-attribute: hasMember
   filter: "(&(objectClass=groupOfNames)(cn={0}))"
-  uidRegex: "^[FW][a-zA-Z0-9]{7}$";
+  uidRegex: "^[FW][a-zA-Z0-9]{7}$"
 
 ldap-mail:
   branch-base: ou=people
