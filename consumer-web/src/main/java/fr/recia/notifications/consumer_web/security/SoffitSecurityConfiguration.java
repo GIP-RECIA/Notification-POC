@@ -4,6 +4,7 @@ import fr.recia.notifications.soffit_java_client.SoffitJwtAuthenticationFilter;
 import fr.recia.notifications.soffit_java_client.SoffitJwtValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -37,6 +38,7 @@ public class SoffitSecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health-check/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
