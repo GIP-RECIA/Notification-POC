@@ -14,6 +14,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -29,7 +31,6 @@ public class LdapGroupService {
 
     @Cacheable(value = "ldapGroupMembers", key = "#groupCn")
     public List<String> getGroupMembers(String groupCn) {
-
 
         String filter = MessageFormat.format(ldapGroupRequestProperties.getFilter(), groupCn);
         log.trace("LDAP filter used : {}", filter);
@@ -49,12 +50,33 @@ public class LdapGroupService {
             while (all.hasMore()) {
                 members.add(all.next().toString());
             }
+        } else {
+            Attribute fallbackAttr = attrs.get(ldapGroupRequestProperties.getRetrievedAttributeFallback());
+            if (fallbackAttr != null) {
+                NamingEnumeration<?> allF = fallbackAttr.getAll();
+                while (allF.hasMore()) {
+                    String member = allF.next().toString();
+                    String uid = extractUid(member);
+                    if (uid != null) {
+                        members.add(uid);
+                    } else {
+                        log.warn("Erreur dans la récupération des UID");
+                    }
+            }
+
+            }
         }
         return members;
     }
 
     private boolean isUser(String value) {
         return value.matches(ldapGroupRequestProperties.getUidRegex());
+    }
+
+    private String extractUid(String memberValue) {
+        Pattern pattern = Pattern.compile(ldapGroupRequestProperties.getMemberUidRegex());
+        Matcher matcher = pattern.matcher(memberValue);
+        return matcher.find() ? matcher.group(1) : null;
     }
 }
 

@@ -47,8 +47,10 @@ spring:
 ldap-group:
   branch-base: ou=groups
   retrieved-attribute: hasMember
+  retrieved-attribute-fallback: member
   filter: "(&(objectClass=groupOfNames)(cn={0}))"
   uidRegex: "^[FW][a-zA-Z0-9]{7}$"
+  memberUidRegex: "uid=([^,]+)"
 
 ldap-mail:
   branch-base: ou=people

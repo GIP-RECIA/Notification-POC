@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 public class LdapGroupRequestProperties {
     private String branchBase;
     private String retrievedAttribute;
+    private String retrievedAttributeFallback;
     private String filter;
     private String uidRegex;
+    private String memberUidRegex;
 }
