@@ -15,7 +15,7 @@ public class DroitDeconnexionServiceTest {
     private BornesHoraires bornesHoraires;
 
     @BeforeEach
-    void setUpCalculDelaiHeure() {
+    void setUp() {
         vacancesProperties = new VacancesProperties();
 
         CalendrierRegion centre = new CalendrierRegion();
@@ -28,19 +28,34 @@ public class DroitDeconnexionServiceTest {
         reunion.setJoursFeries(new ArrayList<>());
         vacancesProperties.setReunion(reunion);
 
-        droitDeconnexionService = new DroitDeconnexionService(vacancesProperties, bornesHoraires);
+        bornesHoraires = new BornesHoraires();
+        bornesHoraires.setInf(8);
+        bornesHoraires.setSup(20);
+        bornesHoraires.setMinutes(0);
+        bornesHoraires.setJour(1);
+
+        droitDeconnexionService =
+                new DroitDeconnexionService(vacancesProperties, bornesHoraires);
     }
 
     @Test
     @DisplayName("On test mardi 12 mai à 10h : on devrait avoir aucun délai")
     void testCalculDelaiMardiMatin() {
+        System.out.println("INF = " + bornesHoraires.getInf());
+        System.out.println("SUP = " + bornesHoraires.getSup());
+
         ZonedDateTime date = ZonedDateTime.of(2026, 5, 12, 10, 0, 0, 0, ZoneId.of("Europe/Paris"));
         long timestamp = date.toInstant().toEpochMilli();
+
+        System.out.println("DATE = " + date);
+        System.out.println("HEURE = " + date.getHour());
+
 
         Duration resultat = droitDeconnexionService.calculDelai(timestamp, Region.CENTRE);
 
         // On devrait avoir un délai de zéro, on test donc si c'est le cas
         assertEquals(Duration.ZERO, resultat);
+
     }
 
     @Test
@@ -56,29 +71,29 @@ public class DroitDeconnexionServiceTest {
     }
 
     @Test
-    @DisplayName("On test si le décalage horaire est bien traité : la notification devrait être autorisée en métropole (17h) mais interdite à la Réunion (19h)")
+    @DisplayName("On test si le décalage horaire est bien traité : la notification devrait être autorisée en métropole (19h) mais interdite à la Réunion (21h)")
     void testDifferenceRegionMemeInstant() {
-        // On fixe un point dans le temps : 12 Mai 2026 à 15:00:00 UTC. En France, il est 17h, donc l'envoie de notification est autorisé,
-        // mais pas à la Réunion car il est 19 là-bas
-        ZonedDateTime instantUtc = ZonedDateTime.of(2026, 5, 12, 15, 0, 0, 0, ZoneOffset.UTC);
+        // On fixe un point dans le temps : 12 Mai 2026 à 17:00:00 UTC.
+        // En France (UTC+2 en été), il est 19h, donc l'envoi de notification est autorisé.
+        // À la Réunion (UTC+4), il est 21h, ce qui dépasse la borne supérieure de 20h.
+        ZonedDateTime instantUtc = ZonedDateTime.of(2026, 5, 12, 17, 0, 0, 0, ZoneOffset.UTC);
         long timestamp = instantUtc.toInstant().toEpochMilli();
 
-        //  Test pour le CENTRE (17h00) -> Doit être envoyé tout de suite
+        //  Test pour le CENTRE (19h00) -> Doit être envoyé tout de suite
         Duration delaiCentre = droitDeconnexionService.calculDelai(timestamp, Region.CENTRE);
-        assertEquals(Duration.ZERO, delaiCentre, "À 17h à Paris, on devrait envoyer immédiatement");
+        assertEquals(Duration.ZERO, delaiCentre, "À 19h à Paris, on devrait envoyer immédiatement");
 
-        //  Test pour la REUNION (19h00) -> Doit être décalé au lendemain 8h
+        //  Test pour la REUNION (21h00) -> Doit être décalé au lendemain 8h (heure locale Réunion)
         Duration delaiReunion = droitDeconnexionService.calculDelai(timestamp, Region.REUNION);
 
-        // De 19h à 8h le lendemain = 13 heures de délai
-        assertFalse(delaiReunion.isZero(), "À 19h à la Réunion, on devrait avoir un délai");
-        assertEquals(Duration.ofHours(13), delaiReunion);
+        // De 21h à 8h le lendemain = 11 heures de délai
+        assertFalse(delaiReunion.isZero(), "À 21h à la Réunion, on devrait avoir un délai");
+        assertEquals(Duration.ofHours(11), delaiReunion);
     }
 
     @BeforeEach
     void setUpCalculDelaiVacance() {
         vacancesProperties = new VacancesProperties();
-
 
         CalendrierRegion centre = new CalendrierRegion();
         centre.setVacances(new ArrayList<>());
@@ -89,6 +104,10 @@ public class DroitDeconnexionServiceTest {
         reunion.setVacances(new ArrayList<>());
         reunion.setJoursFeries(new ArrayList<>());
         vacancesProperties.setReunion(reunion);
+
+        bornesHoraires = new BornesHoraires();
+        bornesHoraires.setInf(8);
+        bornesHoraires.setSup(20);
 
         droitDeconnexionService = new DroitDeconnexionService(vacancesProperties, bornesHoraires);
 
@@ -115,15 +134,11 @@ public class DroitDeconnexionServiceTest {
         long timestamp = dateEnvoi.toInstant().toEpochMilli();
 
         //  Calcul manuel de l'attendu :
-        // Du 22/5 10h au 05/25 08h = 96h
+        // Du 22/5 8h au 25/5 08h = 72h
         ZonedDateTime repriseAttendue = ZonedDateTime.of(2026, 5, 25, 8, 0, 0, 0, ZoneId.of("Europe/Paris"));
         Duration attendu = Duration.between(dateEnvoi, repriseAttendue);
 
         Duration resultat = droitDeconnexionService.calculDelai(timestamp, Region.CENTRE);
-
-        // Debug pour voir ce que le code trouve (en heures)
-        System.out.println("Heures attendues : " + attendu.toHours());
-        System.out.println("Heures obtenues : " + resultat.toHours());
 
         assertEquals(attendu, resultat, "Le délai devrait s'arrêter au lundi de la rentrée 8h");
     }
@@ -148,5 +163,4 @@ public class DroitDeconnexionServiceTest {
         Duration delaiReunion = droitDeconnexionService.calculDelai(timestamp, Region.REUNION);
         assertFalse(delaiReunion.isZero());
     }
-
 }
