@@ -1,6 +1,9 @@
 package fr.recia.notifications.e2e_tests.clients;
 
 import fr.recia.notifications.event_rest_client_kafka.HttpNotificationClient;
+import fr.recia.notifications.model_kafka.model.Channel;
+
+import java.util.List;
 
 public class InputServiceEventApiClient {
 
@@ -11,7 +14,7 @@ public class InputServiceEventApiClient {
     }
 
     public void sendEvent(String userId, String title, String message) {
-        httpNotificationClient.sendNormalPriorityToUser(title, message, userId);
+        httpNotificationClient.sendNormalPriorityToUser(title, message, "link", userId, List.of(Channel.WEB, Channel.MAIL, Channel.PUSH));
     }
 }
 
