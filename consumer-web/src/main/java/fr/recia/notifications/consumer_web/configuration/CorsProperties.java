@@ -4,9 +4,11 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Data
 @ConfigurationProperties(prefix = "cors-configuration")
 @Configuration
 public class CorsProperties {
-    String[] allowedOrigins;
+    List<String> allowedOrigins;
 }

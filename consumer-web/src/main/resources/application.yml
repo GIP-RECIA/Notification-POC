@@ -48,3 +48,6 @@ redis-properties:
 kafka-topic:
   web: "notifications.web"
   replayer: "notifications.replayer"
+
+cors-configuration:
+  allowed-origins:
