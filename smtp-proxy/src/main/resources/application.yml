@@ -31,7 +31,7 @@ spring:
 smtp:
   require-auth: true
   require-tls: true
-  keystore-path: /home/user/Notification-POC/smtp-proxy/smtp-proxy.p12
+  keystore-path: classpath:smtp-proxy.p12
   keystore-password: "password"
   key-password: "password"
   credentials:
