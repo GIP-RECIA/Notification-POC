@@ -3,7 +3,7 @@ name: CI
 on:
   push:
   pull_request:
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   unit-tests:
@@ -56,5 +56,5 @@ jobs:
         run: ./scripts-bash/ci-start-minimal.sh
 
       - name: Run E2E tests
-        working-directory: notification-e2e-tests
+        working-directory: e2e-tests
         run: mvn test
