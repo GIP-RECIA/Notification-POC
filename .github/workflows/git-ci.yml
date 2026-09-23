@@ -55,6 +55,20 @@ jobs:
       - name: Start notification services
         run: ./scripts-bash/ci-start-minimal.sh
 
+      - name: Check notification services
+        if: always()
+        run: |
+          echo "========== RUNNING JAVA PROCESSES =========="
+          ps aux | grep java || true
+
+          echo ""
+          echo "========== LISTENING PORTS =========="
+          ss -lntp || true
+
+          echo ""
+          echo "========== CI LOG FILES =========="
+          ls -lah logs/ci || true
+
       - name: Run E2E tests
         working-directory: e2e-tests
         run: mvn test
@@ -62,20 +76,57 @@ jobs:
       - name: Show E2E service logs
         if: always()
         run: |
+          echo "========================================"
           echo "========== SMTP PROXY =========="
-          cat logs/ci/smtp-proxy.log
+          echo "========================================"
+          cat logs/ci/smtp-proxy.log || true
 
+          echo ""
+          echo "========================================"
+          echo "========== PRODUCER API =========="
+          echo "========================================"
+          cat logs/ci/producer-api.log || true
+
+          echo ""
+          echo "========================================"
           echo "========== CONSUMER MAIL =========="
-          cat logs/ci/consumer-mail.log
+          echo "========================================"
+          cat logs/ci/consumer-mail.log || true
 
+          echo ""
+          echo "========================================"
           echo "========== ROUTER =========="
-          cat logs/ci/router.log
+          echo "========================================"
+          cat logs/ci/router.log || true
 
+          echo ""
+          echo "========================================"
           echo "========== EXPANDER =========="
-          cat logs/ci/expander.log
+          echo "========================================"
+          cat logs/ci/expander.log || true
 
+          echo ""
+          echo "========================================"
           echo "========== DELAYER =========="
-          cat logs/ci/delayer.log
+          echo "========================================"
+          cat logs/ci/delayer.log || true
 
+          echo ""
+          echo "========================================"
           echo "========== CONSUMER WEB =========="
-          cat logs/ci/consumer-web.log
+          echo "========================================"
+          cat logs/ci/consumer-web.log || true
+
+      - name: Show E2E test reports
+        if: always()
+        run: |
+          echo "========================================"
+          echo "========== SUREFIRE REPORTS =========="
+          echo "========================================"
+
+          find e2e-tests/target/surefire-reports \
+            -type f \
+            -maxdepth 1 \
+            -print \
+            -exec sh -c 'echo "----- $1 -----"; cat "$1"' _ {} \; \
+            || true
