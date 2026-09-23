@@ -46,7 +46,7 @@ jobs:
           chmod +x scripts-bash/ci-start-kafka.sh
           chmod +x scripts-bash/ci-start-redis.sh
           chmod +x scripts-bash/ci-start-minimal.sh
-          chmod +x ldap/ci-start-ldap.sh
+          chmod +x scripts-bash/ci-start-ldap.sh
 
       - name: Start test infrastructure
         run: ./scripts-bash/ci-start-infra.sh
