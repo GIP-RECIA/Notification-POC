@@ -58,3 +58,24 @@ jobs:
       - name: Run E2E tests
         working-directory: e2e-tests
         run: mvn test
+
+      - name: Show E2E service logs
+        if: always()
+        run: |
+          echo "========== SMTP PROXY =========="
+          cat logs/ci/smtp-proxy.log
+
+          echo "========== CONSUMER MAIL =========="
+          cat logs/ci/consumer-mail.log
+
+          echo "========== ROUTER =========="
+          cat logs/ci/router.log
+
+          echo "========== EXPANDER =========="
+          cat logs/ci/expander.log
+
+          echo "========== DELAYER =========="
+          cat logs/ci/delayer.log
+
+          echo "========== CONSUMER WEB =========="
+          cat logs/ci/consumer-web.log
