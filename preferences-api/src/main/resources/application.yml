@@ -7,7 +7,7 @@ logging:
 
 soffit:
   jwt:
-    signature-key: KEYKEYKEYKEYKEYKEYKEYKEYKEYKEYKEY
+    signature-key: '7xqI7LLKhRt15a1r05vz4O5lIchhxCx6PXB5dLmyq/U='
 
 spring:
   application:
