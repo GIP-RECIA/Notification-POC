@@ -73,7 +73,6 @@ class NotificationPreferencesRoutingE2ETests {
         String subject = "Partage Nextcloud " + testId;
         String expectedTitle = "Un fichier a été partagé avec vous.";  // = titre configuré côté processor
 
-        String recipientEmail = USER_ID_MAIL + "@recia.fr";
         String from = "noreply@Nextcloud.recia.fr";
 
         inputSmtpApiClient.sendEmail(from, USER_EMAIL, subject, "corps du mail peu importe", null);

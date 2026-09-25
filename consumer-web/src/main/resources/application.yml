@@ -12,6 +12,8 @@ soffit:
 spring:
   application:
     name: consumer-web
+  mongodb:
+    uri: mongodb://localhost:27017/notifications
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:
@@ -43,6 +45,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+notification:
+  storage: mongodb
+
 redis-properties:
     ttl: 14
     scan-count: 500
