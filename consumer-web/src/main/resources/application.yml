@@ -12,8 +12,13 @@ soffit:
 spring:
   application:
     name: consumer-web
-  mongodb:
-    uri: mongodb://localhost:27017/notifications
+  #mongodb:
+    #uri: mongodb://localhost:27017/notifications
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration
+      - org.springframework.boot.data.mongodb.autoconfigure.DataMongoAutoConfiguration
+      - org.springframework.boot.data.mongodb.autoconfigure.DataMongoRepositoriesAutoConfiguration
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:
@@ -40,14 +45,13 @@ spring:
           org.apache.kafka.common.security.plain.PlainLoginModule required
           username="web-consumer"
           password="ibBFcFQR3WAbv9Hi";
-
   data:
     redis:
       host: localhost
       port: 6379
 
 notification:
-  storage: mongodb
+  storage: redis
 
 redis-properties:
     ttl: 14
