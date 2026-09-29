@@ -12,13 +12,8 @@ soffit:
 spring:
   application:
     name: consumer-web
-  #mongodb:
-    #uri: mongodb://localhost:27017/notifications
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration
-      - org.springframework.boot.data.mongodb.autoconfigure.DataMongoAutoConfiguration
-      - org.springframework.boot.data.mongodb.autoconfigure.DataMongoRepositoriesAutoConfiguration
+  mongodb:
+    uri: mongodb://localhost:27017/notifications
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     consumer:

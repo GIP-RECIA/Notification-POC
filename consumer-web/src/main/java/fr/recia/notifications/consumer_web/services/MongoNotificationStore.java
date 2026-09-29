@@ -30,8 +30,8 @@ public class MongoNotificationStore implements NotificationRepository {
 
     @Override
     public void save(Notification notification) {
-        String notifId = notification.getHeader().getNotificationId();
-        String userId = notification.getHeader().getUserId();
+        final String notifId = notification.getHeader().getNotificationId();
+        final String userId = notification.getHeader().getUserId();
         MongoNotificationDocument document = new MongoNotificationDocument(notifId,
                 userId, notification, false
         );
