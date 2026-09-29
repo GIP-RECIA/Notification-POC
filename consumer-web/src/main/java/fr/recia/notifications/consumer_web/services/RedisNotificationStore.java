@@ -1,9 +1,11 @@
 package fr.recia.notifications.consumer_web.services;
 
 import fr.recia.notifications.consumer_web.configuration.RedisProperties;
+import fr.recia.notifications.consumer_web.repository.NotificationRepository;
 import fr.recia.notifications.model_kafka.model.Notification;
 import fr.recia.notifications.model_kafka.model.StoredNotification;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,8 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@ConditionalOnProperty(prefix = "notification", name = "storage", havingValue = "redis")
 @Slf4j
-public class RedisNotificationStore {
+public class RedisNotificationStore implements NotificationRepository {
 
     private final RedisTemplate<String, StoredNotification> notificationRedisTemplate;
     private final RedisTemplate<String, String> userIndexRedisTemplate;
@@ -53,6 +56,7 @@ public class RedisNotificationStore {
         return "user:" + userId + ":notifications";
     }
 
+    @Override
     public void save(Notification notif) {
         StoredNotification stored = new StoredNotification(notif, false);
         // Stocker la notification en elle-même
@@ -65,6 +69,7 @@ public class RedisNotificationStore {
         log.trace("Inverted index stored in redis : added {} to set for user {}", notifKey, userIndex);
     }
 
+    @Override
     public void delete(String userId, List<String> notifIds) {
         for (String notifId : notifIds) {
             try {
@@ -85,6 +90,7 @@ public class RedisNotificationStore {
         }
     }
 
+    @Override
     public void markAsRead(String userId, List<String> notificationIds) {
         for (String notificationId : notificationIds) {
             try {
@@ -105,7 +111,7 @@ public class RedisNotificationStore {
         }
     }
 
-
+    @Override
     public List<StoredNotification> findAllForUser(String userId) {
         log.trace("Getting notifications for user {}", userId);
         String userIndex = getUserIndexKeyForRedis(userId);
@@ -130,6 +136,7 @@ public class RedisNotificationStore {
         return allNotifs;
     }
 
+    @Override
     public List<String> notifIdsList(String userId) {
         List<StoredNotification> notifsList = findAllForUser(userId);
         List<String> notifIds = new ArrayList<>();

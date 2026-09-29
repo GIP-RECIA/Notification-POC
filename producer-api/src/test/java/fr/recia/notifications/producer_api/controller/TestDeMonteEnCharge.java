@@ -33,7 +33,7 @@ public class TestDeMonteEnCharge {
                         new Content("Notif de stress", "Contenu", "Lien"),
                         new Target(TargetType.UID, List.of("f1700ivg"))
                 );
-                kafkaTemplate.send("events.requested", id, event);
+                kafkaTemplate.send("notifications.events.requested", id, event);
             });
         }
         executorService.shutdown();
